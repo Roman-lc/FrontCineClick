@@ -5,6 +5,7 @@
 const CARTELERA = {
     peliculas: [],
     cines: [],
+    peliculasEnCartel: [],
     fechasConFunciones: new Set(),
     cineId: '',
     fecha: ''
@@ -31,11 +32,14 @@ async function inicializarCartelera() {
         ]);
 
         const vigentes = funciones.filter(funcionVigente);
+        const idsConFuncion = new Set(vigentes.map(funcion => funcion.peliculaId));
 
         CARTELERA.cines = cines
             .filter(cine => cine.activo !== false)
             .sort((a, b) => (a.nombre || '').localeCompare(b.nombre || '', 'es'));
         CARTELERA.peliculas = peliculas.filter(pelicula => pelicula.activa !== false);
+        // Solo las que tienen alguna función vigente: sin eso no hay nada que comprar.
+        CARTELERA.peliculasEnCartel = CARTELERA.peliculas.filter(pelicula => idsConFuncion.has(pelicula.id));
         CARTELERA.fechasConFunciones = new Set(vigentes.map(fechaDeFuncion));
 
         renderTiraCines();
@@ -150,7 +154,7 @@ async function aplicarFiltros() {
     const peticion = ++ultimaPeticion;
 
     if (!cineId && !fecha) {
-        renderPeliculas(CARTELERA.peliculas);
+        renderPeliculas(CARTELERA.peliculasEnCartel);
         return;
     }
 
@@ -194,13 +198,23 @@ function renderPeliculas(peliculas) {
 
     if (!peliculas.length) {
         resultado.textContent = '';
+        if (CARTELERA.peliculas.length === 0) {
+            grid.innerHTML = '<div class="cartelera-vacio"><p>No hay películas disponibles.</p></div>';
+            return;
+        }
+
+        const hayFunciones = CARTELERA.peliculasEnCartel.length > 0;
         grid.innerHTML = `
             <div class="cartelera-vacio">
-                <p>No hay películas con funciones para los filtros elegidos.</p>
-                <button type="button" class="btn btn-secondary" id="btnVerTodas">Ver toda la cartelera</button>
+                <p>${hayFunciones
+                    ? 'No hay películas con funciones para los filtros elegidos.'
+                    : 'No hay funciones programadas por el momento.'}</p>
+                ${hayFunciones ? '<button type="button" class="btn btn-secondary" id="btnVerTodas">Ver toda la cartelera</button>' : ''}
             </div>
         `;
-        document.getElementById('btnVerTodas').addEventListener('click', limpiarFiltros);
+
+        const btnVerTodas = document.getElementById('btnVerTodas');
+        if (btnVerTodas) btnVerTodas.addEventListener('click', limpiarFiltros);
         return;
     }
 
