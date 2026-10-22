@@ -11,6 +11,8 @@ frontend/
 │   │   └── style.css
 │   └── js/
 │       ├── auth.js
+│       ├── cartelera.js
+│       ├── fechas.js
 │       ├── funciones.js
 │       ├── detalle.js
 │       ├── compra.js
@@ -41,6 +43,14 @@ frontend/
 ### Landing Page
 - Presentación de CineClick
 - Acceso directo a funciones disponibles
+
+### Cartelera con filtros
+- Bajo los banners, la cartelera se puede filtrar por **Cine** y **Fecha**
+- El listado de fechas arranca en el día de hoy y suma los días que tienen funciones
+- Al filtrar se consulta `GET /api/funciones` y solo se muestran las películas con una función vigente en ese cine y/o fecha
+- El contador indica cuántas películas quedaron y con qué filtros
+- Si ninguna cumple, aparece un estado vacío con el botón "Ver toda la cartelera"
+- Al entrar a una película filtrada, los filtros viajan a `funciones.html` (cine y fecha) para no perder el contexto
 
 ### Funciones (Productos)
 - Listado de funciones con película, cine, sala, fecha/hora, precio, formato, idioma

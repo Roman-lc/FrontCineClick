@@ -16,19 +16,37 @@ async function cargarFunciones() {
         
         const params = new URLSearchParams(window.location.search);
         const peliculaId = params.get('peliculaId');
-        
-        let url = `${API_BASE_URL}/api/funciones`;
+        const cineId = params.get('cineId');
+        const fecha = params.get('fecha');
+
+        const query = new URLSearchParams();
+        if (peliculaId) query.set('peliculaId', peliculaId);
+        if (cineId) query.set('cineId', cineId);
+        if (fecha) query.set('fecha', fecha);
+
+        const url = `${API_BASE_URL}/api/funciones${query.toString() ? '?' + query.toString() : ''}`;
+
+        let nombrePelicula = null;
         if (peliculaId) {
-            url = `${API_BASE_URL}/api/funciones?peliculaId=${peliculaId}`;
             // Intentar obtener info de la película
             try {
                 const respPeli = await fetch(`${API_BASE_URL}/api/peliculas/${peliculaId}`);
                 if (respPeli.ok) {
                     const peli = await respPeli.json();
+                    nombrePelicula = peli.titulo;
                     if (titulo) titulo.textContent = `Funciones - ${peli.titulo}`;
-                    if (subtitulo) subtitulo.textContent = `Seleccioná el horario para ${peli.titulo}`;
                 }
             } catch(e) {}
+        }
+
+        // Filtros elegidos en la cartelera del landing
+        const filtrosTexto = await describirFiltros(cineId, fecha);
+        if (subtitulo) {
+            if (filtrosTexto) {
+                subtitulo.textContent = `Funciones${nombrePelicula ? ' de ' + nombrePelicula : ''} · ${filtrosTexto}`;
+            } else if (nombrePelicula) {
+                subtitulo.textContent = `Seleccioná el horario para ${nombrePelicula}`;
+            }
         }
         
         const response = await fetch(url);
@@ -40,7 +58,10 @@ async function cargarFunciones() {
         loading.style.display = 'none';
         
         if (funciones.length === 0) {
-            funcionesList.innerHTML = '<div class="no-results"><p>No hay funciones disponibles para esta película</p></div>';
+            const conFiltros = params.get('cineId') || params.get('fecha');
+            funcionesList.innerHTML = conFiltros
+                ? '<div class="no-results"><p>No hay funciones con esos filtros</p><a href="../index.html" class="btn btn-secondary" style="margin-top: 1rem;">Volver a la cartelera</a></div>'
+                : '<div class="no-results"><p>No hay funciones disponibles para esta película</p></div>';
             return;
         }
         
@@ -202,4 +223,23 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// Arma el texto de los filtros que llegan desde la cartelera ("CineClick Abasto · Hoy · 22/10")
+async function describirFiltros(cineId, fecha) {
+    const partes = [];
+
+    if (cineId) {
+        try {
+            const resp = await fetch(`${API_BASE_URL}/api/cines/${cineId}`);
+            if (resp.ok) {
+                const cine = await resp.json();
+                if (cine.nombre) partes.push(cine.nombre);
+            }
+        } catch (e) {}
+    }
+
+    if (fecha) partes.push(etiquetaFecha(fecha));
+
+    return partes.join(' · ');
 }

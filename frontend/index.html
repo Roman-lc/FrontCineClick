@@ -125,6 +125,64 @@
             color: var(--text-light);
             font-size: 0.8rem;
         }
+        .cartelera-filtros {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            gap: 1rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 0.75rem;
+        }
+        .filtro-campo {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            flex: 1 1 220px;
+            min-width: 160px;
+        }
+        .filtro-campo label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--text-light);
+        }
+        .filtro-campo select {
+            padding: 0.55rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: white;
+            font-family: inherit;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+        .filtro-campo select:focus {
+            outline: 2px solid var(--info);
+            outline-offset: 2px;
+            border-color: var(--info);
+        }
+        .cartelera-resultado {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            min-height: 1.2em;
+        }
+        .cartelera-vacio {
+            grid-column: 1 / -1;
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            color: var(--text-light);
+        }
+        .cartelera-vacio p {
+            margin-bottom: 1rem;
+        }
         @media (max-width: 768px) {
             .banner-container {
                 height: 250px;
@@ -186,6 +244,25 @@
         <section class="section">
             <h2>Cartelera</h2>
             <p style="color: var(--text-light); margin-bottom: 1rem;">Seleccioná una película para ver las funciones disponibles</p>
+
+            <div class="cartelera-filtros">
+                <div class="filtro-campo">
+                    <label for="filtroCine">Cine</label>
+                    <select id="filtroCine">
+                        <option value="">Todos los cines</option>
+                    </select>
+                </div>
+                <div class="filtro-campo">
+                    <label for="filtroFecha">Fecha</label>
+                    <select id="filtroFecha">
+                        <option value="">Todas las fechas</option>
+                    </select>
+                </div>
+                <button type="button" id="btnLimpiarFiltros" class="btn btn-secondary btn-sm">Limpiar filtros</button>
+            </div>
+
+            <p id="carteleraResultado" class="cartelera-resultado"></p>
+
             <div id="peliculasLoading" class="loading">Cargando películas...</div>
             <div id="peliculasError" class="error" style="display:none;"></div>
             <div id="peliculasGrid" class="poster-grid"></div>
@@ -252,53 +329,8 @@
         }
         
         setInterval(() => changeBanner(1), 5000);
-        
-        // Cargar películas
-        document.addEventListener('DOMContentLoaded', cargarPeliculas);
-        
-        async function cargarPeliculas() {
-            const grid = document.getElementById('peliculasGrid');
-            const loading = document.getElementById('peliculasLoading');
-            const errorDiv = document.getElementById('peliculasError');
-            
-            try {
-                loading.style.display = 'block';
-                errorDiv.style.display = 'none';
-                grid.innerHTML = '';
-                
-                const response = await fetch('http://localhost:8080/api/peliculas');
-                if (!response.ok) throw new Error('Error al cargar películas');
-                const peliculas = await response.json();
-                
-                loading.style.display = 'none';
-                
-                if (peliculas.length === 0) {
-                    grid.innerHTML = '<p style="color: var(--text-light);">No hay películas disponibles</p>';
-                    return;
-                }
-                
-                peliculas.filter(p => p.activa !== false).forEach(pelicula => {
-                    const card = document.createElement('a');
-                    card.href = `pages/funciones.html?peliculaId=${pelicula.id}`;
-                    card.className = 'poster-card';
-                    card.innerHTML = `
-                        <img src="${pelicula.urlPoster || 'https://via.placeholder.com/200x300/1a1a2e/ffffff?text=' + encodeURIComponent(pelicula.titulo)}" 
-                             alt="${pelicula.titulo}" 
-                             class="poster-img"
-                             onerror="this.src='https://via.placeholder.com/200x300/1a1a2e/ffffff?text=CineClick'">
-                        <div class="poster-info">
-                            <div class="poster-title" title="${pelicula.titulo}">${pelicula.titulo}</div>
-                            <div class="poster-genre">${pelicula.genero} • ${pelicula.clasificacion}</div>
-                        </div>
-                    `;
-                    grid.appendChild(card);
-                });
-            } catch (err) {
-                loading.style.display = 'none';
-                errorDiv.style.display = 'block';
-                errorDiv.textContent = err.message;
-            }
-        }
     </script>
+    <script src="assets/js/fechas.js"></script>
+    <script src="assets/js/cartelera.js"></script>
 </body>
 </html>
