@@ -2,10 +2,18 @@
 let butacasDisponibles = [];
 let butacasSeleccionadas = [];
 
+// Contexto con el que se llegó (película y filtros), para el botón de volver.
+const CONTEXTO = { peliculaId: '', cineId: '', fecha: '' };
+
 document.addEventListener('DOMContentLoaded', async () => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
-    
+
+    CONTEXTO.peliculaId = params.get('peliculaId') || '';
+    CONTEXTO.cineId = params.get('cineId') || '';
+    CONTEXTO.fecha = params.get('fecha') || '';
+    aplicarLinkVolver();
+
     if (!id) {
         document.getElementById('loading').style.display = 'none';
         document.getElementById('error').style.display = 'block';
@@ -28,6 +36,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Configurar botÃ³n de pagar
     document.getElementById('btnPagar').addEventListener('click', realizarCompra);
 });
+
+// Vuelve a funciones.html conservando los filtros con los que se llegó.
+function aplicarLinkVolver() {
+    const volver = document.getElementById('volverListado');
+    if (!volver) return;
+    const query = new URLSearchParams();
+    if (CONTEXTO.peliculaId) query.set('peliculaId', CONTEXTO.peliculaId);
+    if (CONTEXTO.cineId) query.set('cineId', CONTEXTO.cineId);
+    if (CONTEXTO.fecha) query.set('fecha', CONTEXTO.fecha);
+    volver.href = 'funciones.html' + (query.toString() ? '?' + query.toString() : '');
+}
 
 async function verificarLogin() {
     const user = JSON.parse(localStorage.getItem('cineclick_user') || 'null');

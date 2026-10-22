@@ -1,6 +1,19 @@
+// Filtros con los que se llegó a la página, para poder propagarlos a
+// detalle/compra y que el botón de volver los conserve.
+const FILTROS_ACTUALES = { peliculaId: '', cineId: '', fecha: '' };
+
 document.addEventListener('DOMContentLoaded', () => {
     cargarFunciones();
 });
+
+// Query para detalle.html / compra.html que arrastra el contexto (película y filtros).
+function parametrosContexto(funcionId) {
+    const params = new URLSearchParams({ id: funcionId });
+    if (FILTROS_ACTUALES.peliculaId) params.set('peliculaId', FILTROS_ACTUALES.peliculaId);
+    if (FILTROS_ACTUALES.cineId) params.set('cineId', FILTROS_ACTUALES.cineId);
+    if (FILTROS_ACTUALES.fecha) params.set('fecha', FILTROS_ACTUALES.fecha);
+    return params.toString();
+}
 
 async function cargarFunciones() {
     const funcionesList = document.getElementById('funcionesList');
@@ -18,6 +31,10 @@ async function cargarFunciones() {
         const peliculaId = params.get('peliculaId');
         const cineId = params.get('cineId');
         const fecha = params.get('fecha');
+
+        FILTROS_ACTUALES.peliculaId = peliculaId || '';
+        FILTROS_ACTUALES.cineId = cineId || '';
+        FILTROS_ACTUALES.fecha = fecha || '';
 
         // El botón de volver conserva los filtros con los que se llegó
         const volver = document.getElementById('volverCartelera');
@@ -124,8 +141,8 @@ async function cargarFunciones() {
                                     <p><strong>🌐 Idioma:</strong> ${escapeHtml(f.idioma || '')}</p>
                                     <p><strong>💰 Precio:</strong> $${(f.precioBase || 0).toLocaleString('es-AR')}</p>
                                     <div class="card-actions">
-                                        <a href="detalle.html?id=${f.id}" class="btn btn-info">Detalle</a>
-                                        <a href="compra.html?id=${f.id}" class="btn btn-success">Comprar</a>
+                                        <a href="detalle.html?${parametrosContexto(f.id)}" class="btn btn-info">Detalle</a>
+                                        <a href="compra.html?${parametrosContexto(f.id)}" class="btn btn-success">Comprar</a>
                                         ${isAdmin ? `<a href="admin-edit.html?id=${f.id}" class="btn btn-warning">Modificar</a><button onclick="eliminarFuncion(${f.id})" class="btn btn-danger">Borrar</button>` : ''}
                                     </div>
                                 </div>

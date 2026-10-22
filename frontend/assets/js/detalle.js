@@ -1,7 +1,17 @@
+// Contexto con el que se llegó (película y filtros), para propagarlo.
+const CONTEXTO = { peliculaId: '', cineId: '', fecha: '' };
+
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
-    
+
+    // El contexto (película y filtros) llega desde funciones.html y se reenvía
+    // a compra.html y al botón de volver, para no perder los filtros.
+    CONTEXTO.peliculaId = params.get('peliculaId') || '';
+    CONTEXTO.cineId = params.get('cineId') || '';
+    CONTEXTO.fecha = params.get('fecha') || '';
+    aplicarLinkVolver();
+
     if (!id) {
         document.getElementById('loading').style.display = 'none';
         document.getElementById('error').style.display = 'block';
@@ -11,6 +21,22 @@ document.addEventListener('DOMContentLoaded', () => {
     
     cargarDetalleFuncion(id);
 });
+
+// Query para volver a funciones.html con los mismos filtros.
+function queryContexto() {
+    const query = new URLSearchParams();
+    if (CONTEXTO.peliculaId) query.set('peliculaId', CONTEXTO.peliculaId);
+    if (CONTEXTO.cineId) query.set('cineId', CONTEXTO.cineId);
+    if (CONTEXTO.fecha) query.set('fecha', CONTEXTO.fecha);
+    return query;
+}
+
+function aplicarLinkVolver() {
+    const volver = document.getElementById('volverListado');
+    if (!volver) return;
+    const query = queryContexto();
+    volver.href = 'funciones.html' + (query.toString() ? '?' + query.toString() : '');
+}
 
 async function cargarDetalleFuncion(id) {
     const loading = document.getElementById('loading');
@@ -58,5 +84,9 @@ function mostrarDetalle(funcion) {
     document.getElementById('genero').textContent = '-';
     document.getElementById('clasificacion').textContent = '-';
     document.getElementById('formatos').textContent = funcion.formato.replace('_', 'D');
-    document.getElementById('btnComprar').href = `compra.html?id=${funcion.id}`;
+    const queryComprar = new URLSearchParams({ id: funcion.id });
+    if (CONTEXTO.peliculaId) queryComprar.set('peliculaId', CONTEXTO.peliculaId);
+    if (CONTEXTO.cineId) queryComprar.set('cineId', CONTEXTO.cineId);
+    if (CONTEXTO.fecha) queryComprar.set('fecha', CONTEXTO.fecha);
+    document.getElementById('btnComprar').href = `compra.html?${queryComprar.toString()}`;
 }
