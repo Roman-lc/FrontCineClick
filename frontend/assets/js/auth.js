@@ -1,5 +1,14 @@
-// Configuración de la API
-const API_BASE_URL = 'http://localhost:8080';
+// Configuración de la API.
+// Por defecto apunta al backend local, pero se puede pisar sin tocar código:
+//   1) ?api=https://otro-host:8080   en la URL
+//   2) window.CINECLICK_API (definido en un <script> antes de auth.js)
+// El valor se normaliza sin barra final para poder concatenar `${API_BASE_URL}/api/...`.
+const API_BASE_URL = (function () {
+    const porQuery = new URLSearchParams(window.location.search).get('api');
+    const porGlobal = typeof window.CINECLICK_API === 'string' ? window.CINECLICK_API : '';
+    const base = porQuery || porGlobal || 'http://localhost:8080';
+    return base.replace(/\/+$/, '');
+})();
 
 // Verificar autenticación y actualizar navbar
 function updateNavbar() {
@@ -46,7 +55,8 @@ function requireAdmin() {
     const user = JSON.parse(localStorage.getItem('cineclick_user') || 'null');
     if (!user || user.rol !== 'ADMIN') {
         alert('Acceso denegado. Solo usuarios administradores pueden acceder.');
-        window.location.href = '/frontend/index.html';
+        // Las páginas admin viven en /pages/, así que el landing está un nivel arriba.
+        window.location.href = window.location.pathname.includes('/pages/') ? '../index.html' : 'index.html';
         return false;
     }
     return true;
