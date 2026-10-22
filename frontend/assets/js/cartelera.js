@@ -59,6 +59,7 @@ async function inicializarCartelera() {
 
         renderTiraCines();
         renderTiraFechas();
+        avisarCambioDeFiltros();
 
         // Delegación: un solo listener por tira
         document.getElementById('filtroCines').addEventListener('click', event => {
@@ -67,6 +68,7 @@ async function inicializarCartelera() {
             CARTELERA.cineId = chip.dataset.valor;
             renderTiraCines();
             aplicarFiltros();
+            avisarCambioDeFiltros();
         });
 
         document.getElementById('filtroFechas').addEventListener('click', event => {
@@ -75,6 +77,7 @@ async function inicializarCartelera() {
             CARTELERA.fecha = chip.dataset.valor;
             renderTiraFechas();
             aplicarFiltros();
+            avisarCambioDeFiltros();
         });
 
         loading.style.display = 'none';
@@ -107,17 +110,23 @@ function crearChip(valor, titulo, subtitulo, activo, opciones) {
     chip.className = 'chip' + (activo ? ' active' : '') + (claseExtra ? ' ' + claseExtra : '');
     chip.dataset.valor = valor;
     chip.disabled = deshabilitado;
+    chip.setAttribute('aria-pressed', activo ? 'true' : 'false');
+    // El texto del chip está partido en dos spans, así que el nombre accesible
+    // se arma a mano ("Hoy 22/10" en vez de "Hoy22/10").
+    chip.setAttribute('aria-label', subtitulo ? `${titulo} ${subtitulo}` : titulo);
     if (title) chip.title = title;
 
     const tituloEl = document.createElement('span');
     tituloEl.className = 'chip-titulo';
     tituloEl.textContent = titulo;
+    tituloEl.setAttribute('aria-hidden', 'true');
     chip.appendChild(tituloEl);
 
     if (subtitulo) {
         const subEl = document.createElement('span');
         subEl.className = 'chip-sub';
         subEl.textContent = subtitulo;
+        subEl.setAttribute('aria-hidden', 'true');
         chip.appendChild(subEl);
     }
 
@@ -218,6 +227,13 @@ function limpiarFiltros() {
     renderTiraCines();
     renderTiraFechas();
     aplicarFiltros();
+    avisarCambioDeFiltros();
+}
+
+// Zona de resultados: se avisa a lectores de pantalla qué quedó listado.
+function avisarCambioDeFiltros() {
+    const resultado = document.getElementById('carteleraResultado');
+    if (resultado) resultado.setAttribute('aria-live', 'polite');
 }
 
 function renderPeliculas(peliculas) {
