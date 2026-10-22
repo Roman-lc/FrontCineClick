@@ -11,6 +11,7 @@ frontend/
 │   │   └── style.css
 │   └── js/
 │       ├── auth.js
+│       ├── comun.js
 │       ├── cartelera.js
 │       ├── fechas.js
 │       ├── funciones.js
@@ -44,17 +45,23 @@ frontend/
 - Presentación de CineClick
 - Acceso directo a funciones disponibles
 
+### Scripts compartidos
+- `assets/js/fechas.js`: utilidades de fecha (las fechas viajan como `yyyy-mm-dd` para no tener corrimientos de zona horaria), `funcionVigente()` (descarta canceladas y ya empezadas) y formateo de horarios en 24h
+- `assets/js/comun.js`: `escapeHtml()` para interpolar texto del backend dentro de `innerHTML`
+
 ### Cartelera con filtros
 - Bajo los banners, dos tiras de chips: **Cine** y **Fecha**
 - Cine: chip "Todos" + un chip por cine activo (con la ciudad debajo)
 - Fecha: chip "Todas" + una tira fija de 7 días desde hoy (Hoy, Mañana y los días de la semana)
-- Los días sin funciones se muestran atenuados y con borde punteado, pero se pueden seleccionar
-- Al filtrar se consulta `GET /api/funciones` y solo se muestran las películas con una función vigente en ese cine y/o fecha
+- Los días sin funciones quedan atenuados y deshabilitados, así no se llega a una cartelera vacía por fecha
+- Solo se listan películas activas **con al menos una función vigente**; al filtrar se consulta `GET /api/funciones` y se muestran las que tienen función en ese cine y/o fecha
 - Si ninguna cumple, aparece un estado vacío con el botón "Ver toda la cartelera"
-- Al entrar a una película filtrada, los filtros viajan a `funciones.html` (cine y fecha) para no perder el contexto
+- Al entrar a una película filtrada, los filtros viajan a `funciones.html` (cine y fecha) y el botón "Volver a Cartelera" los restaura
+- La página de funciones muestra una barra con los filtros activos y un botón "Ver todas las funciones" para quitarlos sin perder la película
 
 ### Funciones (Productos)
 - Listado de funciones con película, cine, sala, fecha/hora, precio, formato, idioma
+- Solo muestra funciones vigentes (no canceladas y que todavía no empezaron)
 - Opción "Ver Detalle" para ver información completa
 - Opción "Comprar" para iniciar flujo de compra
 - Para ADMIN: opciones "Modificar" y "Borrar"
