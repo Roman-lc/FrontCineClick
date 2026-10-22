@@ -19,6 +19,15 @@ async function cargarFunciones() {
         const cineId = params.get('cineId');
         const fecha = params.get('fecha');
 
+        // El botón de volver conserva los filtros con los que se llegó
+        const volver = document.getElementById('volverCartelera');
+        if (volver) {
+            const queryVolver = new URLSearchParams();
+            if (cineId) queryVolver.set('cineId', cineId);
+            if (fecha) queryVolver.set('fecha', fecha);
+            volver.href = '../index.html' + (queryVolver.toString() ? '?' + queryVolver.toString() : '');
+        }
+
         const query = new URLSearchParams();
         if (peliculaId) query.set('peliculaId', peliculaId);
         if (cineId) query.set('cineId', cineId);
@@ -48,7 +57,8 @@ async function cargarFunciones() {
                 subtitulo.textContent = `Seleccioná el horario para ${nombrePelicula}`;
             }
         }
-        
+        mostrarFiltrosActivos(cineId, fecha, filtrosTexto);
+
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error('Error al cargar funciones');
@@ -61,9 +71,9 @@ async function cargarFunciones() {
         loading.style.display = 'none';
         
         if (funciones.length === 0) {
-            const conFiltros = params.get('cineId') || params.get('fecha');
+            const conFiltros = cineId || fecha;
             funcionesList.innerHTML = conFiltros
-                ? '<div class="no-results"><p>No hay funciones con esos filtros</p><a href="../index.html" class="btn btn-secondary" style="margin-top: 1rem;">Volver a la cartelera</a></div>'
+                ? `<div class="no-results"><p>No hay funciones con esos filtros</p><a href="${volver ? volver.getAttribute('href') : '../index.html'}" class="btn btn-secondary" style="margin-top: 1rem;">Volver a la cartelera</a></div>`
                 : '<div class="no-results"><p>No hay funciones disponibles para esta película</p></div>';
             return;
         }
@@ -226,6 +236,33 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// Barra que avisa qué filtros están puestos y permite sacarlos, conservando la película.
+function mostrarFiltrosActivos(cineId, fecha, filtrosTexto) {
+    const contenedor = document.getElementById('filtrosActivos');
+    const texto = document.getElementById('filtrosActivosTexto');
+    const btnQuitar = document.getElementById('btnQuitarFiltros');
+    if (!contenedor || !texto || !btnQuitar) return;
+
+    if (!filtrosTexto) {
+        contenedor.style.display = 'none';
+        return;
+    }
+
+    texto.textContent = `Filtrando por: ${filtrosTexto}`;
+    contenedor.style.display = 'flex';
+
+    btnQuitar.onclick = () => {
+        const params = new URLSearchParams(window.location.search);
+        const query = new URLSearchParams();
+        const peliculaId = params.get('peliculaId');
+        if (peliculaId) query.set('peliculaId', peliculaId);
+
+        contenedor.style.display = 'none';
+        window.history.replaceState({}, '', query.toString() ? `?${query.toString()}` : window.location.pathname);
+        cargarFunciones();
+    };
 }
 
 // Arma el texto de los filtros que llegan desde la cartelera ("CineClick Abasto · Hoy · 22/10")

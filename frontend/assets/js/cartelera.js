@@ -20,6 +20,11 @@ async function inicializarCartelera() {
     const loading = document.getElementById('peliculasLoading');
     const errorDiv = document.getElementById('peliculasError');
 
+    // Filtros que pueden venir de la página de funciones (?cineId=..&fecha=..)
+    const params = new URLSearchParams(window.location.search);
+    CARTELERA.cineId = params.get('cineId') || '';
+    CARTELERA.fecha = params.get('fecha') || '';
+
     loading.style.display = 'block';
     errorDiv.style.display = 'none';
     grid.innerHTML = '';
@@ -41,6 +46,16 @@ async function inicializarCartelera() {
         // Solo las que tienen alguna función vigente: sin eso no hay nada que comprar.
         CARTELERA.peliculasEnCartel = CARTELERA.peliculas.filter(pelicula => idsConFuncion.has(pelicula.id));
         CARTELERA.fechasConFunciones = new Set(vigentes.map(fechaDeFuncion));
+
+        // Un filtro que ya no existe (cine borrado, fecha fuera de la tira) se descarta
+        if (CARTELERA.cineId && !CARTELERA.cines.some(cine => String(cine.id) === CARTELERA.cineId)) {
+            CARTELERA.cineId = '';
+        }
+        const hoy = hoyISO();
+        const ultimoDia = sumarDiasISO(hoy, DIAS_EN_TIRA - 1);
+        if (CARTELERA.fecha && (CARTELERA.fecha < hoy || CARTELERA.fecha > ultimoDia)) {
+            CARTELERA.fecha = '';
+        }
 
         renderTiraCines();
         renderTiraFechas();
@@ -181,6 +196,22 @@ async function aplicarFiltros() {
     }
 }
 
+// Params que viajan a funciones.html: la película y los filtros activos.
+function parametrosFiltros(peliculaId) {
+    const params = new URLSearchParams({ peliculaId });
+    if (CARTELERA.cineId) params.set('cineId', CARTELERA.cineId);
+    if (CARTELERA.fecha) params.set('fecha', CARTELERA.fecha);
+    return params;
+}
+
+// Mismo camino de vuelta: ../index.html?cineId=..&fecha=..
+function urlVolverACartelera() {
+    const params = new URLSearchParams();
+    if (CARTELERA.cineId) params.set('cineId', CARTELERA.cineId);
+    if (CARTELERA.fecha) params.set('fecha', CARTELERA.fecha);
+    return '../index.html' + (params.toString() ? '?' + params.toString() : '');
+}
+
 function limpiarFiltros() {
     CARTELERA.cineId = '';
     CARTELERA.fecha = '';
@@ -221,12 +252,8 @@ function renderPeliculas(peliculas) {
     resultado.textContent = `${peliculas.length} ${peliculas.length === 1 ? 'película' : 'películas'}`;
 
     peliculas.forEach(pelicula => {
-        const params = new URLSearchParams({ peliculaId: pelicula.id });
-        if (cineId) params.set('cineId', cineId);
-        if (fecha) params.set('fecha', fecha);
-
         const card = document.createElement('a');
-        card.href = `pages/funciones.html?${params.toString()}`;
+        card.href = `pages/funciones.html?${parametrosFiltros(pelicula.id).toString()}`;
         card.className = 'poster-card';
         card.innerHTML = `
             <img src="${pelicula.urlPoster || 'https://via.placeholder.com/200x300/1a1a2e/ffffff?text=' + encodeURIComponent(pelicula.titulo)}"
