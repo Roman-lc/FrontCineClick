@@ -80,11 +80,15 @@ function funcionVigente(funcion) {
 
 // ---------- Tiras de filtros ----------
 
-function crearChip(valor, titulo, subtitulo, activo, claseExtra) {
+function crearChip(valor, titulo, subtitulo, activo, opciones) {
+    const { claseExtra = '', deshabilitado = false, title = '' } = opciones || {};
+
     const chip = document.createElement('button');
     chip.type = 'button';
     chip.className = 'chip' + (activo ? ' active' : '') + (claseExtra ? ' ' + claseExtra : '');
     chip.dataset.valor = valor;
+    chip.disabled = deshabilitado;
+    if (title) chip.title = title;
 
     const tituloEl = document.createElement('span');
     tituloEl.className = 'chip-titulo';
@@ -112,7 +116,8 @@ function renderTiraCines() {
     });
 }
 
-// Tira fija: hoy + los próximos 6 días (los días sin funciones se atenúan).
+// Tira fija: hoy + los próximos 6 días. Los días sin funciones quedan
+// atenuados y deshabilitados, así nunca se cae en una cartelera vacía.
 function renderTiraFechas() {
     const contenedor = document.getElementById('filtroFechas');
     contenedor.innerHTML = '';
@@ -124,8 +129,11 @@ function renderTiraFechas() {
         const titulo = i === 0 ? 'Hoy' : i === 1 ? 'Mañana' : diaSemanaCorto(fecha);
         const sinFunciones = !CARTELERA.fechasConFunciones.has(fecha);
 
-        const chip = crearChip(fecha, titulo, fechaCorta(fecha), CARTELERA.fecha === fecha, sinFunciones ? 'sin-funciones' : '');
-        if (sinFunciones) chip.title = 'Sin funciones para este día';
+        const chip = crearChip(fecha, titulo, fechaCorta(fecha), CARTELERA.fecha === fecha, {
+            claseExtra: sinFunciones ? 'sin-funciones' : '',
+            deshabilitado: sinFunciones,
+            title: sinFunciones ? 'Sin funciones para este día' : ''
+        });
         contenedor.appendChild(chip);
     }
 }
