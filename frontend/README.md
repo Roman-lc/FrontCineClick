@@ -60,11 +60,11 @@ frontend/
 - La página de funciones muestra una barra con los filtros activos y un botón "Ver todas las funciones" para quitarlos sin perder la película
 
 ### Funciones (Productos)
-- Listado de funciones con película, cine, sala, fecha/hora, precio, formato, idioma
 - Solo muestra funciones vigentes (no canceladas y que todavía no empezaron)
-- Opción "Ver Detalle" para ver información completa
-- Opción "Comprar" para iniciar flujo de compra
-- Para ADMIN: opciones "Modificar" y "Borrar"
+- Sin película elegida (al entrar desde "Funciones" en el navbar) se agrupa **por película**: cada una muestra sus cines y sus horarios como chips compactos, y un botón "Ver todos los horarios"
+- Al elegir una película (`?peliculaId=`) el listado pasa a detallado **por cine**, con sala, fecha/hora, precio, formato e idioma
+- En el listado detallado: opción "Ver Detalle", "Comprar" y, para ADMIN, "Modificar" y "Borrar"
+- Los filtros de cine y fecha de la cartelera se conservan tanto en los chips de horario como en "Ver todos los horarios"
 
 ### Detalle de Función
 - Muestra sinopsis, duración, género, clasificación, formatos disponibles

@@ -72,6 +72,8 @@ async function cargarFunciones() {
                 subtitulo.textContent = `Funciones${nombrePelicula ? ' de ' + nombrePelicula : ''} · ${filtrosTexto}`;
             } else if (nombrePelicula) {
                 subtitulo.textContent = `Seleccioná el horario para ${nombrePelicula}`;
+            } else {
+                subtitulo.textContent = 'Elegí una película para ver sus cines y horarios';
             }
         }
         mostrarFiltrosActivos(cineId, fecha, filtrosTexto);
@@ -91,68 +93,17 @@ async function cargarFunciones() {
             const conFiltros = cineId || fecha;
             funcionesList.innerHTML = conFiltros
                 ? `<div class="no-results"><p>No hay funciones con esos filtros</p><a href="${volver ? volver.getAttribute('href') : '../index.html'}" class="btn btn-secondary" style="margin-top: 1rem;">Volver a la cartelera</a></div>`
-                : '<div class="no-results"><p>No hay funciones disponibles para esta película</p></div>';
+                : `<div class="no-results"><p>No hay funciones disponibles por el momento</p></div>`;
             return;
         }
-        
-        // Agrupar por cine
-        const funcionesPorCine = {};
-        funciones.forEach(funcion => {
-            const cineKey = funcion.cineId + '|' + (funcion.cineNombre || '');
-            if (!funcionesPorCine[cineKey]) {
-                funcionesPorCine[cineKey] = {
-                    id: funcion.cineId,
-                    nombre: funcion.cineNombre,
-                    funciones: []
-                };
-            }
-            funcionesPorCine[cineKey].funciones.push(funcion);
-        });
-        
-        // Ordenar cines por nombre y funciones por fecha
-        Object.values(funcionesPorCine).forEach(cine => {
-            cine.funciones.sort((a, b) => new Date(a.fechaHoraInicio) - new Date(b.fechaHoraInicio));
-        });
-        
-        // Mostrar agrupado
-        funcionesList.innerHTML = '';
-        Object.values(funcionesPorCine).forEach((cine, idx) => {
-            const cineDiv = document.createElement('div');
-            cineDiv.className = 'cine-group';
-            cineDiv.innerHTML = `
-                <div class="cine-header" onclick="window.toggleCine(${idx})">
-                    <h3>🎬 ${escapeHtml(cine.nombre || 'Cine sin nombre')}</h3>
-                    <span class="cine-toggle" id="toggle-${idx}">-</span>
-                </div>
-                <div class="cine-content" id="content-${idx}">
-                    ${cine.funciones.map(f => {
-                        const fecha = new Date(f.fechaHoraInicio);
-                        const fechaStr = fechaHoraCorta(f.fechaHoraInicio);
-                        const user = JSON.parse(localStorage.getItem('cineclick_user') || 'null');
-                        const isAdmin = user && user.rol === 'ADMIN';
-                        return `
-                            <div class="card" style="margin:0;">
-                                <div class="card-header">
-                                    <strong>Sala: ${escapeHtml(f.salaNombre || '')}</strong>
-                                    <span class="badge">${escapeHtml((f.formato || '').toString().replace('_', 'D'))}</span>
-                                </div>
-                                <div class="card-body">
-                                    <p><strong>📅 Fecha/Hora:</strong> ${fechaStr}</p>
-                                    <p><strong>🌐 Idioma:</strong> ${escapeHtml(f.idioma || '')}</p>
-                                    <p><strong>💰 Precio:</strong> $${(f.precioBase || 0).toLocaleString('es-AR')}</p>
-                                    <div class="card-actions">
-                                        <a href="detalle.html?${parametrosContexto(f.id)}" class="btn btn-info">Detalle</a>
-                                        <a href="compra.html?${parametrosContexto(f.id)}" class="btn btn-success">Comprar</a>
-                                        ${isAdmin ? `<a href="admin-edit.html?id=${f.id}" class="btn btn-warning">Modificar</a><button onclick="eliminarFuncion(${f.id})" class="btn btn-danger">Borrar</button>` : ''}
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            `;
-            funcionesList.appendChild(cineDiv);
-        });
+
+        // Sin película elegida, se lista agrupado por película (es un vistazo
+        // general). Con película, se listan los horarios por cine.
+        if (peliculaId) {
+            renderFuncionesPorCine(funcionesList, funciones);
+        } else {
+            renderFuncionesPorPelicula(funcionesList, funciones);
+        }
         
         // Actualizar navbar por si hay cambios de auth
         if (typeof updateNavbar === 'function') {
@@ -164,6 +115,134 @@ async function cargarFunciones() {
         errorDiv.style.display = 'block';
         errorDiv.textContent = err.message;
     }
+}
+
+// Listado general: una tarjeta por película, con sus cines y horarios como chips.
+// Es lo que se ve al entrar a "Funciones" sin elegir una película.
+function renderFuncionesPorPelicula(contenedor, funciones) {
+    contenedor.innerHTML = '';
+
+    // Agrupar por película
+    const porPelicula = new Map();
+    funciones.forEach(funcion => {
+        const key = funcion.peliculaId;
+        if (!porPelicula.has(key)) {
+            porPelicula.set(key, {
+                id: funcion.peliculaId,
+                titulo: funcion.peliculaTitulo || 'Película',
+                funciones: []
+            });
+        }
+        porPelicula.get(key).funciones.push(funcion);
+    });
+
+    // Ordenar películas por título, y dentro de cada una, por fecha
+    const peliculas = Array.from(porPelicula.values())
+        .sort((a, b) => a.titulo.localeCompare(b.titulo, 'es'));
+    peliculas.forEach(pelicula => {
+        pelicula.funciones.sort((a, b) => new Date(a.fechaHoraInicio) - new Date(b.fechaHoraInicio));
+    });
+
+    peliculas.forEach(pelicula => {
+        // Agrupar las funciones de la película por cine
+        const porCine = new Map();
+        pelicula.funciones.forEach(funcion => {
+            const key = funcion.cineId;
+            if (!porCine.has(key)) {
+                porCine.set(key, { nombre: funcion.cineNombre || 'Cine', funciones: [] });
+            }
+            porCine.get(key).funciones.push(funcion);
+        });
+
+        const card = document.createElement('div');
+        card.className = 'pelicula-group';
+
+        const cinesHtml = Array.from(porCine.values()).map(cine => {
+            const horarios = cine.funciones.map(f => {
+                const texto = `${fechaCorta(fechaDeFuncion(f))} · ${horaCorta(f.fechaHoraInicio)}`;
+                return `<a href="detalle.html?${parametrosContexto(f.id)}" class="chip chip-horario" title="${escapeHtml(`${f.salaNombre || ''} - ${texto}`)}">${escapeHtml(texto)}</a>`;
+            }).join('');
+            return `
+                <div class="pelicula-cine">
+                    <div class="pelicula-cine-nombre">🎬 ${escapeHtml(cine.nombre)}</div>
+                    <div class="chips">${horarios}</div>
+                </div>
+            `;
+        }).join('');
+
+        // "Ver todos los horarios" conserva los filtros de cine/fecha que estén puestos.
+        const queryTodos = new URLSearchParams({ peliculaId: pelicula.id });
+        if (FILTROS_ACTUALES.cineId) queryTodos.set('cineId', FILTROS_ACTUALES.cineId);
+        if (FILTROS_ACTUALES.fecha) queryTodos.set('fecha', FILTROS_ACTUALES.fecha);
+
+        card.innerHTML = `
+            <div class="pelicula-group-header">
+                <h3>${escapeHtml(pelicula.titulo)}</h3>
+                <a href="funciones.html?${queryTodos.toString()}" class="btn btn-secondary btn-sm">Ver todos los horarios</a>
+            </div>
+            <div class="pelicula-cines">${cinesHtml}</div>
+        `;
+        contenedor.appendChild(card);
+    });
+}
+
+// Listado detallado de una película: los horarios agrupados por cine.
+function renderFuncionesPorCine(contenedor, funciones) {
+    const funcionesPorCine = {};
+    funciones.forEach(funcion => {
+        const cineKey = funcion.cineId + '|' + (funcion.cineNombre || '');
+        if (!funcionesPorCine[cineKey]) {
+            funcionesPorCine[cineKey] = {
+                id: funcion.cineId,
+                nombre: funcion.cineNombre,
+                funciones: []
+            };
+        }
+        funcionesPorCine[cineKey].funciones.push(funcion);
+    });
+
+    // Ordenar cines por nombre y funciones por fecha
+    Object.values(funcionesPorCine).forEach(cine => {
+        cine.funciones.sort((a, b) => new Date(a.fechaHoraInicio) - new Date(b.fechaHoraInicio));
+    });
+
+    contenedor.innerHTML = '';
+    Object.values(funcionesPorCine).forEach((cine, idx) => {
+        const cineDiv = document.createElement('div');
+        cineDiv.className = 'cine-group';
+        cineDiv.innerHTML = `
+            <div class="cine-header" onclick="window.toggleCine(${idx})">
+                <h3>🎬 ${escapeHtml(cine.nombre || 'Cine sin nombre')}</h3>
+                <span class="cine-toggle" id="toggle-${idx}">-</span>
+            </div>
+            <div class="cine-content" id="content-${idx}">
+                ${cine.funciones.map(f => {
+                    const fechaStr = fechaHoraCorta(f.fechaHoraInicio);
+                    const user = JSON.parse(localStorage.getItem('cineclick_user') || 'null');
+                    const isAdmin = user && user.rol === 'ADMIN';
+                    return `
+                        <div class="card" style="margin:0;">
+                            <div class="card-header">
+                                <strong>Sala: ${escapeHtml(f.salaNombre || '')}</strong>
+                                <span class="badge">${escapeHtml((f.formato || '').toString().replace('_', 'D'))}</span>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>📅 Fecha/Hora:</strong> ${fechaStr}</p>
+                                <p><strong>🌐 Idioma:</strong> ${escapeHtml(f.idioma || '')}</p>
+                                <p><strong>💰 Precio:</strong> $${(f.precioBase || 0).toLocaleString('es-AR')}</p>
+                                <div class="card-actions">
+                                    <a href="detalle.html?${parametrosContexto(f.id)}" class="btn btn-info">Detalle</a>
+                                    <a href="compra.html?${parametrosContexto(f.id)}" class="btn btn-success">Comprar</a>
+                                    ${isAdmin ? `<a href="admin-edit.html?id=${f.id}" class="btn btn-warning">Modificar</a><button onclick="eliminarFuncion(${f.id})" class="btn btn-danger">Borrar</button>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
+        contenedor.appendChild(cineDiv);
+    });
 }
 
 // Elimina una función y recarga el listado (solo para administradores).
