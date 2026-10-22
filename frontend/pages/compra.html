@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineClick - Compra de Entradas</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand"><a href="../index.html">🎬 CineClick</a></div>
+            <button class="nav-toggle" id="navToggle">☰</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="../index.html">Inicio</a></li>
+                <li><a href="funciones.html">Funciones</a></li>
+                <li><a href="grupo.html">Grupo</a></li>
+                <li id="navAdmin" style="display:none;"><a href="admin.html">Panel Admin</a></li>
+                <li id="navLogin"><a href="login.html">Login</a></li>
+                <li id="navUser" style="display:none;"><span id="userName"></span> <a href="#" id="btnLogout">Salir</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="section">
+            <a href="funciones.html" class="btn btn-secondary" style="margin-bottom: 1rem;">← Volver al listado</a>
+            <h2>Flujo de Compra</h2>
+            
+            <div id="loginRequired" class="alert alert-warning" style="display:none; text-align: center; padding: 2rem;">
+                <h3 style="color: #856404; margin-bottom: 1rem;">⚠️ Iniciá sesión para comprar</h3>
+                <p style="margin-bottom: 1.5rem;">Para realizar la compra necesitás tener una cuenta iniciada</p>
+                <a href="login.html" class="btn btn-primary" style="padding: 0.75rem 2rem;">Ir a Iniciar Sesión</a>
+                <p style="margin-top: 1rem; font-size: 0.9rem;">¿No tenés cuenta? Podés crearla o usar el usuario demo</p>
+            </div>
+            
+            <div id="loading" class="loading">Cargando información...</div>
+            <div id="error" class="error" style="display:none;"></div>
+            
+            <div id="compraContent" style="display:none;">
+                <!-- Paso 1: Seleccionar Butacas -->
+                <div class="step">
+                    <h3>1. Seleccionar Butacas</h3>
+                    <div id="infoFuncion" class="alert alert-info" style="margin-bottom: 1rem;"></div>
+                    <div class="screen">PANTALLA</div>
+                    <div id="seatMap" class="seat-map"></div>
+                    <div class="seat-legend">
+                        <div class="legend-item">
+                            <div class="legend-box free"></div>
+                            <span>Libre</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-box vip"></div>
+                            <span>VIP</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-box selected"></div>
+                            <span>Seleccionada</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-box occupied"></div>
+                            <span>Ocupada</span>
+                        </div>
+                    </div>
+                    <div id="resumenCompra" class="resumen-compra">
+                        <p style="color: var(--text-light);">No hay butacas seleccionadas</p>
+                    </div>
+                    <p style="margin-top: 0.75rem;"><strong>Total: <span id="totalCompra">$0</span></strong></p>
+                </div>
+
+                <!-- Paso 2: Datos del Cliente -->
+                <div class="step">
+                    <h3>2. Datos del Cliente</h3>
+                    <div id="clienteLogueado" style="display:none;" class="alert alert-info">
+                        <strong>Compra como usuario logueado</strong><br>
+                        <span id="clienteLogueadoInfo"></span>
+                    </div>
+                    <div id="clienteNoLogueado" class="alert alert-warning">
+                        <strong>Debés iniciar sesión para comprar</strong><br>
+                        <a href="login.html" class="btn btn-primary" style="margin-top: 0.5rem;">Iniciar Sesión</a>
+                    </div>
+                    <div id="formCliente" style="display:none;" class="form" style="max-width: 100%;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.75rem;">
+                            <div>
+                                <label>Nombre *</label>
+                                <input type="text" id="nombre" placeholder="Tu nombre" />
+                            </div>
+                            <div>
+                                <label>Apellido *</label>
+                                <input type="text" id="apellido" placeholder="Tu apellido" />
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.75rem;">
+                            <div>
+                                <label>Email *</label>
+                                <input type="email" id="email" placeholder="tu@email.com" />
+                            </div>
+                            <div>
+                                <label>Teléfono</label>
+                                <input type="tel" id="telefono" placeholder="011-1234-5678" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 3: Pago y Confirmación -->
+                <div class="step">
+                    <h3>3. Pago</h3>
+                    <div class="form" style="max-width: 100%;">
+                        <label>Código Promoción (opcional)</label>
+                        <input type="text" id="codigoPromo" placeholder="ej: ESTRENO10" />
+                        <small style="color: var(--text-light);">Para probar: ESTRENO10 (10% descuento)</small>
+                        
+                        <label>Método de Pago *</label>
+                        <select id="metodoPago">
+                            <option value="TARJETA_CREDITO">Tarjeta de Crédito</option>
+                            <option value="TARJETA_DEBITO">Tarjeta de Débito</option>
+                            <option value="MERCADO_PAGO">Mercado Pago</option>
+                            <option value="TRANSFERENCIA">Transferencia</option>
+                        </select>
+                        
+                        <label>Datos de Pago (token) *</label>
+                        <input type="text" id="tokenPago" placeholder="ej: tok_123456789 o 'rechazar' para simular error" />
+                        <small style="color: var(--text-light);">Ingresar "rechazar" para simular pago rechazado</small>
+                        
+                        <button type="button" id="btnPagar" class="btn btn-success" style="margin-top: 0.5rem;">
+                            Pagar y Confirmar Compra
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CineClick - TPO Aplicaciones Interactivas</p>
+    </footer>
+
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/compra.js"></script>
+    <script>
+        document.getElementById('navToggle').addEventListener('click', () => {
+            document.getElementById('navMenu').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

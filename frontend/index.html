@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineClick - Inicio</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .banner-container {
+            position: relative;
+            max-width: 1200px;
+            margin: 1rem auto 2rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            height: 400px;
+        }
+        .banner-slide {
+            display: none;
+            position: relative;
+            height: 100%;
+        }
+        .banner-slide.active {
+            display: block;
+        }
+        .banner-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .banner-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(26, 26, 46, 0.95));
+            color: white;
+            padding: 2rem;
+        }
+        .banner-content h2 {
+            color: white;
+            border: none;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+        .banner-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: background 0.3s;
+        }
+        .banner-nav:hover {
+            background: rgba(233, 69, 96, 0.8);
+        }
+        .banner-prev {
+            left: 0;
+        }
+        .banner-next {
+            right: 0;
+        }
+        .banner-dots {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+        }
+        .banner-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+            cursor: pointer;
+        }
+        .banner-dot.active {
+            background: var(--primary);
+        }
+        .poster-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .poster-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: inherit;
+        }
+        .poster-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+        .poster-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            background: #ddd;
+        }
+        .poster-info {
+            padding: 0.75rem;
+        }
+        .poster-title {
+            font-weight: 600;
+            color: var(--bg-dark);
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .poster-genre {
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+        @media (max-width: 768px) {
+            .banner-container {
+                height: 250px;
+            }
+            .banner-content h2 {
+                font-size: 1.5rem;
+            }
+            .poster-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+            .poster-img {
+                height: 225px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand"><a href="index.html">🎬 CineClick</a></div>
+            <button class="nav-toggle" id="navToggle">☰</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="pages/funciones.html">Funciones</a></li>
+                <li><a href="pages/grupo.html">Grupo</a></li>
+                <li id="navAdmin" style="display:none;"><a href="pages/admin.html">Panel Admin</a></li>
+                <li id="navLogin"><a href="pages/login.html">Login</a></li>
+                <li id="navUser" style="display:none;"><span id="userName"></span> <a href="#" id="btnLogout">Salir</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Banners -->
+        <section class="section" style="padding-top: 1rem; padding-bottom: 1rem;">
+            <div class="banner-container" id="bannerContainer">
+                <div class="banner-slide active">
+                    <img src="https://image.tmdb.org/t/p/original/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" alt="Banner 1">
+                    <div class="banner-content">
+                        <h2>Interestelar</h2>
+                        <p>Una aventura épica más allá de las estrellas</p>
+                    </div>
+                </div>
+                <div class="banner-slide">
+                    <img src="https://image.tmdb.org/t/p/original/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg" alt="Banner 2">
+                    <div class="banner-content">
+                        <h2>Intensamente 2</h2>
+                        <p>Nuevas emociones llegan al centro de control</p>
+                    </div>
+                </div>
+                <button class="banner-nav banner-prev" onclick="changeBanner(-1)">❮</button>
+                <button class="banner-nav banner-next" onclick="changeBanner(1)">❯</button>
+                <div class="banner-dots" id="bannerDots"></div>
+            </div>
+        </section>
+
+        <!-- Películas -->
+        <section class="section">
+            <h2>Cartelera</h2>
+            <p style="color: var(--text-light); margin-bottom: 1rem;">Seleccioná una película para ver las funciones disponibles</p>
+            <div id="peliculasLoading" class="loading">Cargando películas...</div>
+            <div id="peliculasError" class="error" style="display:none;"></div>
+            <div id="peliculasGrid" class="poster-grid"></div>
+        </section>
+
+        <section class="section">
+            <h2>¿Cómo comprar?</h2>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Elegí tu película</h3>
+                    <p>Seleccioná la película de tu interés desde la cartelera</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Seleccioná función y butacas</h3>
+                    <p>Elegí horario, cine, sala y tus asientos preferidos</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Pagá y confirmá</h3>
+                    <p>Completá tus datos, aplicá promoción y finalizá la compra</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CineClick - TPO Aplicaciones Interactivas</p>
+    </footer>
+
+    <script src="assets/js/auth.js"></script>
+    <script>
+        document.getElementById('navToggle').addEventListener('click', () => {
+            document.getElementById('navMenu').classList.toggle('active');
+        });
+        setTimeout(() => { if (typeof updateNavbar === 'function') updateNavbar(); }, 100);
+
+        let currentBanner = 0;
+        const banners = document.querySelectorAll('.banner-slide');
+        const dotsContainer = document.getElementById('bannerDots');
+        
+        banners.forEach((_, i) => {
+            const dot = document.createElement('button');
+            dot.className = 'banner-dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goToBanner(i);
+            dotsContainer.appendChild(dot);
+        });
+        
+        function changeBanner(n) {
+            banners[currentBanner].classList.remove('active');
+            document.querySelectorAll('.banner-dot')[currentBanner].classList.remove('active');
+            currentBanner = (currentBanner + n + banners.length) % banners.length;
+            banners[currentBanner].classList.add('active');
+            document.querySelectorAll('.banner-dot')[currentBanner].classList.add('active');
+        }
+        
+        function goToBanner(n) {
+            banners[currentBanner].classList.remove('active');
+            document.querySelectorAll('.banner-dot')[currentBanner].classList.remove('active');
+            currentBanner = n;
+            banners[currentBanner].classList.add('active');
+            document.querySelectorAll('.banner-dot')[currentBanner].classList.add('active');
+        }
+        
+        setInterval(() => changeBanner(1), 5000);
+        
+        // Cargar películas
+        document.addEventListener('DOMContentLoaded', cargarPeliculas);
+        
+        async function cargarPeliculas() {
+            const grid = document.getElementById('peliculasGrid');
+            const loading = document.getElementById('peliculasLoading');
+            const errorDiv = document.getElementById('peliculasError');
+            
+            try {
+                loading.style.display = 'block';
+                errorDiv.style.display = 'none';
+                grid.innerHTML = '';
+                
+                const response = await fetch('http://localhost:8080/api/peliculas');
+                if (!response.ok) throw new Error('Error al cargar películas');
+                const peliculas = await response.json();
+                
+                loading.style.display = 'none';
+                
+                if (peliculas.length === 0) {
+                    grid.innerHTML = '<p style="color: var(--text-light);">No hay películas disponibles</p>';
+                    return;
+                }
+                
+                peliculas.filter(p => p.activa !== false).forEach(pelicula => {
+                    const card = document.createElement('a');
+                    card.href = `pages/funciones.html?peliculaId=${pelicula.id}`;
+                    card.className = 'poster-card';
+                    card.innerHTML = `
+                        <img src="${pelicula.urlPoster || 'https://via.placeholder.com/200x300/1a1a2e/ffffff?text=' + encodeURIComponent(pelicula.titulo)}" 
+                             alt="${pelicula.titulo}" 
+                             class="poster-img"
+                             onerror="this.src='https://via.placeholder.com/200x300/1a1a2e/ffffff?text=CineClick'">
+                        <div class="poster-info">
+                            <div class="poster-title" title="${pelicula.titulo}">${pelicula.titulo}</div>
+                            <div class="poster-genre">${pelicula.genero} • ${pelicula.clasificacion}</div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch (err) {
+                loading.style.display = 'none';
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = err.message;
+            }
+        }
+    </script>
+</body>
+</html>

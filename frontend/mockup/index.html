@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineClick - Mockup</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand">🎬 CineClick</div>
+            <ul class="nav-menu">
+                <li><a href="#home">Inicio</a></li>
+                <li><a href="#funciones">Funciones</a></li>
+                <li><a href="#grupo">Grupo</a></li>
+                <li><a href="#admin">Panel Admin</a></li>
+                <li><a href="#login">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- LANDING PAGE -->
+        <section id="home" class="section">
+            <div class="hero">
+                <h1>Bienvenido a CineClick</h1>
+                <p>Compra tus entradas de cine online</p>
+                <a href="#funciones" class="btn-primary">Ver Funciones</a>
+            </div>
+        </section>
+
+        <!-- FUNCIONES LISTADO -->
+        <section id="funciones" class="section">
+            <h2>Funciones Disponibles</h2>
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>Interestelar</strong> <span class="badge">IMAX</span>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Cine:</strong> CineClick Abasto</p>
+                        <p><strong>Sala:</strong> Sala IMAX</p>
+                        <p><strong>Fecha/Hora:</strong> 2026-10-21 20:30</p>
+                        <p><strong>Idioma:</strong> Subtitulada</p>
+                        <p><strong>Precio:</strong> $6500</p>
+                        <div class="card-actions">
+                            <a href="#detalle" class="btn">Ver Detalle</a>
+                            <a href="#compra" class="btn btn-success">Comprar</a>
+                            <!-- Solo visible para admin -->
+                            <a href="#admin-edit" class="btn btn-warning">Modificar</a>
+                            <a href="#admin-delete" class="btn btn-danger">Borrar</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <strong>Intensamente 2</strong> <span class="badge">2D</span>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Cine:</strong> CineClick Abasto</p>
+                        <p><strong>Sala:</strong> Sala 1</p>
+                        <p><strong>Fecha/Hora:</strong> 2026-10-21 18:00</p>
+                        <p><strong>Idioma:</strong> Castellano</p>
+                        <p><strong>Precio:</strong> $4200</p>
+                        <div class="card-actions">
+                            <a href="#detalle" class="btn">Ver Detalle</a>
+                            <a href="#compra" class="btn btn-success">Comprar</a>
+                            <a href="#admin-edit" class="btn btn-warning">Modificar</a>
+                            <a href="#admin-delete" class="btn btn-danger">Borrar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DETALLE FUNCION -->
+        <section id="detalle" class="section">
+            <h2>Detalle de Función</h2>
+            <div class="detail-card">
+                <h3>Interestelar - IMAX</h3>
+                <p><strong>Sinopsis:</strong> Un grupo de exploradores viaja a través de un agujero de gusano...</p>
+                <p><strong>Duración:</strong> 169 min</p>
+                <p><strong>Género:</strong> Ciencia Ficción</p>
+                <p><strong>Clasificación:</strong> +13</p>
+                <p><strong>Cine:</strong> CineClick Abasto - Sala IMAX</p>
+                <p><strong>Horario:</strong> 2026-10-21 20:30</p>
+                <p><strong>Precio Base:</strong> $6500</p>
+                <p><strong>Butacas Disponibles:</strong> Ver en proceso de compra</p>
+                <div class="actions">
+                    <a href="#compra" class="btn btn-success">Ir a Comprar</a>
+                    <a href="#funciones" class="btn">Volver al Listado</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- COMPRA -->
+        <section id="compra" class="section">
+            <h2>Flujo de Compra</h2>
+            <div class="compra-flow">
+                <div class="step">
+                    <h3>1. Seleccionar Butacas</h3>
+                    <div class="screen">PANTALLA</div>
+                    <div class="seat-map">
+                        <div class="row">A [VIP] [ ] [ ] [ ] [ ] [ ] [ ] [ ]</div>
+                        <div class="row">B [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]</div>
+                        <div class="row">C [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]</div>
+                    </div>
+                    <p><small>VIP = $6500 | Normal = $6500 (precio base)</small></p>
+                </div>
+                <div class="step">
+                    <h3>2. Datos del Cliente</h3>
+                    <form class="form">
+                        <input type="text" placeholder="Nombre" />
+                        <input type="text" placeholder="Apellido" />
+                        <input type="email" placeholder="Email" />
+                        <input type="tel" placeholder="Teléfono" />
+                    </form>
+                </div>
+                <div class="step">
+                    <h3>3. Pago</h3>
+                    <form class="form">
+                        <input type="text" placeholder="Código Promoción (opcional)" />
+                        <select>
+                            <option>Tarjeta de Crédito</option>
+                            <option>Tarjeta de Débito</option>
+                            <option>Mercado Pago</option>
+                        </select>
+                        <input type="text" placeholder="Datos de Pago (token)" />
+                        <button type="button" class="btn btn-success">Pagar y Confirmar Compra</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANEL ADMIN -->
+        <section id="admin" class="section">
+            <h2>Panel de Administrador</h2>
+            <p class="admin-notice">⚠️ Solo acceso para usuarios con rol ADMIN</p>
+            <div class="admin-actions">
+                <a href="#admin-create" class="btn btn-primary">Agregar Nueva Función</a>
+            </div>
+            <h3>Administrar Funciones</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Película</th>
+                        <th>Cine/Sala</th>
+                        <th>Fecha/Hora</th>
+                        <th>Precio</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Interestelar</td>
+                        <td>CineClick Abasto / Sala IMAX</td>
+                        <td>2026-10-21 20:30</td>
+                        <td>$6500</td>
+                        <td>
+                            <a href="#admin-edit" class="btn btn-sm btn-warning">Modificar</a>
+                            <a href="#admin-delete" class="btn btn-sm btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- CREAR/EDITAR FUNCION -->
+        <section id="admin-create" class="section">
+            <h2>Crear Nueva Función (Admin)</h2>
+            <form class="form form-large">
+                <label>Película</label>
+                <select>
+                    <option>Interestelar</option>
+                    <option>Intensamente 2</option>
+                </select>
+                <label>Cine</label>
+                <select>
+                    <option>CineClick Abasto</option>
+                </select>
+                <label>Sala</label>
+                <select>
+                    <option>Sala IMAX</option>
+                    <option>Sala 1</option>
+                </select>
+                <label>Fecha y Hora</label>
+                <input type="datetime-local" />
+                <label>Precio Base</label>
+                <input type="number" placeholder="6500" />
+                <label>Formato</label>
+                <select>
+                    <option>DOS_D</option>
+                    <option>TRES_D</option>
+                    <option>IMAX</option>
+                </select>
+                <label>Idioma</label>
+                <input type="text" placeholder="Subtitulada/Castellano" />
+                <button type="button" class="btn btn-primary">Guardar Función</button>
+                <a href="#admin" class="btn">Cancelar</a>
+            </form>
+        </section>
+
+        <!-- GRUPO -->
+        <section id="grupo" class="section">
+            <h2>Integrantes del Grupo</h2>
+            <p class="company-desc">Compañía: CineClick - Aplicaciones Interactivas - TPO</p>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="avatar">👤</div>
+                    <h3>Juan Pérez</h3>
+                    <p>Desarrollador Backend</p>
+                </div>
+                <div class="team-card">
+                    <div class="avatar">👤</div>
+                    <h3>María González</h3>
+                    <p>Desarrolladora Frontend</p>
+                </div>
+                <div class="team-card">
+                    <div class="avatar">👤</div>
+                    <h3>Carlos Rodríguez</h3>
+                    <p>Analista de Sistemas</p>
+                </div>
+                <div class="team-card">
+                    <div class="avatar">👤</div>
+                    <h3>Laura Martínez</h3>
+                    <p>Diseñadora UX/UI</p>
+                </div>
+            </div>
+            <div class="company-info">
+                <h3>Descripción de la Compañía</h3>
+                <p>CineClick es una plataforma de venta de entradas de cine online desarrollada como Trabajo Práctico Obligatorio para la materia Aplicaciones Interactivas. 
+                Permite a los usuarios consultar funciones, seleccionar butacas, aplicar promociones y realizar compras de manera ágil y segura.</p>
+            </div>
+        </section>
+
+        <!-- LOGIN -->
+        <section id="login" class="section">
+            <h2>Login</h2>
+            <form class="form form-center">
+                <input type="email" placeholder="Email" />
+                <input type="password" placeholder="Contraseña" />
+                <button type="button" class="btn btn-primary">Iniciar Sesión</button>
+                <p><small>Admin demo: admin@cineclick.com / admin123</small></p>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CineClick - TPO Aplicaciones Interactivas</p>
+    </footer>
+</body>
+</html>

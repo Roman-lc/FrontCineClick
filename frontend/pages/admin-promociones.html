@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineClick - Admin Promociones</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand"><a href="../index.html">🎬 CineClick</a></div>
+            <button class="nav-toggle" id="navToggle">☰</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="../index.html">Inicio</a></li>
+                <li><a href="funciones.html">Funciones</a></li>
+                <li><a href="grupo.html">Grupo</a></li>
+                <li id="navAdmin" style="display:none;"><a href="admin.html">Panel Admin</a></li>
+                <li id="navLogin"><a href="login.html">Login</a></li>
+                <li id="navUser" style="display:none;"><span id="userName"></span> <a href="#" id="btnLogout">Salir</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="section">
+            <a href="admin.html" class="btn btn-secondary" style="margin-bottom: 1rem;">← Volver al Panel</a>
+            <h2>Gestionar Promociones</h2>
+            <div class="admin-actions">
+                <button class="btn btn-primary" onclick="mostrarFormulario()">+ Agregar Promoción</button>
+            </div>
+            <div id="formContainer" style="display:none; margin-bottom: 1rem;">
+                <div class="form form-large">
+                    <input type="hidden" id="promoId">
+                    <label>Código *</label>
+                    <input type="text" id="codigo">
+                    <label>Descripción *</label>
+                    <input type="text" id="descripcion">
+                    <label>Porcentaje de Descuento *</label>
+                    <input type="number" id="porcentajeDescuento" step="0.01">
+                    <label>Fecha Inicio *</label>
+                    <input type="date" id="fechaInicio">
+                    <label>Fecha Fin *</label>
+                    <input type="date" id="fechaFin">
+                    <label style="font-weight: normal;"><input type="checkbox" id="activa" checked> Activa</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-primary" onclick="guardarPromo()">Guardar</button>
+                        <button class="btn btn-secondary" onclick="ocultarFormulario()">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+            <div id="loading" class="loading">Cargando promociones...</div>
+            <div id="error" class="error" style="display:none;"></div>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Código</th>
+                            <th>Descripción</th>
+                            <th>Descuento</th>
+                            <th>Vigencia</th>
+                            <th>Activa</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CineClick - TPO Aplicaciones Interactivas</p>
+    </footer>
+
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/admin-promociones.js"></script>
+    <script>
+        document.getElementById('navToggle').addEventListener('click', () => {
+            document.getElementById('navMenu').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

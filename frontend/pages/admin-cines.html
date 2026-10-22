@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineClick - Admin Cines</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand"><a href="../index.html">🎬 CineClick</a></div>
+            <button class="nav-toggle" id="navToggle">☰</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="../index.html">Inicio</a></li>
+                <li><a href="funciones.html">Funciones</a></li>
+                <li><a href="grupo.html">Grupo</a></li>
+                <li id="navAdmin" style="display:none;"><a href="admin.html">Panel Admin</a></li>
+                <li id="navLogin"><a href="login.html">Login</a></li>
+                <li id="navUser" style="display:none;"><span id="userName"></span> <a href="#" id="btnLogout">Salir</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="section">
+            <a href="admin.html" class="btn btn-secondary" style="margin-bottom: 1rem;">← Volver al Panel</a>
+            <h2>Gestionar Cines</h2>
+            <div class="admin-actions">
+                <button class="btn btn-primary" onclick="mostrarFormularioCine()">+ Agregar Cine</button>
+            </div>
+            <div id="formCine" style="display:none; margin-bottom: 1rem;">
+                <div class="form form-large">
+                    <input type="hidden" id="cineId">
+                    <label>Nombre *</label>
+                    <input type="text" id="cineNombre">
+                    <label>Dirección *</label>
+                    <input type="text" id="cineDireccion">
+                    <label>Ciudad *</label>
+                    <input type="text" id="cineCiudad">
+                    <label>Teléfono</label>
+                    <input type="text" id="cineTelefono">
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-primary" onclick="guardarCine()">Guardar Cine</button>
+                        <button class="btn btn-secondary" onclick="document.getElementById('formCine').style.display='none'">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+            <div id="loading" class="loading">Cargando cines...</div>
+            <div id="error" class="error" style="display:none;"></div>
+            <div id="cinesList"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CineClick - TPO Aplicaciones Interactivas</p>
+    </footer>
+
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/admin-cines.js"></script>
+    <script>
+        document.getElementById('navToggle').addEventListener('click', () => {
+            document.getElementById('navMenu').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineClick - Admin Películas</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand"><a href="../index.html">🎬 CineClick</a></div>
+            <button class="nav-toggle" id="navToggle">☰</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="../index.html">Inicio</a></li>
+                <li><a href="funciones.html">Funciones</a></li>
+                <li><a href="grupo.html">Grupo</a></li>
+                <li id="navAdmin" style="display:none;"><a href="admin.html">Panel Admin</a></li>
+                <li id="navLogin"><a href="login.html">Login</a></li>
+                <li id="navUser" style="display:none;"><span id="userName"></span> <a href="#" id="btnLogout">Salir</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="section">
+            <a href="admin.html" class="btn btn-secondary" style="margin-bottom: 1rem;">← Volver al Panel</a>
+            <h2>Gestionar Películas</h2>
+            <div class="admin-actions">
+                <button class="btn btn-primary" onclick="mostrarFormulario()">+ Agregar Película</button>
+            </div>
+            <div id="formContainer" style="display:none; margin-bottom: 1rem;">
+                <div class="form form-large">
+                    <input type="hidden" id="peliculaId">
+                    <label>Título *</label>
+                    <input type="text" id="titulo">
+                    <label>Sinopsis *</label>
+                    <textarea id="sinopsis" rows="3"></textarea>
+                    <label>Duración (minutos) *</label>
+                    <input type="number" id="duracionMinutos">
+                    <label>Clasificación *</label>
+                    <input type="text" id="clasificacion" placeholder="ATP, +13, etc.">
+                    <label>Género *</label>
+                    <select id="genero">
+                        <option value="ACCION">ACCIÓN</option>
+                        <option value="COMEDIA">COMEDIA</option>
+                        <option value="DRAMA">DRAMA</option>
+                        <option value="TERROR">TERROR</option>
+                        <option value="CIENCIA_FICCION">CIENCIA FICCIÓN</option>
+                        <option value="ANIMACION">ANIMACIÓN</option>
+                        <option value="ROMANCE">ROMANCE</option>
+                        <option value="THRILLER">THRILLER</option>
+                    </select>
+                    <label>Idioma *</label>
+                    <input type="text" id="idioma" placeholder="Castellano / Subtitulada">
+                    <label>URL Poster</label>
+                    <input type="text" id="urlPoster">
+                    <label>Fecha de Estreno</label>
+                    <input type="date" id="fechaEstreno">
+                    <label>Formatos Disponibles *</label>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <label style="font-weight: normal;"><input type="checkbox" value="DOS_D" class="formatoChk"> 2D</label>
+                        <label style="font-weight: normal;"><input type="checkbox" value="TRES_D" class="formatoChk"> 3D</label>
+                        <label style="font-weight: normal;"><input type="checkbox" value="IMAX" class="formatoChk"> IMAX</label>
+                    </div>
+                    <label style="font-weight: normal;"><input type="checkbox" id="activa" checked> Activa</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-primary" onclick="guardarPelicula()">Guardar</button>
+                        <button class="btn btn-secondary" onclick="ocultarFormulario()">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+            <div id="loading" class="loading">Cargando películas...</div>
+            <div id="error" class="error" style="display:none;"></div>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Título</th>
+                            <th>Género</th>
+                            <th>Duración</th>
+                            <th>Clasificación</th>
+                            <th>Activa</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CineClick - TPO Aplicaciones Interactivas</p>
+    </footer>
+
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/admin-peliculas.js"></script>
+    <script>
+        document.getElementById('navToggle').addEventListener('click', () => {
+            document.getElementById('navMenu').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

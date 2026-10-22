@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineClick - Detalle de Función</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand"><a href="../index.html">🎬 CineClick</a></div>
+            <button class="nav-toggle" id="navToggle">☰</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="../index.html">Inicio</a></li>
+                <li><a href="funciones.html">Funciones</a></li>
+                <li><a href="grupo.html">Grupo</a></li>
+                <li id="navAdmin" style="display:none;"><a href="admin.html">Panel Admin</a></li>
+                <li id="navLogin"><a href="login.html">Login</a></li>
+                <li id="navUser" style="display:none;"><span id="userName"></span> <a href="#" id="btnLogout">Salir</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="section">
+            <a href="funciones.html" class="btn btn-secondary" style="margin-bottom: 1rem;">← Volver al listado</a>
+            
+            <div id="loading" class="loading">Cargando detalle...</div>
+            <div id="error" class="error" style="display:none;"></div>
+            
+            <div id="detailDiv" class="detail-card" style="display:none;">
+                <h2 id="peliculaTitulo"></h2>
+                
+                <div style="margin-bottom: 1rem;">
+                    <p><strong>📝 Sinopsis:</strong></p>
+                    <p id="sinopsis" style="text-align: justify;"></p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.75rem;">
+                    <p><strong>⏱️ Duración:</strong> <span id="duracion"></span></p>
+                    <p><strong>🎭 Género:</strong> <span id="genero"></span></p>
+                    <p><strong>🔞 Clasificación:</strong> <span id="clasificacion"></span></p>
+                    <p><strong>🎞️ Formato:</strong> <span id="formatos"></span></p>
+                    <p><strong>🌐 Idioma de la función:</strong> <span id="idioma"></span></p>
+                    <p><strong>💰 Precio Base:</strong> <span id="precio" style="color: var(--success); font-weight: 600;"></span></p>
+                </div>
+                
+                <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+                
+                <h3 style="margin-bottom: 0.75rem;">📍 Información de la Función</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.75rem;">
+                    <p><strong>🏢 Cine:</strong> <span id="cine"></span></p>
+                    <p><strong>🏛️ Sala:</strong> <span id="sala"></span></p>
+                    <p><strong>📅 Fecha y Hora:</strong> <span id="fechaHora"></span></p>
+                </div>
+                
+                <div class="actions" style="margin-top: 1.5rem;">
+                    <a id="btnComprar" href="#" class="btn btn-success">🎟️ Comprar Entradas</a>
+                    <a href="funciones.html" class="btn btn-secondary">Volver al Listado</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CineClick - TPO Aplicaciones Interactivas</p>
+    </footer>
+
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/detalle.js"></script>
+    <script>
+        document.getElementById('navToggle').addEventListener('click', () => {
+            document.getElementById('navMenu').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
