@@ -1,4 +1,4 @@
-﻿let funcionActual = null;
+let funcionActual = null;
 let butacasDisponibles = [];
 let butacasSeleccionadas = [];
 
@@ -55,7 +55,7 @@ async function verificarLogin() {
         document.getElementById('clienteNoLogueado').style.display = 'none';
         document.getElementById('formCliente').style.display = 'none';
         const nombreCompleto = (user.nombre || user.email || '').trim();
-        document.getElementById('clienteLogueadoInfo').innerHTML = `Nombre: ${nombreCompleto}<br>Email: ${user.email}<br>Rol: ${user.rol || ''}`;
+        document.getElementById('clienteLogueadoInfo').innerHTML = `Nombre: ${escapeHtml(nombreCompleto)}<br>Email: ${escapeHtml(user.email)}<br>Rol: ${escapeHtml(user.rol || '')}`;
         window.clienteLogueado = {
             nombre: nombreCompleto,
             email: (user.email || '').trim(),
@@ -69,37 +69,18 @@ async function verificarLogin() {
                 const cliente = clientes.find(c => c.email && c.email.toLowerCase() === (user.email || '').toLowerCase());
                 if (cliente) {
                     window.clienteLogueado.clienteId = cliente.id;
-                } else if (user.rol !== 'ADMIN') {
-                    try {
-                        const parts = (user.nombre || user.email || 'Usuario').split(/\s+/).filter(p=>p);
-                        const respCrear = await fetch(`${API_BASE_URL}/api/clientes`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                nombre: parts[0] || 'Usuario',
-                                apellido: parts.slice(1).join(' ') || parts[0] || 'Cliente',
-                                email: user.email,
-                                password: '123456',
-                                telefono: null
-                            })
-                        });
-                        if (respCrear.ok) {
-                            const nuevoCliente = await respCrear.json();
-                            window.clienteLogueado.clienteId = nuevoCliente.id;
-                        } else if (respCrear.status === 409) {
-                            const resp2 = await fetch(`${API_BASE_URL}/api/clientes`);
-                            if (resp2.ok) {
-                                const clientes2 = await resp2.json();
-                                const cliente2 = clientes2.find(c => c.email && c.email.toLowerCase() === (user.email || '').toLowerCase());
-                                if (cliente2) window.clienteLogueado.clienteId = cliente2.id;
-                            }
-                        }
-                    } catch(e2) {}
                 } else {
-                    // Es admin sin cliente asociado
+                    // La cuenta existe para login pero no tiene perfil de cliente.
+                    // No se crea automaticamente: antes se hacia con password '123456',
+                    // que dejaba una cuenta de cliente con contrasena fija y desconocida.
                     window.clienteLogueado.sinCliente = true;
                     const info = document.getElementById('clienteLogueadoInfo');
-                    if (info) info.innerHTML += '<br><span style="color: var(--danger);">âš ï¸ Los administradores no pueden comprar como cliente</span>';
+                    if (info) {
+                        const motivo = user.rol === 'ADMIN'
+                            ? 'Los administradores no pueden comprar como cliente.'
+                            : 'Tu cuenta no tiene perfil de cliente. Cerra sesion y registrate desde el formulario de login.';
+                        info.innerHTML += '<br><span style="color: var(--danger);">\u26A0\uFE0F ' + escapeHtml(motivo) + '</span>';
+                    }
                 }
             }
         } catch(e) {}
@@ -129,7 +110,12 @@ async function cargarFuncionYButacas(id) {
         const respFuncion = await fetch(`${API_BASE_URL}/api/funciones/${id}`);
         if (!respFuncion.ok) throw new Error('Error al cargar funciÃ³n');
         funcionActual = await respFuncion.json();
-        
+
+        // No se puede comprar para una funciÃ³n vencida o cancelada.
+        if (!funcionVigente(funcionActual)) {
+            throw new Error('Esta funciÃ³n ya no estÃ¡ disponible (pasada o cancelada).');
+        }
+
         // Cargar butacas disponibles
         const respButacas = await fetch(`${API_BASE_URL}/api/funciones/${id}/butacas-disponibles`);
         if (!respButacas.ok) throw new Error('Error al cargar butacas disponibles');
@@ -189,18 +175,24 @@ function mostrarMapaButacas() {
         
         // Ordenar butacas por nÃºmero
         butacasPorFila[fila].sort((a, b) => a.numero - b.numero).forEach(butaca => {
+            // disponible === false son las ya vendidas para esta funciÃ³n.
+            const ocupada = butaca.disponible === false;
             const seat = document.createElement('div');
-            seat.className = `seat ${butaca.tipo === 'VIP' ? 'vip' : ''}`;
+            seat.className = `seat ${butaca.tipo === 'VIP' ? 'vip' : ''}${ocupada ? ' occupied' : ''}`;
             seat.textContent = butaca.numero;
             seat.dataset.butacaId = butaca.id;
             seat.dataset.fila = butaca.fila;
             seat.dataset.numero = butaca.numero;
             seat.dataset.tipo = butaca.tipo;
-            seat.title = `${butaca.fila}${butaca.numero} - ${butaca.tipo}`;
-            
-            seat.addEventListener('click', () => {
-                toggleButaca(seat, butaca);
-            });
+            seat.title = ocupada
+                ? `${butaca.fila}${butaca.numero} - ocupada`
+                : `${butaca.fila}${butaca.numero} - ${butaca.tipo}`;
+
+            if (!ocupada) {
+                seat.addEventListener('click', () => {
+                    toggleButaca(seat, butaca);
+                });
+            }
             
             rowDiv.appendChild(seat);
         });
@@ -210,6 +202,11 @@ function mostrarMapaButacas() {
 }
 
 function toggleButaca(seatElement, butaca) {
+    // Las butacas ocupadas no se pueden seleccionar.
+    if (butaca.disponible === false || seatElement.classList.contains('occupied')) {
+        return;
+    }
+
     const butacaId = butaca.id;
     const index = butacasSeleccionadas.findIndex(b => b.id === butacaId);
     
@@ -306,7 +303,7 @@ async function realizarCompra() {
         const compraRequest = {
             clienteId: window.clienteLogueado.clienteId,
             funcionId: funcionActual.id,
-            butacaIds: butacasSeleccionadas.map(b => b.id),
+            butacasIds: butacasSeleccionadas.map(b => b.id),
             codigoPromocion: codigoPromo || null
         };
         console.log('Compra request:', compraRequest);
@@ -350,7 +347,18 @@ async function realizarCompra() {
         
         const pago = await respPago.json();
         
-        // Ã‰xito
+        // Ã‰xito: refrescar las butacas para no dejar lugares fantasma si el
+        // usuario vuelve atrÃ¡s o compra otra vez en la misma sesiÃ³n.
+        try {
+            const respRefresco = await fetch(`${API_BASE_URL}/api/funciones/${funcionActual.id}/butacas-disponibles`);
+            if (respRefresco.ok) {
+                butacasDisponibles = await respRefresco.json();
+                butacasSeleccionadas = [];
+                if (typeof mostrarMapaButacas === 'function') mostrarMapaButacas();
+                if (typeof actualizarResumen === 'function') actualizarResumen();
+            }
+        } catch (e) {}
+
         alert(`Â¡Compra confirmada!\n\nCompra NÂ°: ${compra.id}\nPago NÂ°: ${pago.id}\nEstado: ${pago.estado}\nTotal: $${pago.montoPagado || compra.total}`);
         window.location.href = '../index.html';
         
