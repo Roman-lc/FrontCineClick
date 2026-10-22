@@ -72,8 +72,14 @@ frontend/
 - Guarda usuario en localStorage
 - Demo: admin@cineclick.com / admin123
 
+### Crear Cuenta
+- Formulario de registro contra `/api/clientes` (nombre, apellido, email, contraseña y teléfono opcional)
+- Validaciones en el navegador: campos obligatorios, contraseña de mínimo 4 caracteres y confirmación coincidente
+- Muestra el error del backend si el email ya está registrado (409)
+- Al crearse la cuenta inicia sesión automáticamente y redirige al inicio
+
 ### Grupo / Compañía
-- Integrantes aleatorios (4 personas)
+- Integrantes del grupo (Rodrigo, Gianluca, Lucas y Roman)
 - Descripción de CineClick
 
 ## Cómo usarlo
@@ -86,8 +92,13 @@ frontend/
 La API queda en `http://localhost:8080`
 
 2. Abrir frontend:
-- Abrir `frontend/index.html` directamente en navegador (file://) o con Live Server
-- Recomendado usar Live Server para evitar problemas de CORS
+   - Con el servidor incluido (recomendado, sin dependencias):
+     ```bash
+     node dev-server.mjs        # http://localhost:5173
+     node dev-server.mjs 3000   # otro puerto
+     ```
+   - O con Live Server / cualquier servidor estatico
+   - Evitar abrir con `file://`: el navegador bloquea las llamadas a la API
 
 ## Notas
 

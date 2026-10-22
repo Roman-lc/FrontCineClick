@@ -24,8 +24,15 @@
 
     <main>
         <section class="section">
-            <h2>Iniciar Sesión</h2>
-            <div class="form form-center">
+            <h2>Acceso a CineClick</h2>
+
+            <div class="tabs">
+                <button type="button" class="tab-btn active" id="tabLogin" data-panel="panelLogin">Iniciar Sesión</button>
+                <button type="button" class="tab-btn" id="tabRegistro" data-panel="panelRegistro">Crear Cuenta</button>
+            </div>
+
+            <!-- Panel: Iniciar Sesión -->
+            <div class="form form-center" id="panelLogin">
                 <label>Email</label>
                 <input type="email" id="email" placeholder="usuario@email.com" />
                 
@@ -36,10 +43,39 @@
                 
                 <button type="button" id="btnLogin" class="btn btn-primary">Iniciar Sesión</button>
                 
+                <p class="form-hint">¿No tenés cuenta? <a href="#" id="linkRegistro">Crear una</a></p>
+                
                 <div class="alert alert-info" style="margin-top: 0.5rem;">
                     <strong>Usuario demo:</strong><br>
                     Admin: admin@cineclick.com / admin123
                 </div>
+            </div>
+
+            <!-- Panel: Crear Cuenta -->
+            <div class="form form-center" id="panelRegistro" style="display:none;">
+                <label>Nombre</label>
+                <input type="text" id="regNombre" placeholder="Juan" maxlength="80" />
+                
+                <label>Apellido</label>
+                <input type="text" id="regApellido" placeholder="Pérez" maxlength="80" />
+                
+                <label>Email</label>
+                <input type="email" id="regEmail" placeholder="usuario@email.com" maxlength="120" />
+                
+                <label>Contraseña</label>
+                <input type="password" id="regPassword" placeholder="Mínimo 4 caracteres" />
+                
+                <label>Confirmar contraseña</label>
+                <input type="password" id="regPasswordConfirm" placeholder="Repetí la contraseña" />
+                
+                <label>Teléfono <span class="form-hint-inline">(opcional)</span></label>
+                <input type="tel" id="regTelefono" placeholder="11-4000-1000" maxlength="40" />
+                
+                <div id="registroErrorDiv" class="alert alert-danger" style="display:none;"></div>
+                
+                <button type="button" id="btnRegistro" class="btn btn-primary">Crear Cuenta</button>
+                
+                <p class="form-hint">¿Ya tenés cuenta? <a href="#" id="linkLogin">Iniciar sesión</a></p>
             </div>
         </section>
     </main>
