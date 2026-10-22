@@ -134,15 +134,8 @@ async function cargarFuncionYButacas(id) {
 }
 
 function mostrarInfoFuncion() {
-    const fecha = new Date(funcionActual.fechaHoraInicio);
-    const fechaStr = fecha.toLocaleString('es-AR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-    
+    const fechaStr = fechaHoraCorta(funcionActual.fechaHoraInicio);
+
     document.getElementById('infoFuncion').innerHTML = `
         <strong>${escapeHtml(funcionActual.peliculaTitulo || '')}</strong> - ${funcionActual.formato.replace('_', 'D')}<br>
         <small>${escapeHtml(funcionActual.cineNombre || '')} | ${escapeHtml(funcionActual.salaNombre || '')} | ${fechaStr} | ${escapeHtml(funcionActual.idioma)}</small><br>

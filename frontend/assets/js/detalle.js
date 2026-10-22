@@ -44,21 +44,9 @@ async function cargarDetalleFuncion(id) {
 }
 
 function mostrarDetalle(funcion) {
-    const fecha = new Date(funcion.fechaHoraInicio);
-    const fechaStr = fecha.toLocaleString('es-AR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-    
-    const fin = new Date(funcion.fechaHoraFin);
-    const finStr = fin.toLocaleString('es-AR', {
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-    
+    const fechaStr = fechaHoraCorta(funcion.fechaHoraInicio);
+    const finStr = horaCorta(funcion.fechaHoraFin);
+
     document.getElementById('peliculaTitulo').textContent = `${funcion.peliculaTitulo} - ${funcion.formato.replace('_', 'D')}`;
     document.getElementById('cine').textContent = `${funcion.cineNombre} - Sala: ${funcion.salaNombre}`;
     document.getElementById('sala').textContent = `${funcion.salaNombre} (ID: ${funcion.salaId})`;

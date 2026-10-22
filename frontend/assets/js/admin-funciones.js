@@ -23,8 +23,7 @@ async function cargarFuncionesAdmin() {
         funciones.sort((a, b) => new Date(b.fechaHoraInicio) - new Date(a.fechaHoraInicio));
         funciones.forEach(funcion => {
             const tr = document.createElement('tr');
-            const fecha = new Date(funcion.fechaHoraInicio);
-            const fechaStr = fecha.toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            const fechaStr = fechaHoraCorta(funcion.fechaHoraInicio);
             tr.innerHTML = `
                 <td>${funcion.id}</td>
                 <td><strong>${escapeHtml(funcion.peliculaTitulo || '')}</strong></td>
