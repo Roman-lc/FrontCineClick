@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     if (typeof requireAdmin === 'function') requireAdmin();
     cargarPeliculas();
     if (typeof updateNavbar === 'function') updateNavbar();
@@ -13,11 +13,11 @@ async function cargarPeliculas() {
         errorDiv.style.display = 'none';
         tableBody.innerHTML = '';
         const response = await fetch(`${API_BASE_URL}/api/peliculas`);
-        if (!response.ok) throw new Error('Error al cargar películas');
+        if (!response.ok) throw new Error('Error al cargar pelÃ­culas');
         const peliculas = await response.json();
         loading.style.display = 'none';
         if (peliculas.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No hay películas</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No hay pelÃ­culas</td></tr>';
             return;
         }
         peliculas.forEach(p => {
@@ -28,7 +28,7 @@ async function cargarPeliculas() {
                 <td>${escapeHtml(p.genero)}</td>
                 <td>${p.duracionMinutos} min</td>
                 <td>${escapeHtml(p.clasificacion)}</td>
-                <td>${p.activa !== false ? 'Sí' : 'No'}</td>
+                <td>${p.activa !== false ? 'SÃ­' : 'No'}</td>
                 <td>
                     <button onclick="editarPeliculaByObj(${p.id})" class="btn btn-sm btn-warning">Modificar</button>
                     <button onclick="eliminarPelicula(${p.id})" class="btn btn-sm btn-danger">Eliminar</button>
@@ -97,7 +97,7 @@ async function guardarPelicula() {
     const formatos = [];
     document.querySelectorAll('.formatoChk:checked').forEach(c => formatos.push(c.value));
     if (formatos.length === 0) {
-        alert('Seleccioná al menos un formato');
+        alert('SeleccionÃ¡ al menos un formato');
         return;
     }
     const data = {
@@ -120,12 +120,12 @@ async function guardarPelicula() {
             body: JSON.stringify(data)
         });
         if (response.ok) {
-            alert(id ? 'Película actualizada' : 'Película creada');
+            alert(id ? 'PelÃ­cula actualizada' : 'PelÃ­cula creada');
             ocultarFormulario();
             cargarPeliculas();
         } else {
             const err = await response.json();
-            alert(err.mensaje || 'Error al guardar película');
+            alert(err.mensaje || 'Error al guardar pelÃ­cula');
         }
     } catch (e) {
         alert('Error: ' + e.message);
@@ -133,11 +133,11 @@ async function guardarPelicula() {
 }
 
 async function eliminarPelicula(id) {
-    if (!confirm('¿Eliminar esta película?')) return;
+    if (!confirm('Â¿Eliminar esta pelÃ­cula?')) return;
     try {
         const response = await fetch(`${API_BASE_URL}/api/peliculas/${id}`, { method: 'DELETE' });
         if (response.ok) {
-            alert('Película eliminada');
+            alert('PelÃ­cula eliminada');
             cargarPeliculas();
         } else {
             const err = await response.json();
@@ -146,10 +146,4 @@ async function eliminarPelicula(id) {
     } catch (e) {
         alert('Error: ' + e.message);
     }
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text || '';
-    return div.innerHTML;
 }

@@ -1,4 +1,4 @@
-let funcionActual = null;
+﻿let funcionActual = null;
 let butacasDisponibles = [];
 let butacasSeleccionadas = [];
 
@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!id) {
         document.getElementById('loading').style.display = 'none';
         document.getElementById('error').style.display = 'block';
-        document.getElementById('error').textContent = 'ID de función no especificado';
+        document.getElementById('error').textContent = 'ID de funciÃ³n no especificado';
         return;
     }
     
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     cargarFuncionYButacas(id);
     
-    // Configurar botón de pagar
+    // Configurar botÃ³n de pagar
     document.getElementById('btnPagar').addEventListener('click', realizarCompra);
 });
 
@@ -80,7 +80,7 @@ async function verificarLogin() {
                     // Es admin sin cliente asociado
                     window.clienteLogueado.sinCliente = true;
                     const info = document.getElementById('clienteLogueadoInfo');
-                    if (info) info.innerHTML += '<br><span style="color: var(--danger);">⚠️ Los administradores no pueden comprar como cliente</span>';
+                    if (info) info.innerHTML += '<br><span style="color: var(--danger);">âš ï¸ Los administradores no pueden comprar como cliente</span>';
                 }
             }
         } catch(e) {}
@@ -106,9 +106,9 @@ async function cargarFuncionYButacas(id) {
         errorDiv.style.display = 'none';
         compraContent.style.display = 'none';
         
-        // Cargar función
+        // Cargar funciÃ³n
         const respFuncion = await fetch(`${API_BASE_URL}/api/funciones/${id}`);
-        if (!respFuncion.ok) throw new Error('Error al cargar función');
+        if (!respFuncion.ok) throw new Error('Error al cargar funciÃ³n');
         funcionActual = await respFuncion.json();
         
         // Cargar butacas disponibles
@@ -175,7 +175,7 @@ function mostrarMapaButacas() {
         label.textContent = fila;
         rowDiv.appendChild(label);
         
-        // Ordenar butacas por número
+        // Ordenar butacas por nÃºmero
         butacasPorFila[fila].sort((a, b) => a.numero - b.numero).forEach(butaca => {
             const seat = document.createElement('div');
             seat.className = `seat ${butaca.tipo === 'VIP' ? 'vip' : ''}`;
@@ -237,7 +237,7 @@ function actualizarResumen() {
     let total = butacasSeleccionadas.length * funcionActual.precioBase;
     
     let items = butacasSeleccionadas.map(b => 
-        `<div>• Butaca ${b.fila}${b.numero} (${b.tipo}) - $${funcionActual.precioBase.toLocaleString('es-AR')}</div>`
+        `<div>â€¢ Butaca ${b.fila}${b.numero} (${b.tipo}) - $${funcionActual.precioBase.toLocaleString('es-AR')}</div>`
     ).join('');
     
     resumen.innerHTML = items;
@@ -256,7 +256,7 @@ function actualizarResumen() {
 async function realizarCompra() {
     const user = JSON.parse(localStorage.getItem('cineclick_user') || 'null');
     if (!user) {
-        alert('Debés iniciar sesión para realizar la compra');
+        alert('DebÃ©s iniciar sesiÃ³n para realizar la compra');
         window.location.href = 'login.html';
         return;
     }
@@ -268,7 +268,7 @@ async function realizarCompra() {
     await verificarLogin();
     
     if (!window.clienteLogueado || !window.clienteLogueado.clienteId) {
-        alert('No se encontró/creó el cliente. Probá cerrando sesión y volviendo a ingresar.');
+        alert('No se encontrÃ³/creÃ³ el cliente. ProbÃ¡ cerrando sesiÃ³n y volviendo a ingresar.');
         return;
     }
     
@@ -277,12 +277,12 @@ async function realizarCompra() {
     const tokenPago = document.getElementById('tokenPago').value.trim();
     
     if (butacasSeleccionadas.length === 0) {
-        alert('Por favor seleccioná al menos una butaca');
+        alert('Por favor seleccionÃ¡ al menos una butaca');
         return;
     }
     
     if (!tokenPago) {
-        alert('Por favor ingresá los datos de pago');
+        alert('Por favor ingresÃ¡ los datos de pago');
         return;
     }
     
@@ -338,8 +338,8 @@ async function realizarCompra() {
         
         const pago = await respPago.json();
         
-        // Éxito
-        alert(`¡Compra confirmada!\n\nCompra N°: ${compra.id}\nPago N°: ${pago.id}\nEstado: ${pago.estado}\nTotal: $${pago.montoPagado || compra.total}`);
+        // Ã‰xito
+        alert(`Â¡Compra confirmada!\n\nCompra NÂ°: ${compra.id}\nPago NÂ°: ${pago.id}\nEstado: ${pago.estado}\nTotal: $${pago.montoPagado || compra.total}`);
         window.location.href = '../index.html';
         
     } catch (err) {
@@ -347,10 +347,4 @@ async function realizarCompra() {
         const btn = document.getElementById('btnPagar');
         if (btn) { btn.disabled = false; btn.textContent = 'Pagar y Confirmar Compra'; }
     }
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
 }

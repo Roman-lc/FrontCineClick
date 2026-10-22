@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     if (typeof requireAdmin === 'function') requireAdmin();
     cargarCines();
     if (typeof updateNavbar === 'function') updateNavbar();
@@ -34,12 +34,12 @@ async function cargarCines() {
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Dirección:</strong> ${escapeHtml(cine.direccion)}, ${escapeHtml(cine.ciudad)}</p>
-                    <p><strong>Teléfono:</strong> ${escapeHtml(cine.telefono || '-')}</p>
+                    <p><strong>DirecciÃ³n:</strong> ${escapeHtml(cine.direccion)}, ${escapeHtml(cine.ciudad)}</p>
+                    <p><strong>TelÃ©fono:</strong> ${escapeHtml(cine.telefono || '-')}</p>
                     <h4 style="margin-top: 0.75rem;">Salas (${salas.length})</h4>
                     <div class="table-container" style="margin-top: 0.5rem;">
                         <table class="table">
-                            <thead><tr><th>Nombre</th><th>Número</th><th>Tipo</th><th>Butacas</th></tr></thead>
+                            <thead><tr><th>Nombre</th><th>NÃºmero</th><th>Tipo</th><th>Butacas</th></tr></thead>
                             <tbody>
                                 ${salas.map(s => `<tr><td>${escapeHtml(s.nombre)}</td><td>${s.numero}</td><td>${escapeHtml(s.tipo)}</td><td>${(s.butacas||[]).length}</td></tr>`).join('') || '<tr><td colspan="4">Sin salas</td></tr>'}
                             </tbody>
@@ -114,7 +114,7 @@ async function guardarCine() {
 }
 
 async function eliminarCine(id) {
-    if (!confirm('¿Eliminar este cine?')) return;
+    if (!confirm('Â¿Eliminar este cine?')) return;
     try {
         const response = await fetch(`${API_BASE_URL}/api/cines/${id}`, { method: 'DELETE' });
         if (response.ok) {
@@ -127,10 +127,4 @@ async function eliminarCine(id) {
     } catch (e) {
         alert('Error: ' + e.message);
     }
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text || '';
-    return div.innerHTML;
 }

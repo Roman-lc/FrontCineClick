@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     if (typeof requireAdmin === 'function') requireAdmin();
     cargarPromociones();
     if (typeof updateNavbar === 'function') updateNavbar();
@@ -28,7 +28,7 @@ async function cargarPromociones() {
                 <td>${escapeHtml(p.descripcion)}</td>
                 <td>${p.porcentajeDescuento}%</td>
                 <td>${p.fechaInicio} - ${p.fechaFin}</td>
-                <td>${p.activa !== false ? 'Sí' : 'No'}</td>
+                <td>${p.activa !== false ? 'SÃ­' : 'No'}</td>
                 <td>
                     <button onclick="editarPromoById(${p.id})" class="btn btn-sm btn-warning">Modificar</button>
                 </td>
@@ -101,20 +101,14 @@ async function guardarPromo() {
             body: JSON.stringify(data)
         });
         if (response.ok) {
-            alert(id ? 'Promoción actualizada' : 'Promoción creada');
+            alert(id ? 'PromociÃ³n actualizada' : 'PromociÃ³n creada');
             ocultarFormulario();
             cargarPromociones();
         } else {
             const err = await response.json();
-            alert(err.mensaje || 'Error al guardar promoción');
+            alert(err.mensaje || 'Error al guardar promociÃ³n');
         }
     } catch (e) {
         alert('Error: ' + e.message);
     }
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text || '';
-    return div.innerHTML;
 }

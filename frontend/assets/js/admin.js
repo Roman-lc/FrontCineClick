@@ -87,9 +87,3 @@ async function eliminarFuncion(id) {
         alert('Error de conexión: ' + err.message);
     }
 }
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}

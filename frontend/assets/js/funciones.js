@@ -149,47 +149,7 @@ async function cargarFunciones() {
     }
 }
 
-function crearCardFuncion(funcion) {
-    const div = document.createElement('div');
-    div.className = 'card';
-    
-    const fecha = new Date(funcion.fechaHoraInicio);
-    const fechaStr = fecha.toLocaleString('es-AR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-    
-    const user = JSON.parse(localStorage.getItem('cineclick_user') || 'null');
-    const isAdmin = user && user.rol === 'ADMIN';
-    
-    div.innerHTML = `
-        <div class="card-header">
-            <strong>${escapeHtml(funcion.peliculaTitulo || '')}</strong>
-            <span class="badge">${escapeHtml((funcion.formato || '').toString().replace('_', 'D'))}</span>
-        </div>
-        <div class="card-body">
-            <p><strong>🎬 Cine:</strong> ${escapeHtml(funcion.cineNombre || '')}</p>
-            <p><strong>🏛️ Sala:</strong> ${escapeHtml(funcion.salaNombre || '')}</p>
-            <p><strong>📅 Fecha/Hora:</strong> ${fechaStr}</p>
-            <p><strong>🌐 Idioma:</strong> ${escapeHtml(funcion.idioma || '')}</p>
-            <p><strong>💰 Precio:</strong> $${(funcion.precioBase || 0).toLocaleString('es-AR')}</p>
-            <div class="card-actions">
-                <a href="detalle.html?id=${funcion.id}" class="btn btn-info">Ver Detalle</a>
-                <a href="compra.html?id=${funcion.id}" class="btn btn-success">Comprar</a>
-                ${isAdmin ? `
-                    <a href="admin-edit.html?id=${funcion.id}" class="btn btn-warning">Modificar</a>
-                    <button onclick="eliminarFuncion(${funcion.id})" class="btn btn-danger">Borrar</button>
-                ` : ''}
-            </div>
-        </div>
-    `;
-    
-    return div;
-}
-
+// Elimina una función y recarga el listado (solo para administradores).
 window.toggleCine = function(idx) {
     const content = document.getElementById(`content-${idx}`);
     const toggle = document.getElementById(`toggle-${idx}`);
@@ -230,12 +190,6 @@ async function eliminarFuncion(id) {
     } catch (err) {
         alert('Error de conexión: ' + err.message);
     }
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
 }
 
 // Barra que avisa qué filtros están puestos y permite sacarlos, conservando la película.

@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     if (typeof requireAdmin === 'function') requireAdmin();
     cargarFuncionesAdmin();
     if (typeof updateNavbar === 'function') updateNavbar();
@@ -47,23 +47,17 @@ async function cargarFuncionesAdmin() {
 }
 
 async function eliminarFuncion(id) {
-    if (!confirm('¿Estás seguro de que deseas eliminar esta función?')) return;
+    if (!confirm('Â¿EstÃ¡s seguro de que deseas eliminar esta funciÃ³n?')) return;
     try {
         const response = await fetch(`${API_BASE_URL}/api/funciones/${id}`, { method: 'DELETE' });
         if (response.ok) {
-            alert('Función eliminada correctamente');
+            alert('FunciÃ³n eliminada correctamente');
             cargarFuncionesAdmin();
         } else {
             const error = await response.json();
-            alert(error.mensaje || 'Error al eliminar función');
+            alert(error.mensaje || 'Error al eliminar funciÃ³n');
         }
     } catch (err) {
-        alert('Error de conexión: ' + err.message);
+        alert('Error de conexiÃ³n: ' + err.message);
     }
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text || '';
-    return div.innerHTML;
 }

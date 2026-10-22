@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     if (typeof requireAdmin === 'function') requireAdmin();
     cargarClientes();
     if (typeof updateNavbar === 'function') updateNavbar();
@@ -42,7 +42,7 @@ async function cargarClientes() {
 }
 
 async function eliminarCliente(id) {
-    if (!confirm('¿Eliminar este cliente?')) return;
+    if (!confirm('Â¿Eliminar este cliente?')) return;
     try {
         const response = await fetch(`${API_BASE_URL}/api/clientes/${id}`, { method: 'DELETE' });
         if (response.ok) {
@@ -55,10 +55,4 @@ async function eliminarCliente(id) {
     } catch (e) {
         alert('Error: ' + e.message);
     }
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text || '';
-    return div.innerHTML;
 }
