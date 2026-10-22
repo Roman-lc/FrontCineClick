@@ -205,6 +205,12 @@ async function aplicarFiltros() {
     }
 }
 
+// Poster de relleno cuando la película no tiene urlPoster (o está roto).
+// El texto va escapado: termina dentro de un atributo src en innerHTML.
+function urlPosterPorDefecto(texto) {
+    return 'https://via.placeholder.com/200x300/1a1a2e/ffffff?text=' + encodeURIComponent(texto || 'CineClick');
+}
+
 // Params que viajan a funciones.html: la película y los filtros activos.
 function parametrosFiltros(peliculaId) {
     const params = new URLSearchParams({ peliculaId });
@@ -268,17 +274,18 @@ function renderPeliculas(peliculas) {
     resultado.textContent = `${peliculas.length} ${peliculas.length === 1 ? 'película' : 'películas'}`;
 
     peliculas.forEach(pelicula => {
+        const titulo = pelicula.titulo || '';
         const card = document.createElement('a');
         card.href = `pages/funciones.html?${parametrosFiltros(pelicula.id).toString()}`;
         card.className = 'poster-card';
         card.innerHTML = `
-            <img src="${pelicula.urlPoster || 'https://via.placeholder.com/200x300/1a1a2e/ffffff?text=' + encodeURIComponent(pelicula.titulo)}"
-                 alt="${pelicula.titulo}"
+            <img src="${escapeHtml(pelicula.urlPoster || urlPosterPorDefecto(titulo))}"
+                 alt="${escapeHtml(titulo)}"
                  class="poster-img"
-                 onerror="this.src='https://via.placeholder.com/200x300/1a1a2e/ffffff?text=CineClick'">
+                 onerror="this.src='${urlPosterPorDefecto('CineClick')}'">
             <div class="poster-info">
-                <div class="poster-title" title="${pelicula.titulo}">${pelicula.titulo}</div>
-                <div class="poster-genre">${pelicula.genero} • ${pelicula.clasificacion}</div>
+                <div class="poster-title" title="${escapeHtml(titulo)}">${escapeHtml(titulo)}</div>
+                <div class="poster-genre">${escapeHtml(pelicula.genero)} • ${escapeHtml(pelicula.clasificacion)}</div>
             </div>
         `;
         grid.appendChild(card);
