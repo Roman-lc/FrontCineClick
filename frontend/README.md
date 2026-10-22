@@ -45,10 +45,11 @@ frontend/
 - Acceso directo a funciones disponibles
 
 ### Cartelera con filtros
-- Bajo los banners, la cartelera se puede filtrar por **Cine** y **Fecha**
-- El listado de fechas arranca en el día de hoy y suma los días que tienen funciones
+- Bajo los banners, dos tiras de chips: **Cine** y **Fecha**
+- Cine: chip "Todos" + un chip por cine activo (con la ciudad debajo)
+- Fecha: chip "Todas" + una tira fija de 7 días desde hoy (Hoy, Mañana y los días de la semana)
+- Los días sin funciones se muestran atenuados y con borde punteado, pero se pueden seleccionar
 - Al filtrar se consulta `GET /api/funciones` y solo se muestran las películas con una función vigente en ese cine y/o fecha
-- El contador indica cuántas películas quedaron y con qué filtros
 - Si ninguna cumple, aparece un estado vacío con el botón "Ver toda la cartelera"
 - Al entrar a una película filtrada, los filtros viajan a `funciones.html` (cine y fecha) para no perder el contexto
 

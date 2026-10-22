@@ -127,43 +127,82 @@
         }
         .cartelera-filtros {
             display: flex;
-            flex-wrap: wrap;
-            align-items: flex-end;
-            gap: 1rem;
+            flex-direction: column;
+            gap: 0.85rem;
             background: white;
             padding: 1rem;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             margin-bottom: 0.75rem;
         }
-        .filtro-campo {
+        .filtro-grupo {
             display: flex;
             flex-direction: column;
-            gap: 0.35rem;
-            flex: 1 1 220px;
-            min-width: 160px;
+            gap: 0.4rem;
+            min-width: 0;
         }
-        .filtro-campo label {
+        .filtro-grupo-label {
             font-size: 0.75rem;
             font-weight: 700;
             letter-spacing: 0.04em;
             text-transform: uppercase;
             color: var(--text-light);
         }
-        .filtro-campo select {
-            padding: 0.55rem;
+        .chips {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.35rem;
+            scrollbar-width: thin;
+        }
+        .chip {
+            flex: 0 0 auto;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.1rem;
+            min-height: 46px;
+            padding: 0.4rem 0.95rem;
             border: 1px solid var(--border);
-            border-radius: 4px;
+            border-radius: 999px;
             background: white;
             font-family: inherit;
-            font-size: 0.9rem;
             color: var(--text-dark);
             cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
         }
-        .filtro-campo select:focus {
+        .chip:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .chip:focus-visible {
             outline: 2px solid var(--info);
             outline-offset: 2px;
-            border-color: var(--info);
+        }
+        .chip-titulo {
+            font-size: 0.88rem;
+            font-weight: 600;
+            line-height: 1.15;
+            white-space: nowrap;
+        }
+        .chip-sub {
+            font-size: 0.68rem;
+            line-height: 1.1;
+            white-space: nowrap;
+            opacity: 0.7;
+        }
+        .chip.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        .chip.sin-funciones {
+            border-style: dashed;
+            color: var(--text-light);
+        }
+        .chip.sin-funciones.active {
+            color: white;
         }
         .cartelera-resultado {
             color: var(--text-light);
@@ -243,22 +282,16 @@
         <!-- Películas -->
         <section class="section">
             <h2>Cartelera</h2>
-            <p style="color: var(--text-light); margin-bottom: 1rem;">Seleccioná una película para ver las funciones disponibles</p>
 
             <div class="cartelera-filtros">
-                <div class="filtro-campo">
-                    <label for="filtroCine">Cine</label>
-                    <select id="filtroCine">
-                        <option value="">Todos los cines</option>
-                    </select>
+                <div class="filtro-grupo">
+                    <div class="filtro-grupo-label">Cine</div>
+                    <div class="chips" id="filtroCines"></div>
                 </div>
-                <div class="filtro-campo">
-                    <label for="filtroFecha">Fecha</label>
-                    <select id="filtroFecha">
-                        <option value="">Todas las fechas</option>
-                    </select>
+                <div class="filtro-grupo">
+                    <div class="filtro-grupo-label">Fecha</div>
+                    <div class="chips" id="filtroFechas"></div>
                 </div>
-                <button type="button" id="btnLimpiarFiltros" class="btn btn-secondary btn-sm">Limpiar filtros</button>
             </div>
 
             <p id="carteleraResultado" class="cartelera-resultado"></p>

@@ -4,8 +4,13 @@
 
 const CARTELERA = {
     peliculas: [],
-    cines: []
+    cines: [],
+    fechasConFunciones: new Set(),
+    cineId: '',
+    fecha: ''
 };
+
+const DIAS_EN_TIRA = 7;
 
 document.addEventListener('DOMContentLoaded', inicializarCartelera);
 
@@ -13,9 +18,6 @@ async function inicializarCartelera() {
     const grid = document.getElementById('peliculasGrid');
     const loading = document.getElementById('peliculasLoading');
     const errorDiv = document.getElementById('peliculasError');
-    const selectCine = document.getElementById('filtroCine');
-    const selectFecha = document.getElementById('filtroFecha');
-    const btnLimpiar = document.getElementById('btnLimpiarFiltros');
 
     loading.style.display = 'block';
     errorDiv.style.display = 'none';
@@ -28,18 +30,36 @@ async function inicializarCartelera() {
             pedirJSON('/api/peliculas')
         ]);
 
-        CARTELERA.cines = cines.filter(cine => cine.activo !== false);
-        CARTELERA.peliculas = peliculas.filter(pelicula => pelicula.activa !== false);
+        const vigentes = funciones.filter(funcionVigente);
 
-        cargarOpcionesCine(selectCine, CARTELERA.cines);
-        cargarOpcionesFecha(selectFecha, funciones);
+        CARTELERA.cines = cines
+            .filter(cine => cine.activo !== false)
+            .sort((a, b) => (a.nombre || '').localeCompare(b.nombre || '', 'es'));
+        CARTELERA.peliculas = peliculas.filter(pelicula => pelicula.activa !== false);
+        CARTELERA.fechasConFunciones = new Set(vigentes.map(fechaDeFuncion));
+
+        renderTiraCines();
+        renderTiraFechas();
+
+        // Delegación: un solo listener por tira
+        document.getElementById('filtroCines').addEventListener('click', event => {
+            const chip = event.target.closest('.chip');
+            if (!chip) return;
+            CARTELERA.cineId = chip.dataset.valor;
+            renderTiraCines();
+            aplicarFiltros();
+        });
+
+        document.getElementById('filtroFechas').addEventListener('click', event => {
+            const chip = event.target.closest('.chip');
+            if (!chip) return;
+            CARTELERA.fecha = chip.dataset.valor;
+            renderTiraFechas();
+            aplicarFiltros();
+        });
 
         loading.style.display = 'none';
-        renderPeliculas(CARTELERA.peliculas);
-
-        selectCine.addEventListener('change', aplicarFiltros);
-        selectFecha.addEventListener('change', aplicarFiltros);
-        btnLimpiar.addEventListener('click', limpiarFiltros);
+        aplicarFiltros();
     } catch (err) {
         loading.style.display = 'none';
         errorDiv.style.display = 'block';
@@ -53,51 +73,70 @@ async function pedirJSON(path) {
     return response.json();
 }
 
-function cargarOpcionesCine(select, cines) {
-    cines
-        .slice()
-        .sort((a, b) => (a.nombre || '').localeCompare(b.nombre || '', 'es'))
-        .forEach(cine => {
-            const option = document.createElement('option');
-            option.value = cine.id;
-            option.textContent = cine.ciudad ? `${cine.nombre} (${cine.ciudad})` : cine.nombre;
-            select.appendChild(option);
-        });
-}
-
-// El listado arranca en la fecha de hoy; después agrega los días que tienen funciones.
-function cargarOpcionesFecha(select, funciones) {
-    const hoy = hoyISO();
-    const fechas = new Set([hoy]);
-
-    funciones
-        .filter(funcionVigente)
-        .forEach(funcion => {
-            const fecha = fechaDeFuncion(funcion);
-            if (fecha && fecha >= hoy) fechas.add(fecha);
-        });
-
-    Array.from(fechas)
-        .sort()
-        .forEach(fecha => {
-            const option = document.createElement('option');
-            option.value = fecha;
-            option.textContent = etiquetaFecha(fecha);
-            select.appendChild(option);
-        });
-}
-
 function funcionVigente(funcion) {
     if (funcion.estado === 'CANCELADA') return false;
     return new Date(funcion.fechaHoraInicio) >= new Date();
 }
 
+// ---------- Tiras de filtros ----------
+
+function crearChip(valor, titulo, subtitulo, activo, claseExtra) {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'chip' + (activo ? ' active' : '') + (claseExtra ? ' ' + claseExtra : '');
+    chip.dataset.valor = valor;
+
+    const tituloEl = document.createElement('span');
+    tituloEl.className = 'chip-titulo';
+    tituloEl.textContent = titulo;
+    chip.appendChild(tituloEl);
+
+    if (subtitulo) {
+        const subEl = document.createElement('span');
+        subEl.className = 'chip-sub';
+        subEl.textContent = subtitulo;
+        chip.appendChild(subEl);
+    }
+
+    return chip;
+}
+
+function renderTiraCines() {
+    const contenedor = document.getElementById('filtroCines');
+    contenedor.innerHTML = '';
+    contenedor.appendChild(crearChip('', 'Todos', 'cines', CARTELERA.cineId === ''));
+
+    CARTELERA.cines.forEach(cine => {
+        const valor = String(cine.id);
+        contenedor.appendChild(crearChip(valor, cine.nombre, cine.ciudad || '', CARTELERA.cineId === valor));
+    });
+}
+
+// Tira fija: hoy + los próximos 6 días (los días sin funciones se atenúan).
+function renderTiraFechas() {
+    const contenedor = document.getElementById('filtroFechas');
+    contenedor.innerHTML = '';
+    contenedor.appendChild(crearChip('', 'Todas', 'fechas', CARTELERA.fecha === ''));
+
+    const hoy = hoyISO();
+    for (let i = 0; i < DIAS_EN_TIRA; i++) {
+        const fecha = sumarDiasISO(hoy, i);
+        const titulo = i === 0 ? 'Hoy' : i === 1 ? 'Mañana' : diaSemanaCorto(fecha);
+        const sinFunciones = !CARTELERA.fechasConFunciones.has(fecha);
+
+        const chip = crearChip(fecha, titulo, fechaCorta(fecha), CARTELERA.fecha === fecha, sinFunciones ? 'sin-funciones' : '');
+        if (sinFunciones) chip.title = 'Sin funciones para este día';
+        contenedor.appendChild(chip);
+    }
+}
+
+// ---------- Filtrado ----------
+
 // Numero de la ultima consulta de filtros: si una respuesta llega tarde, se descarta.
 let ultimaPeticion = 0;
 
 async function aplicarFiltros() {
-    const cineId = document.getElementById('filtroCine').value;
-    const fecha = document.getElementById('filtroFecha').value;
+    const { cineId, fecha } = CARTELERA;
     const loading = document.getElementById('peliculasLoading');
     const errorDiv = document.getElementById('peliculasError');
     const peticion = ++ultimaPeticion;
@@ -131,16 +170,17 @@ async function aplicarFiltros() {
 }
 
 function limpiarFiltros() {
-    document.getElementById('filtroCine').value = '';
-    document.getElementById('filtroFecha').value = '';
+    CARTELERA.cineId = '';
+    CARTELERA.fecha = '';
+    renderTiraCines();
+    renderTiraFechas();
     aplicarFiltros();
 }
 
 function renderPeliculas(peliculas) {
     const grid = document.getElementById('peliculasGrid');
     const resultado = document.getElementById('carteleraResultado');
-    const cineId = document.getElementById('filtroCine').value;
-    const fecha = document.getElementById('filtroFecha').value;
+    const { cineId, fecha } = CARTELERA;
 
     grid.innerHTML = '';
 
@@ -148,7 +188,7 @@ function renderPeliculas(peliculas) {
         resultado.textContent = '';
         grid.innerHTML = `
             <div class="cartelera-vacio">
-                <p>No hay películas que cumplan con los filtros seleccionados.</p>
+                <p>No hay películas con funciones para los filtros elegidos.</p>
                 <button type="button" class="btn btn-secondary" id="btnVerTodas">Ver toda la cartelera</button>
             </div>
         `;
@@ -156,15 +196,7 @@ function renderPeliculas(peliculas) {
         return;
     }
 
-    const filtros = [];
-    if (cineId) {
-        const cine = CARTELERA.cines.find(c => String(c.id) === String(cineId));
-        if (cine) filtros.push(cine.nombre);
-    }
-    if (fecha) filtros.push(etiquetaFecha(fecha));
-
-    const cantidad = `${peliculas.length} ${peliculas.length === 1 ? 'película' : 'películas'}`;
-    resultado.textContent = filtros.length ? `${cantidad} · ${filtros.join(' · ')}` : cantidad;
+    resultado.textContent = `${peliculas.length} ${peliculas.length === 1 ? 'película' : 'películas'}`;
 
     peliculas.forEach(pelicula => {
         const params = new URLSearchParams({ peliculaId: pelicula.id });
