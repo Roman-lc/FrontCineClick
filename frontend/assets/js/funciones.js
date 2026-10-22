@@ -53,8 +53,11 @@ async function cargarFunciones() {
         if (!response.ok) {
             throw new Error('Error al cargar funciones');
         }
-        const funciones = await response.json();
-        
+        const todasLasFunciones = await response.json();
+
+        // El backend devuelve también las canceladas y las que ya pasaron.
+        const funciones = todasLasFunciones.filter(funcionVigente);
+
         loading.style.display = 'none';
         
         if (funciones.length === 0) {
@@ -97,7 +100,7 @@ async function cargarFunciones() {
                 <div class="cine-content" id="content-${idx}">
                     ${cine.funciones.map(f => {
                         const fecha = new Date(f.fechaHoraInicio);
-                        const fechaStr = fecha.toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                        const fechaStr = fechaHoraCorta(f.fechaHoraInicio);
                         const user = JSON.parse(localStorage.getItem('cineclick_user') || 'null');
                         const isAdmin = user && user.rol === 'ADMIN';
                         return `

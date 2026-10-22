@@ -44,3 +44,26 @@ function etiquetaFecha(iso) {
 function fechaDeFuncion(funcion) {
     return (funcion.fechaHoraInicio || '').slice(0, 10);
 }
+
+// Una función sirve si no está cancelada y todavía no empezó.
+// El backend no filtra ninguna de las dos cosas, así que se descartan acá.
+function funcionVigente(funcion) {
+    if (!funcion || !funcion.fechaHoraInicio) return false;
+    if (funcion.estado === 'CANCELADA') return false;
+    return new Date(funcion.fechaHoraInicio) >= new Date();
+}
+
+// "04:00 p. m." -> "16:00" (es-AR suele caer en formato 12h según el navegador)
+function horaCorta(fechaHora) {
+    return new Date(fechaHora).toLocaleTimeString('es-AR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+}
+
+// Igual que horaCorta pero con la fecha adelante: "23/10/2026 16:00"
+function fechaHoraCorta(fechaHora) {
+    const fecha = new Date(fechaHora);
+    return `${fecha.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' })} ${horaCorta(fechaHora)}`;
+}
