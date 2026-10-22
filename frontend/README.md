@@ -23,13 +23,20 @@ frontend/
 │       ├── grupo.js
 │       └── login.js
 ├── components/
+│   └── layout.js        # header y footer compartidos (se inyectan solos)
 ├── mockup/
 │   ├── index.html
 │   └── style.css
 ├── pages/
 │   ├── admin.html
+│   ├── admin-cines.html
+│   ├── admin-clientes.html
+│   ├── admin-compras.html
 │   ├── admin-create.html
 │   ├── admin-edit.html
+│   ├── admin-funciones.html
+│   ├── admin-peliculas.html
+│   ├── admin-promociones.html
 │   ├── compra.html
 │   ├── detalle.html
 │   ├── funciones.html
@@ -46,6 +53,7 @@ frontend/
 - Acceso directo a funciones disponibles
 
 ### Scripts compartidos
+- `components/layout.js`: inyecta el header (navbar) y el footer en todas las páginas. Cada HTML deja `<header id="siteHeader"></header>` y `<footer id="siteFooter"></footer>` vacíos y carga este script; la ruta relativa (raíz o `/pages/`) se detecta sola. Antes el header/footer estaban copiados en las 16 páginas.
 - `assets/js/fechas.js`: utilidades de fecha (las fechas viajan como `yyyy-mm-dd` para no tener corrimientos de zona horaria), `funcionVigente()` (descarta canceladas y ya empezadas) y formateo de horarios en 24h
 - `assets/js/comun.js`: `escapeHtml()` para interpolar texto del backend dentro de `innerHTML`
 
