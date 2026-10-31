@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getCines } from '../../services/cines';
 import { getFunciones } from '../../services/funciones';
-import { getPeliculas } from '../../services/peliculas';
+import { getDestacadas, getPeliculas, getProximosEstrenos } from '../../services/peliculas';
 import PeliculaCard from '../../components/ui/PeliculaCard';
 import Cargando from '../../components/ui/Cargando';
 import MensajeError from '../../components/ui/MensajeError';
@@ -12,6 +12,7 @@ import SelectorCine from '../../components/ui/SelectorCine';
 import { escribirFiltros, leerFiltros, queryCineYDia } from '../../lib/filtrosUrl';
 import BarraFiltros from './BarraFiltros';
 import HorariosDelDia from './HorariosDelDia';
+import SliderDestacados from './SliderDestacados';
 import BarraFuncionElegida from '../compra/BarraFuncionElegida';
 import {
   armarCartelera,
@@ -28,6 +29,7 @@ export default function HomePage() {
   const [intento, setIntento] = useState(0);
   const [estado, setEstado] = useState({ cargando: true, error: '', datos: null });
   const [elegida, setElegida] = useState(null);
+  const [estrenos, setEstrenos] = useState({ destacadas: [], proximos: [] });
 
   // Se cargan una sola vez; los filtros se aplican en memoria
   useEffect(() => {
@@ -43,6 +45,19 @@ export default function HomePage() {
       ignorar = true;
     };
   }, [intento]);
+
+  // Slider y proximos estrenos van aparte: si fallan, la cartelera se sigue viendo (y ellos no se muestran)
+  useEffect(() => {
+    let ignorar = false;
+    Promise.all([getDestacadas(), getProximosEstrenos()])
+      .then(([destacadas, proximos]) => {
+        if (!ignorar) setEstrenos({ destacadas, proximos });
+      })
+      .catch(() => {});
+    return () => {
+      ignorar = true;
+    };
+  }, []);
 
   const reintentar = () => {
     setEstado({ cargando: true, error: '', datos: null });
@@ -71,6 +86,8 @@ export default function HomePage() {
   return (
     <section className="section">
       <title>Cartelera | CineClick</title>
+
+      <SliderDestacados destacadas={estrenos.destacadas} />
 
       <div className={styles.encabezado}>
         <h1 className={styles.titulo}>Películas en cartelera</h1>
