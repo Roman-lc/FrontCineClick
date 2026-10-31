@@ -1,16 +1,7 @@
-export function escapeHtml(texto) {
-  if (texto === null || texto === undefined) return '';
-  return String(texto)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
+// Vigente = no cancelada ni finalizada y todavia no empezo.
 export function funcionVigente(funcion) {
   if (!funcion) return false;
-  if (funcion.cancelada === true) return false;
+  if (funcion.estado === 'CANCELADA' || funcion.estado === 'FINALIZADA') return false;
   const inicio = new Date(funcion.fechaHoraInicio);
   if (Number.isNaN(inicio.getTime())) return false;
   if (inicio <= new Date()) return false;
@@ -26,14 +17,22 @@ export function fechaCorta(fechaIso) {
   return d.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' });
 }
 
+// hourCycle 'h23' fuerza 24 h: con es-AR algunos navegadores muestran "02:00 p. m."
 export function horaCorta(fechaIso) {
   const d = new Date(fechaIso);
-  return d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
 }
 
 export function fechaHoraCorta(fechaIso) {
   const d = new Date(fechaIso);
-  return d.toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleString('es-AR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  });
 }
 
 export function hoyISO() {
