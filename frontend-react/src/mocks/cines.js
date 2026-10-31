@@ -1,5 +1,10 @@
-// Misma forma que CineResponseDTO, copiado de GET /api/cines.
-// En la base, Recoleta no tiene salas; aca se le agrega una para tener funciones en dos cines.
+import { capacidadDeSala } from './salas.js';
+
+// Misma forma que CineResponseDTO. Cada sala tiene un plano distinto (ver salas.js).
+function sala(id, nombre, numero, tipo) {
+  return { id, nombre, numero, tipo, activa: true, capacidad: capacidadDeSala(id) };
+}
+
 export const cinesMock = [
   {
     id: 1,
@@ -8,10 +13,7 @@ export const cinesMock = [
     ciudad: 'Buenos Aires',
     telefono: '011-4000-1000',
     activo: true,
-    salas: [
-      { id: 1, nombre: 'Sala 1', numero: 1, tipo: 'TRADICIONAL', activa: true, capacidad: 40 },
-      { id: 2, nombre: 'Sala IMAX', numero: 2, tipo: 'IMAX', activa: true, capacidad: 28 },
-    ],
+    salas: [sala(1, 'Sala 1', 1, 'TRADICIONAL'), sala(2, 'Sala IMAX', 2, 'IMAX')],
   },
   {
     id: 2,
@@ -20,6 +22,15 @@ export const cinesMock = [
     ciudad: 'CABA',
     telefono: '',
     activo: true,
-    salas: [{ id: 3, nombre: 'Sala 1', numero: 1, tipo: 'TRADICIONAL', activa: true, capacidad: 40 }],
+    salas: [sala(3, 'Sala 1', 1, 'TRADICIONAL'), sala(4, 'Sala Premium', 2, 'PREMIUM')],
+  },
+  {
+    id: 3,
+    nombre: 'CineClick Palermo',
+    direccion: 'Av. Santa Fe 3253',
+    ciudad: 'CABA',
+    telefono: '011-4000-3000',
+    activo: true,
+    salas: [sala(5, 'Sala 4D', 1, 'CUATRO_D')],
   },
 ];
