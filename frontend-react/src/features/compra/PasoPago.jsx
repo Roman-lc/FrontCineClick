@@ -1,0 +1,376 @@
+import { useEffect, useRef, useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../app/AuthContext';
+import Modal from '../../components/ui/Modal';
+import { aplicarPromocion, getCompra, pagarCompra } from '../../services/compras';
+import { formatearPrecio } from '../../lib/formato';
+import {
+  detectarMarca,
+  validarCodigoSeguridad,
+  validarDni,
+  validarNumeroTarjeta,
+  validarTitular,
+  validarVencimiento,
+} from '../../lib/tarjeta';
+import { IDS_CAMPOS, borrarCompra, edadMinima, nuevaReserva, textoDeclaracionMenores } from './estadoCompra';
+import FormularioTarjeta from './FormularioTarjeta';
+import { METODOS_PAGO } from './metodosPago';
+import PasoCompra from './PasoCompra';
+import { InformacionCompra, TerminosYCondiciones } from './TextosCompra';
+import { useCompra } from './useCompra';
+import styles from './compra.module.css';
+
+const IDS = { ...IDS_CAMPOS, terminos: 'acepta-terminos', menores: 'acepta-menores' };
+// Orden en que se busca el primer error al tocar "Pagar"
+const CAMPOS = ['numero', 'vencimiento', 'codigo', 'titular', 'dni', 'terminos', 'menores'];
+
+export default function PasoPago() {
+  const { funcion, estado } = useCompra();
+  if (!estado.reserva) return <Navigate to={`/compra/${funcion.id}/butacas`} replace />;
+  return <FormularioPago />;
+}
+
+function FormularioPago() {
+  const { funcion, pelicula, estado, actualizar, segundosRestantes } = useCompra();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const compra = estado.reserva.compra;
+
+  const [metodo, setMetodo] = useState(METODOS_PAGO[0]);
+  const [valores, setValores] = useState({
+    numero: '',
+    vencimiento: '',
+    codigo: '',
+    titular: '',
+    dni: '',
+    terminos: false,
+    menores: false,
+    novedades: false,
+  });
+  const [visibles, setVisibles] = useState(() => new Set());
+  const [verTerminos, setVerTerminos] = useState(false);
+  const [procesando, setProcesando] = useState(false);
+  const [errorPago, setErrorPago] = useState('');
+  const [reservaPerdida, setReservaPerdida] = useState(false);
+  const idCompra = useRef(compra.id);
+
+  // Al entrar (o recargar) se pide la reserva al backend para tener el tiempo restante real
+  useEffect(() => {
+    let ignorar = false;
+    getCompra(idCompra.current)
+      .then((actual) => {
+        if (ignorar) return;
+        if (actual.estado === 'CONFIRMADA') {
+          borrarCompra();
+          navigate(`/compra/confirmacion/${actual.id}`, { replace: true });
+        } else if (actual.estado !== 'PENDIENTE_PAGO' || !actual.segundosRestantes) {
+          setReservaPerdida(true);
+        } else {
+          actualizar({ reserva: nuevaReserva(actual) });
+        }
+      })
+      .catch(() => {
+        if (!ignorar) setReservaPerdida(true);
+      });
+    return () => {
+      ignorar = true;
+    };
+  }, [navigate, actualizar]);
+
+  const marca = detectarMarca(valores.numero);
+  const edad = edadMinima(pelicula.clasificacion);
+  const pideDeclaracion = edad >= 13;
+  const errores = {
+    numero: validarNumeroTarjeta(valores.numero),
+    vencimiento: validarVencimiento(valores.vencimiento),
+    codigo: validarCodigoSeguridad(valores.codigo, marca),
+    titular: validarTitular(valores.titular),
+    dni: validarDni(valores.dni),
+    terminos: valores.terminos ? '' : 'Tenés que aceptar los términos y condiciones para continuar.',
+    menores: !pideDeclaracion || valores.menores ? '' : 'Tenés que confirmar esta declaración para continuar.',
+  };
+  // Un error se muestra recien al salir del campo (o al tocar Pagar), no mientras se escribe
+  const erroresVisibles = Object.fromEntries(CAMPOS.map((c) => [c, visibles.has(c) ? errores[c] : '']));
+
+  const cambiar = (campo, valor) => {
+    setValores((v) => ({ ...v, [campo]: valor }));
+    setVisibles((v) => {
+      const nuevo = new Set(v);
+      nuevo.delete(campo);
+      return nuevo;
+    });
+  };
+  const salir = (campo) => setVisibles((v) => new Set(v).add(campo));
+
+  const vencida = reservaPerdida || (segundosRestantes === 0 && !procesando);
+
+  const pagar = async () => {
+    setVisibles(new Set(CAMPOS));
+    const primero = CAMPOS.find((c) => errores[c]);
+    if (primero) {
+      document.getElementById(IDS[primero])?.focus();
+      return;
+    }
+    setProcesando(true);
+    setErrorPago('');
+    try {
+      const pago = await pagarCompra(compra.id, {
+        metodoPago: metodo.metodoPago,
+        marca: marca.nombre,
+        ultimos4: valores.numero.slice(-4),
+        aceptaTerminos: valores.terminos,
+      });
+      if (pago.estado === 'APROBADO') {
+        borrarCompra();
+        navigate(`/compra/confirmacion/${compra.id}`, { replace: true });
+        return;
+      }
+      setErrorPago('El pago fue rechazado. Revisá los datos de la tarjeta o probá con otra. Tu reserva sigue activa.');
+    } catch (err) {
+      if (err.status === 409) {
+        // Puede ser que la reserva haya vencido o que un intento anterior ya se haya aprobado
+        const actual = await getCompra(compra.id).catch(() => null);
+        if (actual?.estado === 'CONFIRMADA') {
+          borrarCompra();
+          navigate(`/compra/confirmacion/${compra.id}`, { replace: true });
+          return;
+        }
+        setReservaPerdida(true);
+      } else {
+        setErrorPago(err.message);
+      }
+    }
+    setProcesando(false);
+  };
+
+  return (
+    <PasoCompra
+      titulo="Pago"
+      paso={3}
+      onAtras={() => navigate(`/compra/${funcion.id}/butacas`)}
+      accion={{ texto: 'Pagar', onClick: pagar, cargando: procesando, deshabilitado: vencida }}
+      extraResumen={
+        <DetallePago
+          compra={compra}
+          deshabilitado={vencida || procesando}
+          onAplicar={async (codigo) => {
+            const actualizada = await aplicarPromocion(compra.id, codigo);
+            actualizar({ reserva: nuevaReserva(actualizada) });
+          }}
+        />
+      }
+    >
+      {vencida ? (
+        <div className={styles.vencida} role="alert">
+          <p className={styles.vencidaTitulo}>Se terminó el tiempo de tu reserva</p>
+          <p>Las butacas se liberaron. Podés volver a elegirlas si siguen disponibles.</p>
+          <button type="button" className="btn btn-primary" onClick={() => navigate(`/compra/${funcion.id}/butacas`)}>
+            Elegir butacas de nuevo
+          </button>
+        </div>
+      ) : (
+        <>
+          <fieldset className={styles.bloque}>
+            <legend className={styles.bloqueTitulo}>Método de pago</legend>
+            <div className={styles.metodos}>
+              {METODOS_PAGO.map((m) => (
+                <label key={m.id} className={styles.metodo}>
+                  <input
+                    type="radio"
+                    name="metodo-pago"
+                    className="visually-hidden"
+                    checked={metodo.id === m.id}
+                    onChange={() => setMetodo(m)}
+                  />
+                  <m.Icono />
+                  <span className={styles.metodoTexto}>
+                    <strong>{m.nombre}</strong>
+                    <span>{m.descripcion}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <section className={styles.bloque} aria-labelledby="titulo-datos">
+            <h3 id="titulo-datos" className={styles.bloqueTitulo}>
+              Tus datos
+            </h3>
+            <div className={styles.camposTarjeta}>
+              <DatoFijo id="dato-nombre" etiqueta="Nombre" valor={user.nombre} />
+              <DatoFijo id="dato-apellido" etiqueta="Apellido" valor={user.apellido} />
+              <DatoFijo id="dato-email" etiqueta="Email" valor={user.email} completo />
+            </div>
+          </section>
+
+          {metodo.id === 'tarjeta' && (
+            <section className={styles.bloque} aria-labelledby="titulo-tarjeta">
+              <h3 id="titulo-tarjeta" className={styles.bloqueTitulo}>
+                Datos de la tarjeta
+              </h3>
+              <FormularioTarjeta valores={valores} errores={erroresVisibles} marca={marca} onCambiar={cambiar} onSalir={salir} />
+            </section>
+          )}
+
+          <section className={styles.bloque} aria-labelledby="titulo-terminos">
+            <h3 id="titulo-terminos" className={styles.bloqueTitulo}>
+              Términos y condiciones
+            </h3>
+            <Casilla
+              id={IDS.terminos}
+              marcada={valores.terminos}
+              error={erroresVisibles.terminos}
+              onCambiar={(v) => cambiar('terminos', v)}
+            >
+              Leí y acepto los{' '}
+              <button type="button" className={styles.enlace} onClick={() => setVerTerminos(true)}>
+                términos y condiciones
+              </button>
+            </Casilla>
+            {pideDeclaracion && (
+              <Casilla
+                id={IDS.menores}
+                marcada={valores.menores}
+                error={erroresVisibles.menores}
+                onCambiar={(v) => cambiar('menores', v)}
+              >
+                {textoDeclaracionMenores(edad)} (película {pelicula.clasificacion})
+              </Casilla>
+            )}
+            <Casilla id="acepta-novedades" marcada={valores.novedades} onCambiar={(v) => cambiar('novedades', v)}>
+              Quiero recibir novedades de estrenos y promociones
+            </Casilla>
+          </section>
+
+          <section className={styles.bloque} aria-labelledby="titulo-info">
+            <h3 id="titulo-info" className={styles.bloqueTitulo}>
+              Información de tu compra
+            </h3>
+            <div className={styles.info}>
+              <InformacionCompra />
+            </div>
+          </section>
+
+          {errorPago && (
+            <p className={styles.alerta} role="alert">
+              {errorPago}
+            </p>
+          )}
+        </>
+      )}
+
+      <Modal abierto={verTerminos} titulo="Términos y condiciones" onCerrar={() => setVerTerminos(false)}>
+        <TerminosYCondiciones />
+      </Modal>
+    </PasoCompra>
+  );
+}
+
+function DatoFijo({ id, etiqueta, valor, completo = false }) {
+  return (
+    <div className={`${styles.campo} ${completo ? styles.campoCompleto : ''}`}>
+      <label htmlFor={id} className={styles.etiquetaCampo}>
+        {etiqueta}
+      </label>
+      <input id={id} className="form-input" value={valor || ''} readOnly />
+    </div>
+  );
+}
+
+function Casilla({ id, marcada, error, onCambiar, children }) {
+  return (
+    <div className={styles.casilla}>
+      <input
+        id={id}
+        type="checkbox"
+        checked={marcada}
+        onChange={(e) => onCambiar(e.target.checked)}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `${id}-error` : undefined}
+      />
+      <label htmlFor={id}>{children}</label>
+      {error && (
+        <p id={`${id}-error`} className={styles.errorCampo}>
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+// Va en el resumen: codigo promocional arriba del total y el desglose que devolvio el backend
+function DetallePago({ compra, deshabilitado, onAplicar }) {
+  const [codigo, setCodigo] = useState('');
+  const [aplicando, setAplicando] = useState(false);
+  const [error, setError] = useState('');
+  const subtotal = Number(compra.subtotal ?? compra.total);
+  const total = Number(compra.total);
+  const descuento = subtotal - total;
+
+  const aplicar = async (e) => {
+    e.preventDefault();
+    if (!codigo.trim()) {
+      setError('Ingresá un código.');
+      return;
+    }
+    setAplicando(true);
+    setError('');
+    try {
+      await onAplicar(codigo.trim());
+      setCodigo('');
+    } catch (err) {
+      setError(err.status === 404 ? 'Ese código no existe.' : err.message);
+    }
+    setAplicando(false);
+  };
+
+  return (
+    <div className={styles.detallePago}>
+      {compra.codigoPromocion ? (
+        <p className={styles.promoAplicada}>Código {compra.codigoPromocion} aplicado</p>
+      ) : (
+        <form className={styles.promo} onSubmit={aplicar} noValidate>
+          <label htmlFor="codigo-promocional" className={styles.etiquetaCampo}>
+            Código promocional
+          </label>
+          <div className={styles.promoFila}>
+            <input
+              id="codigo-promocional"
+              className="form-input"
+              value={codigo}
+              onChange={(e) => setCodigo(e.target.value.toUpperCase())}
+              disabled={deshabilitado}
+              aria-invalid={Boolean(error)}
+              aria-describedby={error ? 'codigo-promocional-error' : undefined}
+            />
+            <button type="submit" className="btn btn-sm" disabled={deshabilitado || aplicando}>
+              {aplicando ? 'Aplicando…' : 'Aplicar'}
+            </button>
+          </div>
+          {error && (
+            <p id="codigo-promocional-error" className={styles.errorCampo} role="alert">
+              {error}
+            </p>
+          )}
+        </form>
+      )}
+
+      <dl className={styles.desglose}>
+        <div>
+          <dt>Subtotal</dt>
+          <dd>{formatearPrecio(subtotal)}</dd>
+        </div>
+        {descuento > 0 && (
+          <div className={styles.descuento}>
+            <dt>Descuento</dt>
+            <dd>− {formatearPrecio(descuento)}</dd>
+          </div>
+        )}
+        <div className={styles.desgloseTotal}>
+          <dt>Total</dt>
+          <dd>{formatearPrecio(total)}</dd>
+        </div>
+      </dl>
+    </div>
+  );
+}
