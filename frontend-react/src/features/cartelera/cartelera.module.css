@@ -85,8 +85,9 @@
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1.5rem;
-    /* Cada tarjeta mide lo que necesita su bloque de info */
-    align-items: start;
+    /* Todas las filas con el mismo alto (la tarjeta ya tiene alturas fijas, esto lo asegura) */
+    grid-auto-rows: 1fr;
+    align-items: stretch;
 }
 
 @media (max-width: 1024px) {
@@ -104,35 +105,64 @@
 
 /* ---------- Horarios ---------- */
 
+/* Alto fijo para 2 filas de chips (o cine + 1 fila + enlace). HorariosDelDia lee --ancho-chip y
+   --separacion-chips para calcular cuantos chips entran por fila. */
 .horarios {
+    --ancho-chip: 74px;
+    --separacion-chips: 6px;
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.35rem;
+    height: 5.6rem;
     margin-top: 0.25rem;
+    overflow: hidden;
+}
+
+.sinFunciones {
+    justify-content: center;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
 }
 
 .horariosCine {
+    overflow: hidden;
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--text-muted);
-    margin-bottom: 0.3rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.masCines {
+    align-self: flex-start;
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.masCines:hover {
+    text-decoration: underline;
 }
 
 .chips {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem;
+    gap: var(--separacion-chips);
 }
 
 .chip {
     display: inline-flex;
     flex-direction: column;
     align-items: center;
-    min-width: 58px;
-    padding: 0.3rem 0.55rem;
+    justify-content: center;
+    width: var(--ancho-chip);
+    height: 2.5rem;
+    padding: 0.3rem 0.3rem;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     background: var(--surface-2);
@@ -167,8 +197,21 @@ button.chip:hover {
 }
 
 .chipDetalle {
+    max-width: 100%;
+    overflow: hidden;
     font-size: 0.65rem;
     color: var(--text-muted);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chipMas {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.chipMas:hover {
+    border-color: var(--accent);
 }
 
 .chipAgotado {
@@ -178,4 +221,12 @@ button.chip:hover {
 
 .chipAgotado .chipHora {
     text-decoration: line-through;
+}
+
+
+@media (max-width: 640px) {
+    .horarios {
+        --ancho-chip: 62px;
+        --separacion-chips: 5px;
+    }
 }

@@ -6,6 +6,8 @@ import styles from './PeliculaCard.module.css';
 
 // children: contenido debajo de los formatos (los horarios del dia en la cartelera).
 // No va adentro de un enlace para que cada horario tenga su propio clic.
+// Todas las tarjetas miden lo mismo: el titulo reserva 2 lineas, los formatos 1 y los horarios
+// tienen su propia altura fija (ver HorariosDelDia).
 export default function PeliculaCard({ pelicula, to, estreno = false, children }) {
   const duracion = formatearDuracionCorta(pelicula.duracionMinutos);
   const formatos = listarFormatos(pelicula.formatosDisponibles);
@@ -34,9 +36,10 @@ export default function PeliculaCard({ pelicula, to, estreno = false, children }
             {duracion}
           </span>
         )}
+        {estreno && <span className={styles.badgeEstreno}>Estreno</span>}
       </div>
 
-      <div className={`${styles.info} ${estreno ? styles.infoConPestana : ''}`}>
+      <div className={styles.info}>
         <div className={styles.filaTitulo}>
           <h3 className={styles.titulo}>{to ? <Link to={to}>{pelicula.titulo}</Link> : pelicula.titulo}</h3>
           {pelicula.clasificacion && (
@@ -45,11 +48,12 @@ export default function PeliculaCard({ pelicula, to, estreno = false, children }
             </span>
           )}
         </div>
-        {formatos && <p className={styles.formatos}>{formatos}</p>}
+        <p className={styles.formatos} title={formatos || undefined}>
+          {formatos}
+        </p>
         {children}
       </div>
 
-      {estreno && <p className={styles.pestanaEstreno}>Estreno</p>}
     </article>
   );
 }

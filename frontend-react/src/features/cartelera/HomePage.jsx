@@ -96,11 +96,13 @@ export default function HomePage() {
         />
       </p>
       <ul className={styles.enlaces}>
-        <li>
-          <button type="button" className={styles.enlaceTexto} onClick={() => cambiarFiltros({ cineId: '' })}>
-            Ver las películas de todos los cines
-          </button>
-        </li>
+        {filtros.cineId && (
+          <li>
+            <button type="button" className={styles.enlaceTexto} onClick={() => cambiarFiltros({ cineId: '' })}>
+              Ver las películas de todos los cines
+            </button>
+          </li>
+        )}
         <li>
           <Link to="/cines" className={styles.enlaceTexto}>
             Ver la cartelera por cine
@@ -140,22 +142,22 @@ export default function HomePage() {
 
       {cartelera.length > 0 && (
         <ul className={styles.grilla}>
-          {cartelera.map(({ pelicula, funciones }) => (
-            <li key={pelicula.id}>
-              <PeliculaCard
-                pelicula={pelicula}
-                to={`/peliculas/${pelicula.id}${queryCineYDia(filtros.cineId, dia)}`}
-                estreno={esEstreno(pelicula)}
-              >
-                <HorariosDelDia
-                  funciones={funciones}
-                  agruparPorCine={!filtros.cineId}
-                  elegidaId={elegida?.id}
-                  onElegir={setElegida}
-                />
-              </PeliculaCard>
-            </li>
-          ))}
+          {cartelera.map(({ pelicula, funciones }) => {
+            const detalle = `/peliculas/${pelicula.id}${queryCineYDia(filtros.cineId, dia)}`;
+            return (
+              <li key={pelicula.id}>
+                <PeliculaCard pelicula={pelicula} to={detalle} estreno={esEstreno(pelicula)}>
+                  <HorariosDelDia
+                    funciones={funciones}
+                    agruparPorCine={!filtros.cineId}
+                    elegidaId={elegida?.id}
+                    onElegir={setElegida}
+                    enlaceDetalle={detalle}
+                  />
+                </PeliculaCard>
+              </li>
+            );
+          })}
         </ul>
       )}
 
