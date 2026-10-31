@@ -3,8 +3,8 @@ import { useState, useEffect, createContext, useContext } from 'react';
 const AuthContext = createContext(null);
 
 const STORAGE_KEY = 'cineclick_user';
-const TOKEN_KEY = 'cineclick_token';
 
+// La sesion es solo para la interfaz: la API no tiene autenticacion (limitacion conocida).
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
@@ -16,23 +16,24 @@ export function AuthProvider({ children }) {
   });
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
-    } else {
-      localStorage.removeItem(STORAGE_KEY);
-      localStorage.removeItem(TOKEN_KEY);
+    try {
+      if (user) localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+      else localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // Sin acceso al storage la sesion dura hasta recargar
     }
   }, [user]);
 
+  // data: LoginResponseDTO
   const login = (data) => {
-    const userData = {
-      nombre: data.nombreCompleto || data.nombre || data.apellido ? `${data.nombre || ''} ${data.apellido || ''}`.trim() : data.email,
+    setUser({
+      usuarioId: data.usuarioId ?? null,
+      clienteId: data.clienteId ?? null,
+      nombre: data.nombre || data.nombreCompleto || data.email,
+      apellido: data.apellido || '',
       email: data.email || '',
       rol: data.rol || '',
-      token: data.token || '',
-    };
-    if (data.token) localStorage.setItem(TOKEN_KEY, data.token);
-    setUser(userData);
+    });
   };
 
   const logout = () => setUser(null);
@@ -48,8 +49,4 @@ export function useAuth() {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error('useAuth must be used within AuthProvider');
   return ctx;
-}
-
-export function getToken() {
-  return localStorage.getItem(TOKEN_KEY);
 }
