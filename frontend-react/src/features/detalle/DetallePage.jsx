@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { api } from '../../lib/api';
+import { api } from '../../services/http';
 import { fechaHoraCorta, horaCorta } from '../../lib/fechas';
 
 function buildQuery(params) {

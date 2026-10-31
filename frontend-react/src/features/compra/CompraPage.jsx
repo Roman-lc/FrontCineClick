@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
-import { api } from '../../lib/api';
+import { api } from '../../services/http';
 import { fechaHoraCorta } from '../../lib/fechas';
 import { funcionVigente } from '../../lib/fechas';
 import { useToast } from '../../components/ui/ToastProvider';

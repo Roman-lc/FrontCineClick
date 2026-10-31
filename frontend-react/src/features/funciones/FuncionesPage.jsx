@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
-import { api } from '../../lib/api';
+import { api } from '../../services/http';
 import { funcionVigente, fechaCorta, horaCorta, fechaHoraCorta, fechaDeFuncion, etiquetaFecha } from '../../lib/fechas';
 import { useAuth } from '../../app/AuthContext';
 import { useToast } from '../../components/ui/ToastProvider';

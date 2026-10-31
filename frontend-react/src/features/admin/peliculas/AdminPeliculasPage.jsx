@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { api } from '../../../lib/api';
+import { api } from '../../../services/http';
 import { useToast } from '../../../components/ui/ToastProvider';
 import { useAuth } from '../../../app/AuthContext';
 
