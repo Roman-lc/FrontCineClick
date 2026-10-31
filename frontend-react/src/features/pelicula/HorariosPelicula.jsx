@@ -8,6 +8,8 @@ import SelectorCine from '../../components/ui/SelectorCine';
 import { NIVELES_DISPONIBILIDAD, nivelDisponibilidad } from '../../lib/disponibilidad';
 import { diaYFechaCortos, fechaDeFuncion, fechaLarga, funcionVigente, horaCorta, hoyISO } from '../../lib/fechas';
 import { etiquetaFormato } from '../../lib/formato';
+import BotonAviso from '../listaEspera/BotonAviso';
+import { useListaEspera } from '../listaEspera/useListaEspera';
 import {
   agruparPorFormatoEIdioma,
   cinePrincipal,
@@ -18,6 +20,7 @@ import {
 import styles from './pelicula.module.css';
 
 export default function HorariosPelicula({ pelicula, cines, funciones, filtros, onCambiar, elegidaId, onElegir }) {
+  const { anotadas, marcar } = useListaEspera();
   const vigentes = funciones.filter(funcionVigente);
   const cine = cinePrincipal(cines, vigentes, filtros.cineId);
 
@@ -38,10 +41,12 @@ export default function HorariosPelicula({ pelicula, cines, funciones, filtros, 
         <EstadoVacio
           mensaje={
             proximoEstreno
-              ? `Se estrena el ${fechaLarga(pelicula.fechaEstreno)}.`
+              ? `Se estrena el ${fechaLarga(pelicula.fechaEstreno)}. Las entradas todavía no están a la venta.`
               : 'Esta película no tiene funciones programadas.'
           }
-        />
+        >
+          {proximoEstreno && <BotonAviso pelicula={pelicula} anotada={anotadas.has(pelicula.id)} onCambio={marcar} />}
+        </EstadoVacio>
       </div>
     );
   }

@@ -224,6 +224,71 @@ button.chip:hover {
 }
 
 
+/* ---------- Proximos estrenos ---------- */
+
+.proximos {
+    margin-top: 3.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--border);
+}
+
+.tituloSeccion {
+    margin: 0 0 0.35rem;
+    font-size: clamp(1.8rem, 4.5vw, 2.6rem);
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.bajada {
+    margin: 0 0 1.5rem;
+    color: var(--text-muted);
+}
+
+/* Alto fijo: todas las tarjetas de la seccion miden lo mismo */
+.proximoPie {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.6rem;
+    height: 5.25rem;
+    margin-top: 0.25rem;
+}
+
+.proximoFecha {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.6rem;
+    margin: 0;
+    color: var(--text);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.etiqueta {
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.etiquetaPreventa {
+    background: var(--accent);
+    color: var(--accent-text);
+}
+
+.etiquetaProxima {
+    background: var(--info);
+    color: var(--bg);
+}
+
+.proximoAccion {
+    width: 100%;
+    text-decoration: none;
+}
+
 @media (max-width: 640px) {
     .horarios {
         --ancho-chip: 62px;

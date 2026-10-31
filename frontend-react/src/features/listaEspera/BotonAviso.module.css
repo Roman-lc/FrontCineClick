@@ -1,0 +1,10 @@
+/* Doble clase: index.css se carga despues de los modulos y su .btn ganaria con la misma especificidad */
+.boton.anotada {
+    border-color: var(--success);
+    color: var(--success);
+}
+
+.boton.anotada:hover {
+    border-color: var(--danger);
+    color: var(--danger);
+}

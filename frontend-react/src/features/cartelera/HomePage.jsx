@@ -12,6 +12,7 @@ import SelectorCine from '../../components/ui/SelectorCine';
 import { escribirFiltros, leerFiltros, queryCineYDia } from '../../lib/filtrosUrl';
 import BarraFiltros from './BarraFiltros';
 import HorariosDelDia from './HorariosDelDia';
+import ProximosEstrenos from './ProximosEstrenos';
 import SliderDestacados from './SliderDestacados';
 import BarraFuncionElegida from '../compra/BarraFuncionElegida';
 import {
@@ -177,6 +178,8 @@ export default function HomePage() {
           })}
         </ul>
       )}
+
+      <ProximosEstrenos proximos={estrenos.proximos} />
 
       {elegida && <BarraFuncionElegida funcion={elegida} onQuitar={() => setElegida(null)} />}
     </section>
