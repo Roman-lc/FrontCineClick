@@ -142,9 +142,23 @@
     transition: border-color 0.2s, color 0.2s;
 }
 
-a.chip:hover {
+/* font: inherit trae el interlineado del body; se vuelve al del chip para que entren las 2 lineas */
+button.chip {
+    font: inherit;
+    line-height: 1.2;
+    cursor: pointer;
+}
+
+button.chip:hover {
     border-color: var(--accent);
     color: var(--accent);
+}
+
+.chip[aria-pressed='true'],
+.chip[aria-pressed='true'] .chipDetalle {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--accent-text);
 }
 
 .chipHora {

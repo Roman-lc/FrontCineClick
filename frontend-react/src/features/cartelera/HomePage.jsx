@@ -12,6 +12,7 @@ import SelectorCine from '../../components/ui/SelectorCine';
 import { escribirFiltros, leerFiltros, queryCineYDia } from '../../lib/filtrosUrl';
 import BarraFiltros from './BarraFiltros';
 import HorariosDelDia from './HorariosDelDia';
+import BarraFuncionElegida from '../compra/BarraFuncionElegida';
 import {
   armarCartelera,
   diaElegido,
@@ -26,6 +27,7 @@ export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [intento, setIntento] = useState(0);
   const [estado, setEstado] = useState({ cargando: true, error: '', datos: null });
+  const [elegida, setElegida] = useState(null);
 
   // Se cargan una sola vez; los filtros se aplican en memoria
   useEffect(() => {
@@ -145,12 +147,19 @@ export default function HomePage() {
                 to={`/peliculas/${pelicula.id}${queryCineYDia(filtros.cineId, dia)}`}
                 estreno={esEstreno(pelicula)}
               >
-                <HorariosDelDia funciones={funciones} agruparPorCine={!filtros.cineId} />
+                <HorariosDelDia
+                  funciones={funciones}
+                  agruparPorCine={!filtros.cineId}
+                  elegidaId={elegida?.id}
+                  onElegir={setElegida}
+                />
               </PeliculaCard>
             </li>
           ))}
         </ul>
       )}
+
+      {elegida && <BarraFuncionElegida funcion={elegida} onQuitar={() => setElegida(null)} />}
     </section>
   );
 }

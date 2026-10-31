@@ -17,7 +17,7 @@ import {
 } from './horarios';
 import styles from './pelicula.module.css';
 
-export default function HorariosPelicula({ pelicula, cines, funciones, filtros, onCambiar }) {
+export default function HorariosPelicula({ pelicula, cines, funciones, filtros, onCambiar, elegidaId, onElegir }) {
   const vigentes = funciones.filter(funcionVigente);
   const cine = cinePrincipal(cines, vigentes, filtros.cineId);
 
@@ -143,7 +143,7 @@ export default function HorariosPelicula({ pelicula, cines, funciones, filtros, 
               <ul className={styles.chips}>
                 {grupo.funciones.map((funcion) => (
                   <li key={funcion.id}>
-                    <ChipHorario funcion={funcion} />
+                    <ChipHorario funcion={funcion} elegida={funcion.id === elegidaId} onElegir={onElegir} />
                   </li>
                 ))}
               </ul>
@@ -155,7 +155,7 @@ export default function HorariosPelicula({ pelicula, cines, funciones, filtros, 
   );
 }
 
-function ChipHorario({ funcion }) {
+function ChipHorario({ funcion, elegida, onElegir }) {
   const hora = horaCorta(funcion.fechaHoraInicio);
   const nivel = nivelDisponibilidad(funcion);
   const contenido = (
@@ -175,12 +175,14 @@ function ChipHorario({ funcion }) {
     );
   }
   return (
-    <Link
-      to={`/compra/${funcion.id}`}
+    <button
+      type="button"
       className={styles.chip}
-      aria-label={`Comprar para las ${hora}, disponibilidad ${nivel.etiqueta.toLowerCase()}`}
+      aria-pressed={elegida}
+      onClick={() => onElegir(elegida ? null : funcion)}
+      aria-label={`${hora}, disponibilidad ${nivel.etiqueta.toLowerCase()}`}
     >
       {contenido}
-    </Link>
+    </button>
   );
 }

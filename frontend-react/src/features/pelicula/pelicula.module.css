@@ -263,8 +263,20 @@
     transition: border-color 0.2s;
 }
 
-a.chip:hover {
+button.chip {
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+button.chip:hover {
     border-color: var(--accent);
+}
+
+.chip[aria-pressed='true'] {
+    border-color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent);
+    background: var(--surface-2);
 }
 
 .chipCompleta {

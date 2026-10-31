@@ -9,6 +9,7 @@ import MensajeError from '../../components/ui/MensajeError';
 import { escribirFiltros, leerFiltros } from '../../lib/filtrosUrl';
 import FichaPelicula from './FichaPelicula';
 import HorariosPelicula from './HorariosPelicula';
+import BarraFuncionElegida from '../compra/BarraFuncionElegida';
 import styles from './pelicula.module.css';
 
 // La key reinicia el estado al pasar de una pelicula a otra
@@ -21,6 +22,7 @@ function DetallePelicula({ id }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [intento, setIntento] = useState(0);
   const [estado, setEstado] = useState({ cargando: true, error: null, datos: null });
+  const [elegida, setElegida] = useState(null);
 
   useEffect(() => {
     let ignorar = false;
@@ -84,7 +86,10 @@ function DetallePelicula({ id }) {
         funciones={funciones}
         filtros={filtros}
         onCambiar={cambiarFiltros}
+        elegidaId={elegida?.id}
+        onElegir={setElegida}
       />
+      {elegida && <BarraFuncionElegida funcion={elegida} onQuitar={() => setElegida(null)} />}
     </section>
   );
 }

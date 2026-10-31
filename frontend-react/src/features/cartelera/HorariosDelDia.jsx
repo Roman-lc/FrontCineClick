@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom';
 import { horaCorta } from '../../lib/fechas';
 import { etiquetaFormato, etiquetaIdiomaCorta } from '../../lib/formato';
 import styles from './cartelera.module.css';
 
 // Horarios de una pelicula para el dia elegido. Con "todos los cines" se agrupan por cine.
-export default function HorariosDelDia({ funciones, agruparPorCine }) {
+// Tocar un horario lo elige (onElegir) y la pagina muestra la barra para comprar.
+export default function HorariosDelDia({ funciones, agruparPorCine, elegidaId, onElegir }) {
   const grupos = agruparPorCine ? agruparPorNombreDeCine(funciones) : [['', funciones]];
   return (
     <div className={styles.horarios}>
@@ -14,7 +14,7 @@ export default function HorariosDelDia({ funciones, agruparPorCine }) {
           <ul className={styles.chips}>
             {lista.map((funcion) => (
               <li key={funcion.id}>
-                <ChipHorario funcion={funcion} />
+                <ChipHorario funcion={funcion} elegida={funcion.id === elegidaId} onElegir={onElegir} />
               </li>
             ))}
           </ul>
@@ -24,7 +24,7 @@ export default function HorariosDelDia({ funciones, agruparPorCine }) {
   );
 }
 
-function ChipHorario({ funcion }) {
+function ChipHorario({ funcion, elegida, onElegir }) {
   const hora = horaCorta(funcion.fechaHoraInicio);
   const formato = etiquetaFormato(funcion.formato);
 
@@ -37,16 +37,18 @@ function ChipHorario({ funcion }) {
     );
   }
   return (
-    <Link
-      to={`/compra/${funcion.id}`}
+    <button
+      type="button"
       className={styles.chip}
-      aria-label={`Comprar para las ${hora}, ${formato}, ${funcion.idioma}, ${funcion.cineNombre}`}
+      aria-pressed={elegida}
+      onClick={() => onElegir(elegida ? null : funcion)}
+      aria-label={`${hora}, ${formato}, ${funcion.idioma}, ${funcion.cineNombre}`}
     >
       <span className={styles.chipHora}>{hora}</span>
       <span className={styles.chipDetalle}>
         {formato} · {etiquetaIdiomaCorta(funcion.idioma)}
       </span>
-    </Link>
+    </button>
   );
 }
 
