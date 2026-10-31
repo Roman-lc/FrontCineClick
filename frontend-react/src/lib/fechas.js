@@ -93,3 +93,8 @@ export function diaRelativo(fechaIso) {
   if (fecha === sumarDiasISO(hoy, 1)) return 'Mañana';
   return `${diaSemanaCorto(fecha)} ${fechaCorta(fecha)}`;
 }
+
+// '2026-11-05' -> '5 de noviembre'
+export function fechaDiaMes(iso) {
+  return new Date(iso + 'T00:00:00').toLocaleDateString('es-AR', { day: 'numeric', month: 'long' });
+}

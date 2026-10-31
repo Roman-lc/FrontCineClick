@@ -53,6 +53,9 @@ const programacion = [
   [101, 1, enDias(3, '20:00'), 'DOS_D', 'Castellano', 4200],
   [103, 4, enDias(3, '17:00'), 'DOS_D', 'Castellano', 7800],
   [1, 2, enDias(4, '19:00'), 'IMAX', 'Subtitulada', 6500],
+  [105, 2, enDias(5, '20:00'), 'IMAX', 'Subtitulada', 6500], // preventa
+  [105, 3, enDias(5, '22:30'), 'DOS_D', 'Subtitulada', 4200],
+  [106, 2, enDias(19, '20:30'), 'IMAX', 'Subtitulada', 6500], // preventa
   [2, 3, enDias(5, '15:30'), 'DOS_D', 'Castellano', 4200],
   [104, 5, hoyEnHoras(5), 'CUATRO_D', 'Subtitulada', 9000],
   [104, 5, enDias(1, '21:00'), 'CUATRO_D', 'Subtitulada', 9000],
