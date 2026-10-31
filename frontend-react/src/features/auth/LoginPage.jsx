@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../../lib/api';
+import { api } from '../../services/http';
 import { useToast } from '../../components/ui/ToastProvider';
 
-export default function LoginPage() {
-  const [tab, setTab] = useState('login');
+// modoInicial: 'login' o 'registro' (la ruta /registro abre directo la pestaña de crear cuenta)
+export default function LoginPage({ modoInicial = 'login' }) {
+  const [tab, setTab] = useState(modoInicial);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [regNombre, setRegNombre] = useState('');
