@@ -59,6 +59,17 @@ export function listarFormatos(formatos = []) {
     .join(' · ');
 }
 
+const CLASIFICACIONES = {
+  ATP: 'Apta para todo público',
+  '+13': 'Apta para mayores de 13 años',
+  '+16': 'Apta para mayores de 16 años',
+  '+18': 'Apta para mayores de 18 años',
+};
+
+export function clasificacionCompleta(clasificacion) {
+  return CLASIFICACIONES[clasificacion] ?? clasificacion ?? '';
+}
+
 const IDIOMAS_CORTOS = { Castellano: 'Cast.', Subtitulada: 'Subt.' };
 
 export function etiquetaIdiomaCorta(idioma) {

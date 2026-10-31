@@ -67,6 +67,19 @@ export function etiquetaFecha(iso) {
   return `${diaSemanaCorto(iso)} · ${fechaCorta(iso)}`;
 }
 
+const MESES_CORTOS = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+
+// '2026-10-31' -> { dia: 'SÁB', fecha: '31/OCT' }
+export function diaYFechaCortos(iso) {
+  const d = new Date(iso + 'T00:00:00');
+  return { dia: diaSemanaCorto(iso).toUpperCase(), fecha: `${d.getDate()}/${MESES_CORTOS[d.getMonth()]}` };
+}
+
+// '2026-10-23' -> '23 de octubre de 2026'
+export function fechaLarga(iso) {
+  return new Date(iso + 'T00:00:00').toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
 export function fechaDeFuncion(funcion) {
   if (!funcion || !funcion.fechaHoraInicio) return '';
   return funcion.fechaHoraInicio.split('T')[0];

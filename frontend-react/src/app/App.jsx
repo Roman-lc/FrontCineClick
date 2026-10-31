@@ -14,6 +14,7 @@ import AdminFuncionesPage from '../features/admin/funciones/AdminFuncionesPage';
 import AdminClientesPage from '../features/admin/clientes/AdminClientesPage';
 import AdminPromocionesPage from '../features/admin/promociones/AdminPromocionesPage';
 import AdminComprasPage from '../features/admin/compras/AdminComprasPage';
+import PeliculaPage from '../features/pelicula/PeliculaPage';
 import PaginaPendiente from '../features/pendiente/PaginaPendiente';
 import NoEncontradaPage from '../features/error/NoEncontradaPage';
 
@@ -30,7 +31,7 @@ export default function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/cines" element={<PaginaPendiente titulo="Cines" etapa={3} />} />
-        <Route path="/peliculas/:id" element={<PaginaPendiente titulo="Película" etapa={3} />} />
+        <Route path="/peliculas/:id" element={<PeliculaPage />} />
         <Route path="/promociones" element={<PaginaPendiente titulo="Promociones" etapa={3} />} />
         <Route path="/grupo" element={<GrupoPage />} />
 

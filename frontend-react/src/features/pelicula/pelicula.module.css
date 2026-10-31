@@ -1,0 +1,274 @@
+/* ---------- Layout: ficha 35% | horarios 65% ---------- */
+
+.detalle {
+    display: grid;
+    grid-template-columns: minmax(0, 35fr) minmax(0, 65fr);
+    gap: 6rem;
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .detalle {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 3rem;
+    }
+}
+
+.tituloGrande {
+    margin: 0 0 1.25rem;
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    text-transform: uppercase;
+    /* No menos de 1.15: con menos, el recorte a 2 lineas corta las tildes de las mayusculas */
+    line-height: 1.15;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.etiquetaChica {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+/* ---------- Ficha ---------- */
+
+.posterCaja {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+/* En el celular, con las columnas apiladas, el poster es mas chico */
+@media (max-width: 900px) {
+    .posterCaja {
+        max-width: 260px;
+    }
+}
+
+.pastillaPoster {
+    position: absolute;
+    top: 0.75rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(15, 15, 20, 0.75);
+    color: var(--text);
+    font-size: 0.8rem;
+    font-weight: 700;
+    backdrop-filter: blur(4px);
+}
+
+.pastillaIzquierda {
+    left: 0.75rem;
+}
+
+.pastillaDerecha {
+    right: 0.75rem;
+}
+
+.genero {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 1.25rem;
+    padding: 0.35rem 0.9rem;
+    border: 1px solid var(--text-muted);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.sinopsis {
+    margin-top: 1.25rem;
+}
+
+.datos {
+    margin-top: 1.5rem;
+}
+
+.fila {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.fila:first-child {
+    border-top: 1px solid var(--border);
+}
+
+.fila dt {
+    flex-shrink: 0;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.fila dd {
+    text-align: right;
+}
+
+/* ---------- Horarios ---------- */
+
+.botonCines {
+    margin-bottom: 1.5rem;
+}
+
+/* 5 dias contiguos de igual ancho */
+.dias {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    margin-bottom: 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.dia {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1rem;
+    padding: 0.7rem 0.25rem;
+    border: none;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+}
+
+.dia + .dia {
+    border-left: 1px solid var(--border);
+}
+
+.dia:hover {
+    background: var(--surface-2);
+}
+
+/* Seleccionado: fondo invertido (claro sobre oscuro) */
+.dia[aria-pressed='true'] {
+    background: var(--text);
+    color: var(--bg);
+}
+
+.diaNombre {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    letter-spacing: 0.06em;
+    line-height: 1.1;
+}
+
+.diaFecha {
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.leyenda {
+    margin: 1.5rem 0;
+}
+
+.leyendaItems {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    margin-top: 0.4rem;
+}
+
+.leyendaItems li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+}
+
+.leyendaItems li span {
+    color: var(--text);
+}
+
+/* Colores por nivel de disponibilidad (icono de butaca) */
+.alta {
+    color: var(--success);
+}
+
+.media {
+    color: var(--accent);
+}
+
+.baja {
+    color: var(--danger);
+}
+
+.completa {
+    color: var(--text-muted);
+}
+
+.cine {
+    margin-bottom: 2rem;
+}
+
+.horariosEn {
+    font-size: 1.15rem;
+    margin-top: 0.2rem;
+}
+
+.direccion {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.grupos {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.grupoTitulo {
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+}
+
+.grupoTitulo strong {
+    color: var(--text);
+}
+
+.chips {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    font-weight: 700;
+    text-decoration: none;
+    transition: border-color 0.2s;
+}
+
+a.chip:hover {
+    border-color: var(--accent);
+}
+
+.chipCompleta {
+    opacity: 0.5;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
