@@ -4,8 +4,11 @@ export const DIAS_EN_SELECTOR = 5;
 
 const ORDEN_FORMATOS = ['DOS_D', 'TRES_D', 'CUATRO_D', 'IMAX'];
 
-export function diasDelSelector(hoy = hoyISO()) {
-  return Array.from({ length: DIAS_EN_SELECTOR }, (_, i) => sumarDiasISO(hoy, i));
+// Arranca hoy o, en una preventa, el primer dia con funciones (no tiene sentido mostrar dias vacios)
+export function diasDelSelector(funcionesDelCine = [], hoy = hoyISO()) {
+  const primera = funcionesDelCine.map(fechaDeFuncion).sort()[0];
+  const desde = primera && primera > hoy ? primera : hoy;
+  return Array.from({ length: DIAS_EN_SELECTOR }, (_, i) => sumarDiasISO(desde, i));
 }
 
 // El cine pedido si existe; si no, el primero que tenga funciones de esta pelicula

@@ -52,7 +52,7 @@ export default function HorariosPelicula({ pelicula, cines, funciones, filtros, 
   }
 
   const delCine = funcionesVigentesDeCine(funciones, cine.id);
-  const dias = diasDelSelector();
+  const dias = diasDelSelector(delCine);
   const dia = diaInicial(dias, delCine, filtros.dia);
   const formatos = [...new Set(delCine.map((f) => f.formato))];
   const idiomas = [...new Set(delCine.map((f) => f.idioma))].sort();
