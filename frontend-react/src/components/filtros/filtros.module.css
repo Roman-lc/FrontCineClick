@@ -1,0 +1,77 @@
+/* Barra de segmentos con desplegables (cartelera y detalle de pelicula) */
+
+.barra {
+    position: relative;
+    display: inline-flex;
+    flex-wrap: wrap;
+    max-width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+/* Divisor vertical sutil entre segmentos */
+.barra > * + * {
+    border-left: 1px solid var(--border);
+}
+
+/* Las esquinas del primer y ultimo segmento siguen el redondeado de la barra */
+.barra > :first-child > button {
+    border-radius: var(--radius) 0 0 var(--radius);
+}
+
+.barra > :last-child > button {
+    border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.opciones {
+    border: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.opciones + .opciones {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+}
+
+.leyenda {
+    padding: 0 0.5rem 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+.opcion {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.opcion:hover {
+    background: var(--surface-2);
+}
+
+.opcion input {
+    accent-color: var(--accent);
+    width: 16px;
+    height: 16px;
+}
+
+.opcionDeshabilitada {
+    color: var(--text-muted);
+    cursor: not-allowed;
+}
+
+.notaOpcion {
+    margin-left: auto;
+    font-size: 0.75rem;
+}
