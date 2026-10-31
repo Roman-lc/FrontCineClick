@@ -1,0 +1,26 @@
+/* Tema "sala oscura": fondo oscuro, posters como protagonistas y un solo acento ambar. */
+:root {
+    --bg: #0f0f14;
+    --surface: #1a1a22;
+    --surface-2: #24242e;
+    --border: #2f2f3a;
+    --text: #f2f2f5;
+    --text-muted: #a0a0ad;
+
+    /* Sobre el ambar el texto va oscuro (--accent-text) para que tenga contraste */
+    --accent: #f5b301;
+    --accent-hover: #ffc933;
+    --accent-text: #111111;
+
+    --danger: #ff5c5c;
+    --success: #34d399;
+    --info: #60a5fa;
+
+    --font-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
+    --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+    --radius-sm: 6px;
+    --radius: 12px;
+    --ancho-max: 1200px;
+    --alto-header: 64px;
+}
