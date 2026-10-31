@@ -1,0 +1,129 @@
+.card {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---------- Poster ---------- */
+
+.posterCaja {
+    position: relative;
+    border-radius: var(--radius) var(--radius) 0 0;
+    overflow: hidden;
+    background: var(--surface-2);
+}
+
+.enlacePoster {
+    display: block;
+    text-decoration: none;
+}
+
+/* Poster 2:3 en todas las tarjetas (ver Poster): los de una fila quedan de igual alto */
+.poster {
+    transition: transform 0.3s;
+}
+
+.enlacePoster:hover .poster {
+    transform: scale(1.03);
+}
+
+.badgeDestacada {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    color: var(--accent-text);
+}
+
+.badgeDuracion {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(15, 15, 20, 0.75);
+    color: var(--text);
+    font-size: 0.75rem;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+}
+
+/* ---------- Informacion ---------- */
+
+.info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.85rem 0.9rem 1rem;
+    background: var(--surface);
+    border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.infoConPestana {
+    border-radius: 0;
+}
+
+.filaTitulo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.6rem;
+}
+
+.titulo {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.35rem;
+    letter-spacing: 0.03em;
+    /* No menos de 1.15: con menos, el recorte a 2 lineas corta las tildes de las mayusculas (É, Á) */
+    line-height: 1.15;
+    text-transform: uppercase;
+    /* Hasta 2 lineas */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.titulo a {
+    color: var(--text);
+    text-decoration: none;
+}
+
+.titulo a:hover {
+    color: var(--accent);
+}
+
+.calificacion {
+    flex-shrink: 0;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--text-muted);
+    border-radius: 4px;
+    color: var(--text);
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.formatos {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.pestanaEstreno {
+    padding: 0.3rem;
+    border-radius: 0 0 var(--radius) var(--radius);
+    background: var(--accent);
+    color: var(--accent-text);
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}

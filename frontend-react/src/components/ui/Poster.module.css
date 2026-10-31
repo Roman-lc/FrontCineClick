@@ -1,0 +1,21 @@
+.poster {
+    display: block;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    background: var(--surface-2);
+}
+
+.vacio {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    text-align: center;
+    background: linear-gradient(160deg, var(--surface-2) 0%, var(--bg) 100%);
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    letter-spacing: 0.04em;
+    line-height: 1.15;
+    color: var(--text-muted);
+}
