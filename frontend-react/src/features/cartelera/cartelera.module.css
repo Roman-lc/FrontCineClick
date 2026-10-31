@@ -1,0 +1,167 @@
+/* ---------- Encabezado ---------- */
+
+.encabezado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+
+.titulo {
+    margin: 0;
+    font-size: clamp(2.2rem, 6vw, 3.5rem);
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.pastilla {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.pastilla:hover {
+    border-color: var(--text-muted);
+}
+
+.pastillaActiva {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-text);
+}
+
+.contexto {
+    font-size: 1.05rem;
+    margin-bottom: 0.4rem;
+}
+
+.enlaces {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.enlaceTexto {
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font: inherit;
+    font-size: 0.9rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+}
+
+.enlaceTexto:hover {
+    color: var(--text);
+}
+
+.resultado {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 1rem 0;
+    min-height: 1.4em;
+}
+
+/* ---------- Grilla ---------- */
+
+.grilla {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+    /* Cada tarjeta mide lo que necesita su bloque de info */
+    align-items: start;
+}
+
+@media (max-width: 1024px) {
+    .grilla {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .grilla {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+    }
+}
+
+/* ---------- Horarios ---------- */
+
+.horarios {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 0.25rem;
+}
+
+.horariosCine {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+}
+
+.chips {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.chip {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 58px;
+    padding: 0.3rem 0.55rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    color: var(--text);
+    text-decoration: none;
+    line-height: 1.2;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+a.chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.chipHora {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.chipDetalle {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+
+.chipAgotado {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.chipAgotado .chipHora {
+    text-decoration: line-through;
+}
