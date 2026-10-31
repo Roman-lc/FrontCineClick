@@ -1,0 +1,824 @@
+/* ---------- Estructura comun de los pasos ---------- */
+
+.compra {
+    max-width: var(--ancho-max);
+}
+
+/* position y background pisan el estilo global de <header>, que es el del sitio */
+.cabecera {
+    position: static;
+    z-index: auto;
+    background: none;
+    display: grid;
+    grid-template-columns: 2.5rem 1fr 2.5rem;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.titulo {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    text-align: center;
+}
+
+.reloj {
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+}
+
+.botonIcono {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+.botonIcono:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.columnas {
+    display: grid;
+    grid-template-columns: minmax(0, 65fr) minmax(0, 35fr);
+    gap: 2.5rem;
+    align-items: start;
+}
+
+.contenido {
+    min-width: 0;
+}
+
+.subtitulo {
+    margin: 0 0 1.25rem;
+    font-size: 1.35rem;
+}
+
+.alerta {
+    margin: 1rem 0;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--danger);
+    border-radius: var(--radius-sm);
+    background: rgba(255, 92, 92, 0.1);
+    color: var(--text);
+}
+
+/* ---------- Resumen ---------- */
+
+.resumen {
+    position: sticky;
+    top: calc(var(--alto-header) + 1rem);
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - var(--alto-header) - 2rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    overflow: hidden;
+}
+
+.resumenTitulo {
+    margin: 0;
+    padding: 1rem 1.25rem 0.5rem;
+    font-size: 1.1rem;
+}
+
+.secciones {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 1.25rem;
+}
+
+.seccion {
+    display: flex;
+    gap: 0.85rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.secciones > :last-child {
+    border-bottom: none;
+}
+
+.icono,
+.iconoPoster {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    color: var(--accent);
+}
+
+.iconoPoster {
+    height: 4.1rem;
+    overflow: hidden;
+    background: none;
+}
+
+.miniatura {
+    width: 100%;
+    height: 100%;
+    font-size: 0.5rem;
+    object-fit: cover;
+}
+
+.seccionTexto {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.seccionTexto strong {
+    color: var(--text);
+}
+
+.seccionEtiqueta {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.renglones {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.renglones li {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    color: var(--text);
+}
+
+.barraTotal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+}
+
+.total {
+    display: flex;
+    flex-direction: column;
+}
+
+.totalEtiqueta {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.totalMonto {
+    font-size: 1.3rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.botonAccion {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 8.5rem;
+    justify-content: center;
+}
+
+.botonAccion:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.spinner {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.resumenAcordeon {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.resumenAcordeonTotal {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--accent);
+}
+
+/* ---------- Paso 1: tipos de entrada ---------- */
+
+.grupoEntradas + .grupoEntradas {
+    margin-top: 1.75rem;
+}
+
+.grupoTitulo {
+    margin: 0 0 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.tickets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.ticket {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.ticketDatos {
+    flex: 1;
+    min-width: 0;
+    padding: 1rem 1.25rem;
+}
+
+.ticketNombre {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.25rem;
+    font-weight: 700;
+}
+
+.ticketPrecio {
+    margin: 0;
+    color: var(--accent);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+/* El borde punteado con dos muescas separa la info del contador, como un ticket troquelado */
+.contador {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1rem 1.25rem;
+    border-left: 2px dashed var(--border);
+}
+
+.contador::before,
+.contador::after {
+    content: '';
+    position: absolute;
+    left: -9px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--bg);
+}
+
+.contador::before {
+    top: -9px;
+}
+
+.contador::after {
+    bottom: -9px;
+}
+
+.contadorBoton {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.contadorBoton:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.contadorBoton:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.contadorValor {
+    min-width: 1.5rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.avisoMaximo {
+    min-height: 1.5rem;
+    margin: 1rem 0 0;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* ---------- Paso 2: butacas ---------- */
+
+.indicacion {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin: -0.75rem 0 0;
+    color: var(--text-muted);
+}
+
+.contadorElegidas {
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* ---------- Paso 3: pago ---------- */
+
+.bloque {
+    margin: 0 0 1.75rem;
+    padding: 0;
+    border: none;
+}
+
+.bloqueTitulo {
+    margin: 0 0 0.85rem;
+    padding: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.metodos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.metodo {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-width: min(100%, 280px);
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.metodo:has(input:checked) {
+    border-color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent);
+    color: var(--accent);
+}
+
+.metodo:has(input:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.metodoTexto {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8rem;
+}
+
+.metodoTexto strong {
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+.camposTarjeta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.campoCompleto {
+    grid-column: 1 / -1;
+}
+
+.etiquetaCampo {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.campo input[readonly] {
+    color: var(--text-muted);
+    background: var(--surface-2);
+}
+
+.campo input[aria-invalid='true'] {
+    border-color: var(--danger);
+}
+
+.conLogo {
+    position: relative;
+}
+
+.conLogo input {
+    width: 100%;
+    padding-right: 3.5rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.logo {
+    position: absolute;
+    top: 50%;
+    right: 0.6rem;
+    display: flex;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.errorCampo {
+    margin: 0;
+    color: var(--danger);
+    font-size: 0.85rem;
+}
+
+.casilla {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.25rem 0.65rem;
+    align-items: start;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+}
+
+.casilla input {
+    width: 1.1rem;
+    height: 1.1rem;
+    margin-top: 0.15rem;
+    accent-color: var(--accent);
+}
+
+.casilla .errorCampo {
+    grid-column: 2;
+}
+
+.enlace {
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--accent);
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.info {
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.info ul {
+    margin: 0;
+    padding-left: 1.1rem;
+}
+
+.vencida {
+    padding: 1.5rem;
+    border: 1px solid var(--danger);
+    border-radius: var(--radius);
+    background: rgba(255, 92, 92, 0.08);
+}
+
+.vencidaTitulo {
+    margin: 0 0 0.35rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.detallePago {
+    padding: 0.9rem 0;
+}
+
+.promo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 0.9rem;
+}
+
+.promoFila {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.promoFila input {
+    flex: 1;
+    min-width: 0;
+    text-transform: uppercase;
+}
+
+.promoAplicada {
+    margin: 0 0 0.9rem;
+    color: var(--success);
+    font-weight: 600;
+}
+
+.desglose {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin: 0;
+}
+
+.desglose div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--text-muted);
+}
+
+.desglose dd {
+    margin: 0;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+}
+
+.descuento dd {
+    color: var(--success);
+}
+
+.desgloseTotal {
+    padding-top: 0.35rem;
+    border-top: 1px solid var(--border);
+    font-weight: 700;
+}
+
+/* ---------- Confirmacion ---------- */
+
+.confirmacion {
+    max-width: 720px;
+}
+
+.confirmacionCabecera {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.tilde {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: var(--success);
+    color: #0f0f14;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.confirmacionFuncion {
+    margin-bottom: 1.75rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text-muted);
+}
+
+.confirmacionFuncion p {
+    margin: 0.15rem 0;
+}
+
+.confirmacionPelicula {
+    color: var(--text);
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.entradasConfirmadas {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 1rem 0 1.5rem;
+}
+
+.entradaConfirmada {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.entradaConfirmada p {
+    margin: 0;
+}
+
+.entradaButaca {
+    font-weight: 700;
+}
+
+.codigoEntrada {
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    color: var(--accent);
+    font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+}
+
+.confirmacion .desglose {
+    margin-bottom: 1.5rem;
+}
+
+/* ---------- Barra de funcion elegida (cartelera y detalle) ---------- */
+
+.espacioBarra {
+    height: 5.5rem;
+}
+
+.barraFuncion {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem max(16px, calc((100vw - var(--ancho-max)) / 2));
+    border-top: 1px solid var(--accent);
+    background: var(--surface);
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.barraFuncionDatos {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.barraFuncionPelicula {
+    overflow: hidden;
+    color: var(--text);
+    font-size: 1rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.barraFuncionAcciones {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 860px) {
+    .columnas {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 1.25rem;
+    }
+
+    .compra {
+        padding-bottom: 6rem;
+    }
+
+    .resumen {
+        position: static;
+        width: 100%;
+        max-height: none;
+        overflow: visible;
+    }
+
+    .secciones {
+        overflow: visible;
+        border-top: 1px solid var(--border);
+    }
+
+    .barraTotal {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 50;
+        padding: 0.75rem 16px;
+        border-top: 1px solid var(--accent);
+        box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .contenido > .detallePago {
+        margin-top: 1rem;
+        padding: 1rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--surface);
+    }
+}
+
+@media (max-width: 560px) {
+    .camposTarjeta {
+        grid-template-columns: 1fr;
+    }
+
+    .barraFuncion {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.6rem;
+    }
+
+    .barraFuncionAcciones .btn {
+        flex: 1;
+    }
+
+    .espacioBarra {
+        height: 8.5rem;
+    }
+
+    .ticketDatos,
+    .contador {
+        padding: 0.85rem 1rem;
+    }
+}

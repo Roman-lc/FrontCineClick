@@ -84,3 +84,12 @@ export function fechaDeFuncion(funcion) {
   if (!funcion || !funcion.fechaHoraInicio) return '';
   return funcion.fechaHoraInicio.split('T')[0];
 }
+
+// '2026-10-31T13:00:00' -> 'Hoy', 'Mañana' o 'Lun 02/11'
+export function diaRelativo(fechaIso) {
+  const fecha = fechaIso.split('T')[0];
+  const hoy = hoyISO();
+  if (fecha === hoy) return 'Hoy';
+  if (fecha === sumarDiasISO(hoy, 1)) return 'Mañana';
+  return `${diaSemanaCorto(fecha)} ${fechaCorta(fecha)}`;
+}
