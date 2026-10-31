@@ -1,0 +1,151 @@
+.mapa {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+/* Las salas anchas (IMAX) no entran en un celular: se desplaza el mapa, no la pagina */
+.desplazable {
+    container-type: inline-size;
+    overflow-x: auto;
+    padding: 0.25rem 0 0.75rem;
+}
+
+/* El tamaño de la butaca se ajusta para que entre la sala; con menos de 22px se desplaza */
+.sala {
+    --separacion: 6px;
+    --tam: clamp(22px, calc((100cqw - 1.5rem) / var(--columnas) - var(--separacion)), 32px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--separacion);
+    width: max-content;
+    margin-inline: auto;
+}
+
+.pantalla {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 0 1.5rem calc(1.5rem + var(--separacion));
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+}
+
+.pantalla svg {
+    width: 100%;
+    height: 24px;
+    overflow: visible;
+}
+
+.pantalla path {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 3;
+    vector-effect: non-scaling-stroke;
+    filter: drop-shadow(0 6px 8px rgba(245, 179, 1, 0.45));
+}
+
+.fila {
+    display: grid;
+    grid-template-columns: 1.5rem repeat(var(--columnas), var(--tam));
+    gap: var(--separacion);
+    align-items: center;
+}
+
+.letra {
+    grid-column: 1;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.butaca {
+    display: grid;
+    place-items: center;
+    width: var(--tam);
+    height: var(--tam);
+    padding: 0;
+    border: 1px solid #4a4a58;
+    border-radius: 7px 7px 4px 4px;
+    background: var(--surface-2);
+    color: var(--text-muted);
+    font-size: 0.55rem;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.butaca:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.silla {
+    border-color: var(--info);
+    color: var(--info);
+}
+
+.elegida,
+.elegida.silla {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--accent-text);
+}
+
+.ocupada,
+.ocupada.silla {
+    border-color: var(--border);
+    background: transparent;
+    color: #5f5f6e;
+    cursor: not-allowed;
+}
+
+.leyenda {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem 1.5rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.leyenda li {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.muestra {
+    display: grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #4a4a58;
+    border-radius: 5px 5px 3px 3px;
+    background: var(--surface-2);
+    color: var(--info);
+}
+
+.muestraElegida {
+    border-color: var(--accent);
+    background: var(--accent);
+}
+
+.muestraOcupada {
+    border-color: var(--border);
+    background: transparent;
+    color: #5f5f6e;
+}
+
+@media (max-width: 560px) {
+    .sala {
+        --separacion: 4px;
+    }
+}
