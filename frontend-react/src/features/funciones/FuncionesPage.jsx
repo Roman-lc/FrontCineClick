@@ -255,7 +255,7 @@ export default function FuncionesPage() {
                   <p><strong>💰 Precio:</strong> ${(f.precioBase || 0).toLocaleString('es-AR')}</p>
                   <div className="card-actions">
                     <Link to={`/detalle?${buildContextQuery(filtros, f.id)}`} className="btn btn-info">Detalle</Link>
-                    <Link to={`/compra?${buildContextQuery(filtros, f.id)}`} className="btn btn-success">Comprar</Link>
+                    <Link to={`/compra/${f.id}/entradas`} className="btn btn-success">Comprar</Link>
                     {isAdmin && <Link to={`/admin/editar-funcion?id=${f.id}`} className="btn btn-warning">Modificar</Link>}
                     {isAdmin && <button onClick={() => eliminarFuncion(f.id)} className="btn btn-danger">Borrar</button>}
                   </div>

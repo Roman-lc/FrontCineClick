@@ -42,10 +42,6 @@ export default function DetallePage() {
 
   const qVolver = buildQuery(searchParams);
   const volverHref = `/funciones${qVolver.toString() ? '?' + qVolver.toString() : ''}`;
-  const qComprar = new URLSearchParams({ id });
-  if (searchParams.get('peliculaId')) qComprar.set('peliculaId', searchParams.get('peliculaId'));
-  if (searchParams.get('cineId')) qComprar.set('cineId', searchParams.get('cineId'));
-  if (searchParams.get('fecha')) qComprar.set('fecha', searchParams.get('fecha'));
 
   return (
     <section className="section">
@@ -75,7 +71,7 @@ export default function DetallePage() {
             <p><strong>📅 Fecha y Hora:</strong> {fechaHoraCorta(funcion.fechaHoraInicio)} a {horaCorta(funcion.fechaHoraFin)}</p>
           </div>
           <div className="actions" style={{ marginTop: '1.5rem' }}>
-            <Link to={`/compra?${qComprar.toString()}`} className="btn btn-success">🎟️ Comprar Entradas</Link>
+            <Link to={`/compra/${id}/entradas`} className="btn btn-success">🎟️ Comprar Entradas</Link>
             <Link to={volverHref} className="btn btn-secondary">Volver al Listado</Link>
           </div>
         </div>

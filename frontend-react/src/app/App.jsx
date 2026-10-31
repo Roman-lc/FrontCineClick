@@ -1,11 +1,17 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import { useAuth } from './AuthContext';
 import HomePage from '../features/cartelera/HomePage';
 import LoginPage from '../features/auth/LoginPage';
 import FuncionesPage from '../features/funciones/FuncionesPage';
 import DetallePage from '../features/detalle/DetallePage';
-import CompraPage from '../features/compra/CompraPage';
+import CompraLayout from '../features/compra/CompraLayout';
+import PasoEntradas from '../features/compra/PasoEntradas';
+import PasoButacas from '../features/compra/PasoButacas';
+import PasoPago from '../features/compra/PasoPago';
+import ConfirmacionPage from '../features/compra/ConfirmacionPage';
+import EstadoVacio from '../components/ui/EstadoVacio';
+import { rutaLogin } from '../lib/volver';
 import GrupoPage from '../features/grupo/GrupoPage';
 import AdminPage from '../features/admin/AdminPage';
 import AdminPeliculasPage from '../features/admin/peliculas/AdminPeliculasPage';
@@ -25,6 +31,25 @@ function RequireAdmin({ children }) {
   return children;
 }
 
+// Sin sesion de cliente se va al login, que despues vuelve a esta misma pantalla
+function RequireCliente({ children }) {
+  const { user, isAdmin } = useAuth();
+  const location = useLocation();
+  if (isAdmin) {
+    return (
+      <section className="section">
+        <EstadoVacio mensaje="Las cuentas de administrador no pueden comprar entradas.">
+          <Link to="/" className="btn btn-primary">
+            Volver a la cartelera
+          </Link>
+        </EstadoVacio>
+      </section>
+    );
+  }
+  if (!user?.clienteId) return <Navigate to={rutaLogin(location.pathname)} replace />;
+  return children;
+}
+
 export default function App() {
   return (
     <Routes>
@@ -40,14 +65,17 @@ export default function App() {
         <Route path="/registro" element={<LoginPage key="registro" modoInicial="registro" />} />
         <Route path="/mis-compras" element={<PaginaPendiente titulo="Mis compras" etapa={4} />} />
 
-        <Route path="/compra/:funcionId" element={<PaginaPendiente titulo="Elegí tus butacas" etapa={5} />} />
-        <Route path="/compra/:funcionId/pago" element={<PaginaPendiente titulo="Resumen y pago" etapa={5} />} />
-        <Route path="/compra/confirmacion/:compraId" element={<PaginaPendiente titulo="Confirmación" etapa={5} />} />
+        <Route path="/compra/confirmacion/:compraId" element={<RequireCliente><ConfirmacionPage /></RequireCliente>} />
+        <Route path="/compra/:funcionId" element={<RequireCliente><CompraLayout /></RequireCliente>}>
+          <Route index element={<Navigate to="entradas" replace />} />
+          <Route path="entradas" element={<PasoEntradas />} />
+          <Route path="butacas" element={<PasoButacas />} />
+          <Route path="pago" element={<PasoPago />} />
+        </Route>
 
-        {/* Pantallas del vanilla que siguen en uso hasta que las reemplacen las etapas 3 y 5 */}
+        {/* Pantallas del vanilla que siguen en uso hasta que las reemplace la etapa 3 */}
         <Route path="/funciones" element={<FuncionesPage />} />
         <Route path="/detalle" element={<DetallePage />} />
-        <Route path="/compra" element={<CompraPage />} />
 
         <Route path="/admin" element={<RequireAdmin><AdminPage /></RequireAdmin>} />
         <Route path="/admin/validar" element={<RequireAdmin><PaginaPendiente titulo="Validar entradas" etapa={5} /></RequireAdmin>} />
