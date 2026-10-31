@@ -23,6 +23,7 @@ import AdminComprasPage from '../features/admin/compras/AdminComprasPage';
 import PeliculaPage from '../features/pelicula/PeliculaPage';
 import PaginaPendiente from '../features/pendiente/PaginaPendiente';
 import NoEncontradaPage from '../features/error/NoEncontradaPage';
+import LegalesPage from '../features/legales/LegalesPage';
 
 // Solo controla lo que muestra la interfaz: la API no tiene autenticacion (limitacion conocida).
 function RequireAdmin({ children }) {
@@ -59,6 +60,9 @@ export default function App() {
         <Route path="/peliculas/:id" element={<PeliculaPage />} />
         <Route path="/promociones" element={<PaginaPendiente titulo="Promociones" etapa={3} />} />
         <Route path="/grupo" element={<GrupoPage />} />
+        <Route path="/terminos" element={<LegalesPage key="terminos" tipo="terminos" />} />
+        <Route path="/privacidad" element={<LegalesPage key="privacidad" tipo="privacidad" />} />
+        <Route path="/arrepentimiento" element={<LegalesPage key="arrepentimiento" tipo="arrepentimiento" />} />
 
         {/* key distinta para que al pasar de una ruta a la otra se reinicie la pestaña elegida */}
         <Route path="/login" element={<LoginPage key="login" />} />

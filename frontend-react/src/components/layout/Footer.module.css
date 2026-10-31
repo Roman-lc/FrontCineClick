@@ -1,0 +1,87 @@
+.footer {
+    display: grid;
+    grid-template-columns: 2fr repeat(3, 1fr);
+    gap: 2rem;
+    max-width: var(--ancho-max);
+    margin: 0 auto;
+    padding: 2.5rem 2rem 1.75rem;
+    font-size: 0.9rem;
+}
+
+.marca p {
+    margin: 0;
+    max-width: 30ch;
+    line-height: 1.5;
+}
+
+.marca .logo {
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.tituloColumna {
+    margin: 0 0 0.75rem;
+    color: var(--text);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.columna ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+}
+
+.columna a {
+    color: var(--text-muted);
+    text-decoration: none;
+}
+
+.columna a:hover {
+    color: var(--text);
+    text-decoration: underline;
+}
+
+.legal {
+    max-width: var(--ancho-max);
+    margin: 0 auto;
+    padding: 1.25rem 2rem 1.75rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+.legal p {
+    margin: 0;
+}
+
+@media (max-width: 860px) {
+    .footer {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .marca {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 2rem 1rem 1.5rem;
+    }
+
+    .legal {
+        padding: 1rem 1rem 1.5rem;
+    }
+}
