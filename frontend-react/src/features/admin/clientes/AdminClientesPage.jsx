@@ -58,7 +58,7 @@ export default function AdminClientesPage() {
   };
 
   const eliminar = async (id) => {
-    if (!(await confirmar('¿Eliminar este cliente?', { peligro: true, textoOk: 'Eliminar' }))) return;
+    if (!(await confirmar('¿Eliminar este cliente?', { peligro: 'borrado', textoOk: 'Eliminar' }))) return;
     try {
       await api.delete(`/api/clientes/${id}`);
       mostrarAviso('Cliente eliminado', 'exito');
