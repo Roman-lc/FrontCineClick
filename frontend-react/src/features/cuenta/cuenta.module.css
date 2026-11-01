@@ -1,0 +1,322 @@
+.encabezado {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.titulo {
+    margin: 0;
+    font-size: clamp(2.2rem, 6vw, 3.5rem);
+    text-transform: uppercase;
+    line-height: 1.05;
+}
+
+/* Titulo de seccion, igual que en cines y promociones */
+.subtitulo {
+    margin: 0 0 1rem;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+}
+
+/* ---------- Interruptor "Mostrar canceladas" ---------- */
+
+.interruptor {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 44px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--text);
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.interruptorPista {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+    border: 1px solid var(--border-input);
+    border-radius: 999px;
+    background: var(--surface-2);
+    transition: background-color 0.15s;
+}
+
+.interruptorBoton {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    transition: transform 0.15s;
+}
+
+.interruptor[aria-checked='true'] .interruptorPista {
+    border-color: var(--accent);
+    background: var(--accent);
+}
+
+.interruptor[aria-checked='true'] .interruptorBoton {
+    background: var(--on-accent);
+    transform: translateX(18px);
+}
+
+/* ---------- Grupos y filas ---------- */
+
+.grupo {
+    margin-bottom: 2.25rem;
+}
+
+.sinItems {
+    margin: 0;
+    color: var(--text-muted);
+}
+
+.filas {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* De izquierda a derecha: poster, pelicula, funcion, cine y sala, entradas, total y estado */
+.fila {
+    position: relative;
+    display: grid;
+    grid-template-columns: 48px minmax(0, 2.2fr) minmax(0, 1.3fr) minmax(0, 1.4fr) minmax(0, 1.5fr) 7rem 8rem;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    transition: border-color 0.15s;
+}
+
+.fila:hover,
+.fila:focus-within {
+    border-color: var(--text-muted);
+}
+
+.fila p {
+    margin: 0;
+}
+
+/* Canceladas: color apagado, sin tachar */
+.filaApagada {
+    background: transparent;
+}
+
+.filaApagada .peliculaTitulo,
+.filaApagada .fecha,
+.filaApagada .total {
+    color: var(--text-muted);
+}
+
+.fila.filaApagada .poster {
+    opacity: 0.55;
+}
+
+.fila .poster {
+    width: 48px;
+    border-radius: 4px;
+    font-size: 0.55rem;
+}
+
+.pelicula {
+    min-width: 0;
+}
+
+.peliculaTitulo {
+    margin: 0;
+    overflow: hidden;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.enlaceFila {
+    color: var(--text);
+    text-decoration: none;
+}
+
+/* El area del enlace cubre toda la fila */
+.enlaceFila::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+}
+
+.enlaceFila:focus-visible {
+    outline: none;
+}
+
+.enlaceFila:focus-visible::after {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+}
+
+.dato {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+}
+
+.compraNumero {
+    margin-top: 0.15rem !important;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.cuando {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+}
+
+.fecha {
+    font-size: 0.92rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.relativo {
+    padding: 0.05rem 0.5rem;
+    border-radius: 999px;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.total {
+    font-weight: 700;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.estado {
+    justify-self: end;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.proxima {
+    background: color-mix(in srgb, var(--success) 18%, transparent);
+    color: var(--success);
+}
+
+.usada,
+.pasada,
+.cancelada {
+    background: var(--surface-2);
+    color: var(--text-muted);
+}
+
+/* ---------- Lista de espera ---------- */
+
+.avisos {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+}
+
+.listaAvisos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    padding-left: 1.1rem;
+    color: var(--text-muted);
+}
+
+.listaAvisos a {
+    color: var(--text);
+}
+
+/* Tablet: la fila pasa a dos lineas (datos arriba, cine/entradas/total abajo) */
+@media (max-width: 1024px) {
+    .fila {
+        grid-template-columns: 48px minmax(0, 1fr) auto;
+        grid-template-areas:
+            'poster pelicula estado'
+            'poster cuando total'
+            'poster lugar entradas';
+        row-gap: 0.35rem;
+    }
+
+    .fila .poster {
+        grid-area: poster;
+        align-self: start;
+    }
+
+    .pelicula {
+        grid-area: pelicula;
+    }
+
+    .cuando {
+        grid-area: cuando;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .lugar {
+        grid-area: lugar;
+    }
+
+    .entradas {
+        grid-area: entradas;
+        text-align: right;
+    }
+
+    .total {
+        grid-area: total;
+    }
+
+    .estado {
+        grid-area: estado;
+        align-self: start;
+    }
+}
+
+/* Celular: tres lineas apiladas al lado del poster */
+@media (max-width: 560px) {
+    .fila {
+        grid-template-columns: 44px minmax(0, 1fr) auto;
+        grid-template-areas:
+            'poster pelicula estado'
+            'poster cuando cuando'
+            'poster lugar lugar'
+            'poster entradas total';
+        gap: 0.3rem 0.75rem;
+        padding: 0.75rem;
+    }
+
+    .fila .poster {
+        width: 44px;
+    }
+
+    .entradas {
+        text-align: left;
+    }
+}

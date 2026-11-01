@@ -2,6 +2,8 @@ import { ApiError } from '../services/http';
 import { simular, simularNoEncontrado } from './simular';
 import { funcionesMock } from './funciones';
 import { butacasDeSala } from './salas';
+import { peliculasMock } from './peliculas';
+import { cinesMock } from './cines';
 
 // Simula las reglas del backend para la compra: reserva de 8 minutos, 409 si la butaca ya esta
 // tomada, promocion ESTRENO10 y pago rechazado con la tarjeta terminada en 0002.
@@ -17,10 +19,106 @@ const TIPOS_ENTRADA = [
   { tipo: 'JUBILADO', nombre: 'Jubilado', seccion: 'Con descuento', condiciones: 'Jubilados y pensionados. Presentar credencial y DNI en el ingreso.', factor: 0.6 },
 ];
 
-const PROMOCIONES = { ESTRENO10: 10 };
+const PROMOCIONES = { ESTRENO10: 10, FINDE15: 15 };
 
 const compras = new Map();
 let proximoId = 5001;
+
+// Igual que FuncionCompraDTO: lo que la compra necesita de la funcion, la pelicula y el cine
+function resumenFuncion(funcion) {
+  const pelicula = peliculasMock.find((p) => p.id === funcion.peliculaId) ?? {};
+  const cine = cinesMock.find((c) => c.id === funcion.cineId) ?? {};
+  return {
+    id: funcion.id,
+    fechaHoraInicio: funcion.fechaHoraInicio,
+    fechaHoraFin: funcion.fechaHoraFin,
+    formato: funcion.formato,
+    idioma: funcion.idioma,
+    estado: funcion.estado,
+    peliculaId: funcion.peliculaId,
+    peliculaTitulo: funcion.peliculaTitulo,
+    urlPoster: pelicula.urlPoster ?? null,
+    clasificacion: pelicula.clasificacion ?? null,
+    cineId: funcion.cineId,
+    cineNombre: funcion.cineNombre,
+    salaNombre: funcion.salaNombre,
+    provincia: cine.provincia ?? null,
+    localidad: cine.localidad ?? null,
+    calle: cine.calle ?? null,
+    altura: cine.altura ?? null,
+  };
+}
+
+// '2026-10-30T22:14:00' en hora local, corrido "dias" desde hoy
+function isoEnDias(dias, hora) {
+  const [h, m] = hora.split(':').map(Number);
+  const d = new Date();
+  d.setDate(d.getDate() + dias);
+  d.setHours(h, m, 0, 0);
+  const dos = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${dos(d.getMonth() + 1)}-${dos(d.getDate())}T${dos(h)}:${dos(m)}:00`;
+}
+
+// Compras de ejemplo del cliente demo (id 1) para ver Mis compras con mocks: una proxima, una de una
+// funcion que ya paso (con una entrada usada) y una reserva que vencio sin pagarse.
+function compraDeEjemplo({ id, funcion, creada, estado, entradas, promocion = null }) {
+  const pagada = estado !== 'CANCELADA';
+  compras.set(id, {
+    id,
+    clienteId: 1,
+    funcionId: funcion.id,
+    peliculaTitulo: funcion.peliculaTitulo,
+    funcion: resumenFuncion(funcion),
+    creadaMs: new Date(creada).getTime(),
+    expiraMs: new Date(creada).getTime() + MINUTOS_RESERVA * 60_000,
+    estado,
+    promocion,
+    pago: null,
+    entradas: entradas.map(([codigoButaca, tipo, estadoEntrada = pagada ? 'EMITIDA' : 'CANCELADA'], i) => ({
+      id: id * 100 + i,
+      butacaId: -1,
+      codigoQr: ['K7M2Q9XA', 'P4T8W3NB', 'H6R2C9JD'][i],
+      fila: codigoButaca[0],
+      numeroButaca: Number(codigoButaca.slice(1)),
+      codigoButaca,
+      tipo,
+      precioUnitario: Math.round(funcion.precioBase * TIPOS_ENTRADA.find((t) => t.tipo === tipo).factor * 100) / 100,
+      estado: estadoEntrada,
+    })),
+  });
+  const compra = compras.get(id);
+  if (pagada) {
+    compra.pago = {
+      id,
+      monto: aDto(compra).total,
+      metodoPago: 'TARJETA_CREDITO',
+      estado: 'APROBADO',
+      fechaPago: new Date(compra.creadaMs + 60_000).toISOString(),
+      codigoTransaccion: `TX-MOCK-${id}`,
+      marcaTarjeta: 'Visa',
+      ultimos4: '4242',
+    };
+  }
+}
+
+function cargarComprasDeEjemplo() {
+  const proxima = funcionesMock.find((f) => f.id === 1006) ?? funcionesMock[1];
+  compraDeEjemplo({ id: 4001, funcion: proxima, creada: isoEnDias(-1, '22:14'), estado: 'CONFIRMADA', entradas: [['D4', 'GENERAL'], ['D5', 'MENOR']], promocion: 'ESTRENO10' });
+  const pasada = {
+    ...funcionesMock[0],
+    id: 901,
+    peliculaId: 1,
+    peliculaTitulo: peliculasMock.find((p) => p.id === 1)?.titulo ?? 'Película',
+    fechaHoraInicio: isoEnDias(-6, '20:30'),
+    fechaHoraFin: isoEnDias(-6, '22:50'),
+    formato: 'IMAX',
+    idioma: 'SUBTITULADA',
+    precioBase: 6500,
+    estado: 'FINALIZADA',
+  };
+  compraDeEjemplo({ id: 4000, funcion: pasada, creada: isoEnDias(-8, '18:02'), estado: 'CONFIRMADA', entradas: [['F8', 'GENERAL', 'USADA']] });
+  compraDeEjemplo({ id: 3999, funcion: proxima, creada: isoEnDias(-2, '11:40'), estado: 'CANCELADA', entradas: [['A1', 'JUBILADO']] });
+}
 
 // Para probar el 409: la primera vez que se intenta reservar la E7 de una funcion, "otra persona" la
 // toma un instante antes. Al reintentar, el mapa ya la muestra ocupada.
@@ -92,6 +190,7 @@ function aDto(compra) {
     clienteNombre: 'Ana Gómez',
     funcionId: compra.funcionId,
     peliculaTitulo: compra.peliculaTitulo,
+    funcion: compra.funcion,
     fechaCompra: new Date(compra.creadaMs).toISOString(),
     subtotal,
     total: subtotal - descuento,
@@ -166,6 +265,7 @@ export async function crearReservaMock({ clienteId, funcionId, butacasIds, entra
     clienteId,
     funcionId: funcion.id,
     peliculaTitulo: funcion.peliculaTitulo,
+    funcion: resumenFuncion(funcion),
     creadaMs: ahora,
     expiraMs: ahora + MINUTOS_RESERVA * 60_000,
     estado: 'PENDIENTE_PAGO',
@@ -187,7 +287,14 @@ export async function crearReservaMock({ clienteId, funcionId, butacasIds, entra
   return simular(aDto(compra));
 }
 
+export async function comprasDelClienteMock(clienteId) {
+  if (!compras.has(4000)) cargarComprasDeEjemplo();
+  vencerReservas();
+  return simular([...compras.values()].filter((c) => String(c.clienteId) === String(clienteId)).map(aDto));
+}
+
 export async function getCompraMock(id) {
+  if (!compras.has(4000)) cargarComprasDeEjemplo();
   const compra = buscarCompra(id);
   return compra ? simular(aDto(compra)) : simularNoEncontrado(`Compra no encontrada con id ${id}`);
 }

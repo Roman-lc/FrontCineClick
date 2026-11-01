@@ -1,0 +1,386 @@
+.detalle {
+    max-width: 820px;
+}
+
+.volver {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.volver:hover {
+    color: var(--accent-text);
+}
+
+.cabecera {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.tilde {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--success);
+    color: var(--bg);
+}
+
+.titulo {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 3rem);
+    text-transform: uppercase;
+    line-height: 1.05;
+}
+
+.bajada {
+    margin: 0.25rem 0 0;
+    color: var(--text-muted);
+}
+
+.tituloEstado {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.estado {
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.proxima {
+    background: color-mix(in srgb, var(--success) 18%, transparent);
+    color: var(--success);
+}
+
+/* ---------- Tarjeta de la funcion ---------- */
+
+.funcion {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.funcion .poster {
+    width: 96px;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+}
+
+.funcionDatos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+    color: var(--text-muted);
+}
+
+.funcionDatos p {
+    margin: 0;
+}
+
+.pelicula {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    letter-spacing: 0.03em;
+    line-height: 1.1;
+    text-transform: uppercase;
+}
+
+.pelicula > span {
+    font-family: var(--font-body);
+    letter-spacing: 0;
+}
+
+.fecha {
+    color: var(--text);
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.direccion {
+    font-size: 0.9rem;
+}
+
+.comoLlegar {
+    color: var(--text);
+    font-weight: 600;
+    text-decoration: underline;
+    white-space: nowrap;
+}
+
+.comoLlegar:hover {
+    color: var(--accent-text);
+}
+
+/* ---------- Entradas ---------- */
+
+/* Titulo de seccion, igual que en el resto de la app */
+.subtitulo {
+    margin: 0 0 0.5rem;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+}
+
+.ayuda {
+    margin: 0 0 1rem;
+    color: var(--text-muted);
+}
+
+.entradas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 0.85rem;
+    margin: 0 0 2rem;
+    padding: 0;
+    list-style: none;
+}
+
+.entrada {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    break-inside: avoid;
+}
+
+.entradaApagada .qrFondo {
+    opacity: 0.35;
+}
+
+.qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* Recuadro claro alrededor del QR (zona de silencio para que los lectores lo tomen). El color del
+   papel llega por style desde la constante QR_PAPEL del componente. */
+.qrFondo {
+    display: block;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    line-height: 0;
+}
+
+.codigo {
+    font-family: Consolas, ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
+    font-size: 0.95rem;
+    font-variant-numeric: slashed-zero;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+.entradaDatos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+    color: var(--text-muted);
+}
+
+.entradaDatos p {
+    margin: 0;
+}
+
+.butaca {
+    color: var(--text);
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.requisito {
+    color: var(--text);
+    font-size: 0.85rem;
+}
+
+.estadoEntrada {
+    align-self: flex-start;
+    margin-top: 0.25rem !important;
+    padding: 0.1rem 0.55rem;
+    border-radius: 999px;
+    background: var(--surface-2);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.soloImpresion {
+    display: none;
+}
+
+/* ---------- Desglose ---------- */
+
+.desglose {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin: 0 0 1.75rem;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.desglose > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.desglose dd {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+.descuento dd {
+    color: var(--success);
+}
+
+.total {
+    margin-top: 0.35rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--border);
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.secundario {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+}
+
+.acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.acciones :global(.btn) {
+    min-height: 44px;
+}
+
+@media (max-width: 560px) {
+    .funcion {
+        grid-template-columns: 72px minmax(0, 1fr);
+        gap: 0.9rem;
+        padding: 1rem;
+    }
+
+    .funcion .poster {
+        width: 72px;
+    }
+
+    .pelicula {
+        font-size: 1.45rem;
+    }
+
+    .entradas {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .acciones :global(.btn) {
+        flex: 1 1 100%;
+    }
+}
+
+/* ---------- Impresion: solo las entradas, en blanco y negro ---------- */
+
+@media print {
+    /* Excepcion a los tokens: la impresion va siempre en blanco y negro, sin importar el tema */
+    :global(html) {
+        --impresion-papel: #fff;
+        --impresion-tinta: #000;
+    }
+
+    :global(html),
+    :global(body) {
+        background: var(--impresion-papel) !important;
+    }
+
+    :global(body *) {
+        visibility: hidden;
+    }
+
+    .entradasBloque,
+    .entradasBloque * {
+        visibility: visible;
+    }
+
+    .entradasBloque {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        color: var(--impresion-tinta);
+    }
+
+    .subtitulo,
+    .ayuda {
+        display: none;
+    }
+
+    .soloImpresion {
+        display: block;
+        margin-bottom: 12pt;
+        color: var(--impresion-tinta);
+        font-size: 11pt;
+    }
+
+    .soloImpresion p {
+        margin: 0 0 2pt;
+    }
+
+    .impresionPelicula {
+        font-size: 18pt;
+        font-weight: 700;
+    }
+
+    .entradas {
+        grid-template-columns: 1fr 1fr;
+        gap: 10pt;
+    }
+
+    .entrada {
+        border: 1px solid var(--impresion-tinta);
+        background: var(--impresion-papel);
+        color: var(--impresion-tinta);
+    }
+
+    .entradaDatos,
+    .butaca,
+    .requisito {
+        color: var(--impresion-tinta);
+    }
+
+    .estadoEntrada {
+        display: none;
+    }
+}
