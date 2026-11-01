@@ -3,9 +3,9 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getCines } from '../../services/cines';
 import { getFunciones } from '../../services/funciones';
 import { getPeliculaPorSlug } from '../../services/peliculas';
-import Cargando from '../../components/ui/Cargando';
+import EstadoError from '../../components/ui/EstadoError';
 import EstadoVacio from '../../components/ui/EstadoVacio';
-import MensajeError from '../../components/ui/MensajeError';
+import { EsqueletoDetallePelicula } from '../../components/ui/Esqueletos';
 import { rutaPelicula, aSlug } from '../../lib/slug';
 import FichaPelicula from './FichaPelicula';
 import HorariosPelicula from './HorariosPelicula';
@@ -57,7 +57,7 @@ function DetallePelicula({ slug }) {
   if (estado.cargando) {
     return (
       <section className="section">
-        <Cargando texto="Cargando película..." />
+        <EsqueletoDetallePelicula className={styles.detalle} />
       </section>
     );
   }
@@ -69,15 +69,15 @@ function DetallePelicula({ slug }) {
           <>
             <title>Película no encontrada | CineClick</title>
             <h1>Película no encontrada</h1>
-            <EstadoVacio mensaje="La película que buscás no existe o ya no está en cartelera.">
+            <EstadoVacio titulo="No encontramos esa película" mensaje="Puede que ya no esté en cartelera. Fijate qué hay para ver hoy.">
               <Link to="/" className="btn btn-primary">
                 Volver a la cartelera
               </Link>
             </EstadoVacio>
           </>
         ) : (
-          <MensajeError
-            mensaje={estado.error.message}
+          <EstadoError
+            titulo="No pudimos cargar la película"
             onReintentar={() => {
               setEstado({ cargando: true, error: null, datos: null });
               setIntento((n) => n + 1);

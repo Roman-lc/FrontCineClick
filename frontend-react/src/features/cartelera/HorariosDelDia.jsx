@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { horaCorta } from '../../lib/fechas';
-import { etiquetaFormato, etiquetaIdiomaCorta } from '../../lib/formato';
+import ChipHorario from '../../components/ui/ChipHorario';
+import { nombreCine } from '../../lib/formato';
 import styles from './cartelera.module.css';
 
 // Horarios de una pelicula para el dia elegido, en una zona de alto fijo para que todas las
@@ -34,7 +34,7 @@ export default function HorariosDelDia({ funciones, agruparPorCine, elegidaId, o
   const [[cine, delCine], ...otros] = agruparPorNombreDeCine(funciones);
   return (
     <div ref={zona} className={styles.horarios}>
-      <p className={styles.horariosCine}>{cine}</p>
+      <p className={styles.horariosCine}>{nombreCine(cine)}</p>
       <ListaChips funciones={delCine} maximo={porFila} {...chip} />
       {otros.length > 0 && (
         <Link to={enlaceDetalle.to} state={enlaceDetalle.state} className={styles.masCines}>
@@ -53,7 +53,7 @@ function ListaChips({ funciones, maximo, elegidaId, onElegir, enlaceDetalle }) {
     <ul className={styles.chips}>
       {visibles.map((funcion) => (
         <li key={funcion.id}>
-          <ChipHorario funcion={funcion} elegida={funcion.id === elegidaId} onElegir={onElegir} />
+          <ChipHorario funcion={funcion} elegida={funcion.id === elegidaId} onElegir={onElegir} conDetalle />
         </li>
       ))}
       {sobran && (
@@ -61,7 +61,7 @@ function ListaChips({ funciones, maximo, elegidaId, onElegir, enlaceDetalle }) {
           <Link
             to={enlaceDetalle.to}
             state={enlaceDetalle.state}
-            className={`${styles.chip} ${styles.chipMas}`}
+            className={styles.chipMas}
             aria-label={`Ver ${resto} ${resto === 1 ? 'horario' : 'horarios'} más`}
           >
             +{resto}
@@ -69,34 +69,6 @@ function ListaChips({ funciones, maximo, elegidaId, onElegir, enlaceDetalle }) {
         </li>
       )}
     </ul>
-  );
-}
-
-function ChipHorario({ funcion, elegida, onElegir }) {
-  const hora = horaCorta(funcion.fechaHoraInicio);
-  const formato = etiquetaFormato(funcion.formato);
-
-  if (funcion.butacasLibres === 0) {
-    return (
-      <span className={`${styles.chip} ${styles.chipAgotado}`} aria-disabled="true">
-        <span className={styles.chipHora}>{hora}</span>
-        <span className={styles.chipDetalle}>Agotada</span>
-      </span>
-    );
-  }
-  return (
-    <button
-      type="button"
-      className={styles.chip}
-      aria-pressed={elegida}
-      onClick={() => onElegir(elegida ? null : funcion)}
-      aria-label={`${hora}, ${formato}, ${funcion.idioma}, ${funcion.cineNombre}`}
-    >
-      <span className={styles.chipHora}>{hora}</span>
-      <span className={styles.chipDetalle}>
-        {formato} · {etiquetaIdiomaCorta(funcion.idioma)}
-      </span>
-    </button>
   );
 }
 

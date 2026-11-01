@@ -8,8 +8,8 @@
 }
 
 .slider:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
 }
 
 /* pan-y: el swipe horizontal lo maneja el slider, el vertical sigue scrolleando la pagina */
@@ -45,8 +45,8 @@
     position: absolute;
     inset: 0;
     background:
-        linear-gradient(90deg, rgba(15, 15, 20, 0.95) 0%, rgba(15, 15, 20, 0.8) 40%, rgba(15, 15, 20, 0.2) 100%),
-        linear-gradient(0deg, rgba(15, 15, 20, 0.6) 0%, transparent 45%);
+        linear-gradient(90deg, color-mix(in srgb, var(--bg) 95%, transparent) 0%, color-mix(in srgb, var(--bg) 80%, transparent) 40%, color-mix(in srgb, var(--bg) 20%, transparent) 100%),
+        linear-gradient(0deg, color-mix(in srgb, var(--bg) 60%, transparent) 0%, transparent 45%);
 }
 
 .posterCaja {
@@ -57,7 +57,7 @@
     aspect-ratio: 2 / 3;
     border-radius: var(--radius-sm);
     overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 24px 60px color-mix(in srgb, var(--sombra) 60%, transparent);
     transform: translateY(-50%);
 }
 
@@ -89,18 +89,19 @@
 }
 
 .preventa {
-    background: var(--accent);
-    color: var(--accent-text);
+    background: var(--tag-bg);
+    color: var(--tag-text);
 }
 
 .novedad {
-    background: var(--success);
-    color: var(--bg);
+    background: var(--tag-bg);
+    color: var(--tag-text);
 }
 
 .proximamente {
-    background: var(--info);
-    color: var(--bg);
+    background: var(--surface-2);
+    color: var(--text);
+    box-shadow: inset 0 0 0 1px var(--border-input);
 }
 
 .titulo {
@@ -152,9 +153,9 @@
     width: 44px;
     height: 44px;
     padding: 0;
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-input);
     border-radius: 50%;
-    background: rgba(15, 15, 20, 0.65);
+    background: color-mix(in srgb, var(--bg) 65%, transparent);
     color: var(--text);
     cursor: pointer;
     opacity: 0;
@@ -168,7 +169,7 @@
 }
 
 .flecha:hover {
-    border-color: var(--accent);
+    border-color: var(--text);
 }
 
 .anterior {
@@ -185,7 +186,7 @@
 
 .puntos {
     position: absolute;
-    bottom: 0.75rem;
+    bottom: 0.25rem;
     left: 50%;
     z-index: 2;
     display: flex;
@@ -196,7 +197,7 @@
 .punto {
     display: grid;
     place-items: center;
-    height: 28px;
+    height: 44px;
     padding: 0 4px;
     border: none;
     background: none;
@@ -208,18 +209,18 @@
     width: 8px;
     height: 8px;
     border-radius: 999px;
-    background: rgba(242, 242, 245, 0.4);
+    background: color-mix(in srgb, var(--text) 40%, transparent);
     overflow: hidden;
     transition: width 0.3s;
 }
 
 .punto:hover .barra {
-    background: rgba(242, 242, 245, 0.7);
+    background: color-mix(in srgb, var(--text) 70%, transparent);
 }
 
 .punto[aria-current='true'] .barra {
     width: 36px;
-    background: rgba(242, 242, 245, 0.3);
+    background: color-mix(in srgb, var(--text) 30%, transparent);
 }
 
 .progreso {
@@ -275,7 +276,7 @@
     .contenido {
         max-width: 100%;
         gap: 0.45rem;
-        padding: 1rem 1.25rem 2.5rem;
+        padding: 1rem 1.25rem 3rem;
     }
 
     .titulo {

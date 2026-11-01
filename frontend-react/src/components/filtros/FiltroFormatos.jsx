@@ -1,28 +1,18 @@
-import Desplegable from '../ui/Desplegable';
-import { etiquetaFormato } from '../../lib/formato';
-import styles from './filtros.module.css';
+import Selector from '../ui/Selector';
+import { ORDEN_FORMATOS, etiquetaFormato } from '../../lib/formato';
 
-const alternar = (lista, valor) => (lista.includes(valor) ? lista.filter((v) => v !== valor) : [...lista, valor]);
-
+// Seleccion multiple de formatos (codigos del backend: DOS_D, IMAX...). Sin seleccion = todos.
 export default function FiltroFormatos({ formatos, seleccionados, onCambiar }) {
+  const ordenados = [...formatos].sort((a, b) => ORDEN_FORMATOS.indexOf(a) - ORDEN_FORMATOS.indexOf(b));
   return (
-    <Desplegable
+    <Selector
+      multiple
+      opciones={ordenados.map((f) => ({ valor: f, texto: etiquetaFormato(f) }))}
+      valor={seleccionados}
+      onCambiar={onCambiar}
       etiqueta={seleccionados.length ? `Formatos (${seleccionados.length})` : 'Formatos'}
+      etiquetaAccesible="Formatos"
       activo={seleccionados.length > 0}
-    >
-      <fieldset className={styles.opciones}>
-        <legend className="visually-hidden">Formatos</legend>
-        {formatos.map((formato) => (
-          <label key={formato} className={styles.opcion}>
-            <input
-              type="checkbox"
-              checked={seleccionados.includes(formato)}
-              onChange={() => onCambiar(alternar(seleccionados, formato))}
-            />
-            {etiquetaFormato(formato)}
-          </label>
-        ))}
-      </fieldset>
-    </Desplegable>
+    />
   );
 }

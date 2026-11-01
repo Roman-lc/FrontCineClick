@@ -33,34 +33,34 @@ const salas = new Map(
 
 // [peliculaId, salaId, inicio, formato, idioma, precioBase, extra]
 const programacion = [
-  [2, 1, hoyEnHoras(-1), 'DOS_D', 'Castellano', 4200], // ya empezo: no se muestra
-  [2, 1, hoyEnHoras(1), 'DOS_D', 'Castellano', 4200],
-  [1, 2, hoyEnHoras(2), 'IMAX', 'Subtitulada', 6500],
-  [101, 3, hoyEnHoras(3), 'DOS_D', 'Castellano', 4200],
-  [102, 1, hoyEnHoras(4), 'TRES_D', 'Subtitulada', 5200, { butacasLibres: 0 }], // agotada
-  [1, 2, enDias(1, '18:00'), 'IMAX', 'Subtitulada', 6500, { butacasLibres: 10 }], // disponibilidad media
-  [1, 2, enDias(1, '21:30'), 'IMAX', 'Subtitulada', 6500, { butacasLibres: 3 }], // disponibilidad baja
-  [2, 1, enDias(1, '15:00'), 'DOS_D', 'Castellano', 4200, { butacasLibres: 15 }],
-  [2, 1, enDias(1, '17:30'), 'DOS_D', 'Castellano', 4200, { butacasLibres: 0 }],
-  [2, 3, enDias(1, '16:00'), 'TRES_D', 'Castellano', 5200],
-  [101, 4, enDias(1, '20:00'), 'DOS_D', 'Castellano', 7800],
-  [102, 1, enDias(1, '22:00'), 'TRES_D', 'Subtitulada', 5200],
-  [103, 3, enDias(1, '19:00'), 'DOS_D', 'Castellano', 4200],
-  [1, 2, enDias(2, '20:30'), 'IMAX', 'Subtitulada', 6500],
-  [2, 1, enDias(2, '16:00'), 'TRES_D', 'Castellano', 5200],
-  [103, 1, enDias(2, '18:30'), 'DOS_D', 'Castellano', 4200],
-  [102, 3, enDias(2, '21:00'), 'DOS_D', 'Subtitulada', 4200, { estado: 'CANCELADA' }],
-  [101, 1, enDias(3, '20:00'), 'DOS_D', 'Castellano', 4200],
-  [103, 4, enDias(3, '17:00'), 'DOS_D', 'Castellano', 7800],
-  [1, 2, enDias(4, '19:00'), 'IMAX', 'Subtitulada', 6500],
-  [105, 2, enDias(5, '20:00'), 'IMAX', 'Subtitulada', 6500], // preventa
-  [105, 3, enDias(5, '22:30'), 'DOS_D', 'Subtitulada', 4200],
-  [106, 2, enDias(19, '20:30'), 'IMAX', 'Subtitulada', 6500], // preventa
-  [2, 3, enDias(5, '15:30'), 'DOS_D', 'Castellano', 4200],
-  [104, 5, hoyEnHoras(5), 'CUATRO_D', 'Subtitulada', 9000],
-  [104, 5, enDias(1, '21:00'), 'CUATRO_D', 'Subtitulada', 9000],
-  [2, 5, enDias(2, '17:00'), 'CUATRO_D', 'Castellano', 9000],
-  [102, 1, enDias(6, '21:30'), 'DOS_D', 'Subtitulada', 4200],
+  [2, 1, hoyEnHoras(-1), 'DOS_D', 'CASTELLANO', 4200], // ya empezo: no se muestra
+  [2, 1, hoyEnHoras(1), 'DOS_D', 'CASTELLANO', 4200],
+  [1, 2, hoyEnHoras(2), 'IMAX', 'SUBTITULADA', 6500],
+  [101, 3, hoyEnHoras(3), 'DOS_D', 'CASTELLANO', 4200],
+  [102, 1, hoyEnHoras(4), 'TRES_D', 'SUBTITULADA', 5200, { butacasLibres: 0 }], // agotada
+  [1, 2, enDias(1, '18:00'), 'IMAX', 'SUBTITULADA', 6500, { butacasLibres: 10 }], // disponibilidad media
+  [1, 2, enDias(1, '21:30'), 'IMAX', 'SUBTITULADA', 6500, { butacasLibres: 3 }], // disponibilidad baja
+  [2, 1, enDias(1, '15:00'), 'DOS_D', 'CASTELLANO', 4200, { butacasLibres: 15 }],
+  [2, 1, enDias(1, '17:30'), 'DOS_D', 'CASTELLANO', 4200, { butacasLibres: 0 }],
+  [2, 3, enDias(1, '16:00'), 'TRES_D', 'CASTELLANO', 5200],
+  [101, 4, enDias(1, '20:00'), 'DOS_D', 'CASTELLANO', 7800],
+  [102, 1, enDias(1, '22:00'), 'TRES_D', 'SUBTITULADA', 5200],
+  [103, 3, enDias(1, '19:00'), 'DOS_D', 'CASTELLANO', 4200],
+  [1, 2, enDias(2, '20:30'), 'IMAX', 'SUBTITULADA', 6500],
+  [2, 1, enDias(2, '16:00'), 'TRES_D', 'CASTELLANO', 5200],
+  [103, 1, enDias(2, '18:30'), 'DOS_D', 'CASTELLANO', 4200],
+  [102, 3, enDias(2, '21:00'), 'DOS_D', 'SUBTITULADA', 4200, { estado: 'CANCELADA' }],
+  [101, 1, enDias(3, '20:00'), 'DOS_D', 'CASTELLANO', 4200],
+  [103, 4, enDias(3, '17:00'), 'DOS_D', 'CASTELLANO', 7800],
+  [1, 2, enDias(4, '19:00'), 'IMAX', 'SUBTITULADA', 6500],
+  [105, 2, enDias(5, '20:00'), 'IMAX', 'SUBTITULADA', 6500], // preventa
+  [105, 3, enDias(5, '22:30'), 'DOS_D', 'SUBTITULADA', 4200],
+  [106, 2, enDias(19, '20:30'), 'IMAX', 'SUBTITULADA', 6500], // preventa
+  [2, 3, enDias(5, '15:30'), 'DOS_D', 'CASTELLANO', 4200],
+  [104, 5, enDias(12, '19:00'), 'CUATRO_D', 'SUBTITULADA', 9000], // preventa (se estrena en 12 dias)
+  [104, 5, enDias(12, '21:30'), 'CUATRO_D', 'SUBTITULADA', 9000],
+  [2, 5, enDias(2, '17:00'), 'CUATRO_D', 'CASTELLANO', 9000],
+  [102, 1, enDias(6, '21:30'), 'DOS_D', 'SUBTITULADA', 4200],
 ];
 
 export const funcionesMock = programacion.map(([peliculaId, salaId, inicio, formato, idioma, precioBase, extra], i) => {

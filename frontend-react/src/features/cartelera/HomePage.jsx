@@ -1,15 +1,17 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { getCines } from '../../services/cines';
 import { getFunciones } from '../../services/funciones';
 import { getDestacadas, getPeliculas, getProximosEstrenos } from '../../services/peliculas';
 import PeliculaCard from '../../components/ui/PeliculaCard';
-import Cargando from '../../components/ui/Cargando';
-import MensajeError from '../../components/ui/MensajeError';
+import EstadoError from '../../components/ui/EstadoError';
 import EstadoVacio from '../../components/ui/EstadoVacio';
+import { EsqueletoGrillaPeliculas, EsqueletoSlider } from '../../components/ui/Esqueletos';
 import IconoEstrella from '../../components/ui/IconoEstrella';
-import SelectorCine from '../../components/ui/SelectorCine';
+import Selector from '../../components/ui/Selector';
+import { diaRelativo } from '../../lib/fechas';
 import { escribirFiltros, leerFiltros } from '../../lib/filtrosUrl';
+import { nombreCine } from '../../lib/formato';
 import { rutaPelicula } from '../../lib/slug';
 import BarraFiltros from './BarraFiltros';
 import HorariosDelDia from './HorariosDelDia';
@@ -29,19 +31,19 @@ import styles from './cartelera.module.css';
 export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [intento, setIntento] = useState(0);
-  const [estado, setEstado] = useState({ cargando: true, error: '', datos: null });
+  const [estado, setEstado] = useState({ cargando: true, error: false, datos: null });
   const [elegida, setElegida] = useState(null);
-  const [estrenos, setEstrenos] = useState({ destacadas: [], proximos: [] });
+  const [estrenos, setEstrenos] = useState({ cargando: true, destacadas: [], proximos: [] });
 
   // Se cargan una sola vez; los filtros se aplican en memoria
   useEffect(() => {
     let ignorar = false;
     Promise.all([getPeliculas(), getCines(), getFunciones()])
       .then(([peliculas, cines, funciones]) => {
-        if (!ignorar) setEstado({ cargando: false, error: '', datos: { peliculas, cines, funciones } });
+        if (!ignorar) setEstado({ cargando: false, error: false, datos: { peliculas, cines, funciones } });
       })
-      .catch((err) => {
-        if (!ignorar) setEstado({ cargando: false, error: err.message, datos: null });
+      .catch(() => {
+        if (!ignorar) setEstado({ cargando: false, error: true, datos: null });
       });
     return () => {
       ignorar = true;
@@ -53,16 +55,18 @@ export default function HomePage() {
     let ignorar = false;
     Promise.all([getDestacadas(), getProximosEstrenos()])
       .then(([destacadas, proximos]) => {
-        if (!ignorar) setEstrenos({ destacadas, proximos });
+        if (!ignorar) setEstrenos({ cargando: false, destacadas, proximos });
       })
-      .catch(() => {});
+      .catch(() => {
+        if (!ignorar) setEstrenos({ cargando: false, destacadas: [], proximos: [] });
+      });
     return () => {
       ignorar = true;
     };
   }, []);
 
   const reintentar = () => {
-    setEstado({ cargando: true, error: '', datos: null });
+    setEstado({ cargando: true, error: false, datos: null });
     setIntento((n) => n + 1);
   };
 
@@ -79,6 +83,8 @@ export default function HomePage() {
   const dia = diaElegido(dias, filtros.dia);
   const opciones = opcionesDeFiltro(funcionesDelCine, datos?.peliculas ?? []);
   const cartelera = armarCartelera(datos?.peliculas ?? [], funcionesDelCine, filtros, dia);
+  // Para el estado vacio: el proximo dia en el que si hay peliculas con estos filtros
+  const otroDia = dias.find((d) => d.fecha > dia && armarCartelera(datos?.peliculas ?? [], funcionesDelCine, filtros, d.fecha).length);
 
   const hayFiltrosExtra =
     filtros.formatos.length > 0 || filtros.idioma || filtros.generos.length > 0 || filtros.soloDestacadas || filtros.soloEstrenos;
@@ -89,63 +95,65 @@ export default function HomePage() {
     <section className="section">
       <title>Cartelera | CineClick</title>
 
-      <SliderDestacados destacadas={estrenos.destacadas} />
+      {estrenos.cargando ? <EsqueletoSlider /> : <SliderDestacados destacadas={estrenos.destacadas} />}
 
       <div className={styles.encabezado}>
         <h1 className={styles.titulo}>Películas en cartelera</h1>
-        <button
-          type="button"
-          className={`${styles.pastilla} ${filtros.soloDestacadas ? styles.pastillaActiva : ''}`}
-          aria-pressed={filtros.soloDestacadas}
-          onClick={() => cambiarFiltros({ soloDestacadas: !filtros.soloDestacadas })}
-        >
-          <IconoEstrella />
-          Destacadas
-        </button>
+        <div className={styles.pastillas}>
+          <button
+            type="button"
+            className={`${styles.pastilla} ${filtros.soloDestacadas ? styles.pastillaActiva : ''}`}
+            aria-pressed={filtros.soloDestacadas}
+            onClick={() => cambiarFiltros({ soloDestacadas: !filtros.soloDestacadas })}
+          >
+            <IconoEstrella />
+            Destacadas
+          </button>
+          <button
+            type="button"
+            className={`${styles.pastilla} ${filtros.soloEstrenos ? styles.pastillaActiva : ''}`}
+            aria-pressed={filtros.soloEstrenos}
+            onClick={() => cambiarFiltros({ soloEstrenos: !filtros.soloEstrenos })}
+          >
+            Estrenos
+          </button>
+        </div>
       </div>
 
-      <p className={styles.contexto}>
+      <div className={styles.contexto}>
         <label htmlFor="cine-elegido">Está viendo películas de</label>{' '}
-        <SelectorCine
+        <Selector
           id="cine-elegido"
-          cines={cines}
+          variante="frase"
+          opciones={[{ valor: '', texto: 'todos los cines' }, ...cines.map((c) => ({ valor: String(c.id), texto: nombreCine(c.nombre) }))]}
           valor={filtros.cineId}
           onCambiar={(cineId) => cambiarFiltros({ cineId })}
-          opcionTodos="todos los cines"
         />
-      </p>
-      <ul className={styles.enlaces}>
-        {filtros.cineId && (
-          <li>
-            <button type="button" className={styles.enlaceTexto} onClick={() => cambiarFiltros({ cineId: '' })}>
-              Ver las películas de todos los cines
-            </button>
-          </li>
-        )}
-        <li>
-          <Link to="/cines" className={styles.enlaceTexto}>
-            Ver la cartelera por cine
-          </Link>
-        </li>
-      </ul>
+      </div>
 
-      {datos && <BarraFiltros filtros={filtros} opciones={opciones} dias={dias} dia={dia} onCambiar={cambiarFiltros} />}
+      {datos ? (
+        <BarraFiltros filtros={filtros} opciones={opciones} dias={dias} dia={dia} onCambiar={cambiarFiltros} />
+      ) : (
+        <div className={styles.barraReservada} aria-hidden="true" />
+      )}
 
       <p className={styles.resultado} aria-live="polite">
         {datos && cartelera.length > 0 && `${cartelera.length} ${cartelera.length === 1 ? 'película' : 'películas'}`}
       </p>
 
-      {estado.cargando && <Cargando texto="Cargando cartelera..." />}
-      {estado.error && <MensajeError mensaje={estado.error} onReintentar={reintentar} />}
+      {estado.cargando && <EsqueletoGrillaPeliculas className={styles.grilla} etiqueta="Cargando cartelera" />}
+      {estado.error && <EstadoError titulo="No pudimos cargar la cartelera" onReintentar={reintentar} />}
 
       {datos && cartelera.length === 0 && (
         <EstadoVacio
-          mensaje={
-            hayFiltrosExtra || filtros.cineId
-              ? 'No hay películas para los filtros elegidos.'
-              : 'No hay funciones programadas por el momento.'
-          }
+          titulo={hayFiltrosExtra ? 'No hay películas con estos filtros' : 'No hay funciones para este día'}
+          mensaje={otroDia ? `Probá con ${diaRelativo(otroDia.fecha).toLowerCase()}.` : 'Probá con otros filtros o con otro cine.'}
         >
+          {otroDia && (
+            <button type="button" className="btn btn-primary" onClick={() => cambiarFiltros({ dia: otroDia.fecha })}>
+              Ver {diaRelativo(otroDia.fecha).toLowerCase()}
+            </button>
+          )}
           {hayFiltrosExtra && (
             <button type="button" className="btn" onClick={quitarFiltros}>
               Quitar filtros

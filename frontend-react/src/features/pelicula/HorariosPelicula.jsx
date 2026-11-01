@@ -4,10 +4,13 @@ import FiltroFormatos from '../../components/filtros/FiltroFormatos';
 import FiltroIdioma from '../../components/filtros/FiltroIdioma';
 import EstadoVacio from '../../components/ui/EstadoVacio';
 import IconoButaca from '../../components/ui/IconoButaca';
-import SelectorCine from '../../components/ui/SelectorCine';
+import BadgeFormato from '../../components/ui/BadgeFormato';
+import ChipHorario from '../../components/ui/ChipHorario';
+import Selector from '../../components/ui/Selector';
 import { NIVELES_DISPONIBILIDAD } from '../../lib/disponibilidad';
-import { fechaDeFuncion, fechaLarga, funcionVigente, hoyISO } from '../../lib/fechas';
-import { etiquetaFormato } from '../../lib/formato';
+import { diaRelativo, fechaDeFuncion, fechaLarga, funcionVigente, hoyISO } from '../../lib/fechas';
+import { etiquetaFormato, etiquetaIdioma, nombreCine } from '../../lib/formato';
+import { direccionCine, ubicacionCine } from '../cines/cines';
 import BotonAviso from '../listaEspera/BotonAviso';
 import { useListaEspera } from '../listaEspera/useListaEspera';
 import {
@@ -17,7 +20,6 @@ import {
   diasDelSelector,
   funcionesVigentesDeCine,
 } from './horarios';
-import ChipHorario from './ChipHorario';
 import SelectorDias from './SelectorDias';
 import styles from './pelicula.module.css';
 
@@ -47,7 +49,13 @@ export default function HorariosPelicula({ pelicula, cines, funciones, filtros, 
               : 'Esta película no tiene funciones programadas.'
           }
         >
-          {proximoEstreno && <BotonAviso pelicula={pelicula} anotada={anotadas.has(pelicula.id)} onCambio={marcar} />}
+          {proximoEstreno ? (
+            <BotonAviso pelicula={pelicula} anotada={anotadas.has(pelicula.id)} onCambio={marcar} />
+          ) : (
+            <Link to="/" className="btn btn-primary">
+              Ver la cartelera
+            </Link>
+          )}
         </EstadoVacio>
       </div>
     );
@@ -58,12 +66,11 @@ export default function HorariosPelicula({ pelicula, cines, funciones, filtros, 
   const dia = diaInicial(dias, delCine, filtros.dia);
   const formatos = [...new Set(delCine.map((f) => f.formato))];
   const idiomas = [...new Set(delCine.map((f) => f.idioma))].sort();
-  const delDia = delCine.filter(
-    (f) =>
-      fechaDeFuncion(f) === dia &&
-      (!filtros.formatos.length || filtros.formatos.includes(f.formato)) &&
-      (!filtros.idioma || f.idioma === filtros.idioma)
-  );
+  const cumpleFiltros = (f) =>
+    (!filtros.formatos.length || filtros.formatos.includes(f.formato)) && (!filtros.idioma || f.idioma === filtros.idioma);
+  const delDia = delCine.filter((f) => fechaDeFuncion(f) === dia && cumpleFiltros(f));
+  // Para el estado vacio: el proximo dia de la tira con funciones que cumplan los filtros
+  const otroDia = dias.find((d) => d > dia && delCine.some((f) => fechaDeFuncion(f) === d && cumpleFiltros(f)));
   const grupos = agruparPorFormatoEIdioma(delDia);
   const hayFiltros = filtros.formatos.length > 0 || Boolean(filtros.idioma);
 
@@ -92,44 +99,48 @@ export default function HorariosPelicula({ pelicula, cines, funciones, filtros, 
 
       <div className={styles.cine}>
         <p className={styles.etiquetaChica}>Cine principal</p>
-        <p className={styles.horariosEn}>
+        <div className={styles.horariosEn}>
           <label htmlFor="cine-horarios">Horarios en</label>{' '}
-          <SelectorCine
+          <Selector
             id="cine-horarios"
-            cines={cines}
+            variante="frase"
+            opciones={cines.map((c) => ({ valor: String(c.id), texto: nombreCine(c.nombre) }))}
             valor={String(cine.id)}
             onCambiar={(cineId) => onCambiar({ cineId })}
           />
-        </p>
-        {cine.direccion && (
+        </div>
+        {cine.calle && (
           <p className={styles.direccion}>
-            {cine.direccion}
-            {cine.ciudad && `, ${cine.ciudad}`}
+            {direccionCine(cine)}, {ubicacionCine(cine)}
           </p>
         )}
       </div>
 
       {grupos.length === 0 ? (
         <EstadoVacio
-          mensaje={
-            hayFiltros
-              ? `No hay funciones con los filtros elegidos para este día en ${cine.nombre}.`
-              : `No hay funciones para este día en ${cine.nombre}.`
-          }
+          titulo={hayFiltros ? 'No hay funciones con estos filtros' : 'No hay funciones para este día'}
+          mensaje={otroDia ? `Probá con ${diaRelativo(otroDia).toLowerCase()} en ${nombreCine(cine.nombre)}.` : 'Probá con otro cine.'}
         >
+          {otroDia && (
+            <button type="button" className="btn btn-primary" onClick={() => onCambiar({ dia: otroDia })}>
+              Ver {diaRelativo(otroDia).toLowerCase()}
+            </button>
+          )}
           {hayFiltros && (
             <button type="button" className="btn" onClick={() => onCambiar({ formatos: [], idioma: '' })}>
               Quitar filtros
             </button>
           )}
-          <Link to="/cines">Ver otros cines</Link>
+          <Link to="/cines" className="btn">
+            Ver otros cines
+          </Link>
         </EstadoVacio>
       ) : (
         <div className={styles.grupos}>
           {grupos.map((grupo) => (
-            <section key={`${grupo.formato}|${grupo.idioma}`} aria-label={`${etiquetaFormato(grupo.formato)}, ${grupo.idioma}`}>
+            <section key={`${grupo.formato}|${grupo.idioma}`} aria-label={`${etiquetaFormato(grupo.formato)}, ${etiquetaIdioma(grupo.idioma)}`}>
               <h3 className={styles.grupoTitulo}>
-                <strong>{etiquetaFormato(grupo.formato)}</strong> · {grupo.idioma.toUpperCase()}
+                <BadgeFormato formato={grupo.formato} /> · {etiquetaIdioma(grupo.idioma).toUpperCase()}
               </h3>
               <ul className={styles.chips}>
                 {grupo.funciones.map((funcion) => (

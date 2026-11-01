@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../app/AuthContext';
 import { useToast } from '../../components/ui/ToastProvider';
 import { diaRelativo, horaCorta } from '../../lib/fechas';
-import { etiquetaFormato } from '../../lib/formato';
+import { etiquetaFormato, etiquetaIdioma, nombreCine } from '../../lib/formato';
 import { rutaLogin } from '../../lib/volver';
 import { IconoCerrar } from './iconos';
 import styles from './compra.module.css';
@@ -32,8 +32,8 @@ export default function BarraFuncionElegida({ funcion, onQuitar }) {
         <div className={styles.barraFuncionDatos}>
           <strong className={styles.barraFuncionPelicula}>{funcion.peliculaTitulo}</strong>
           <span>
-            {funcion.cineNombre} · {diaRelativo(funcion.fechaHoraInicio)} · {horaCorta(funcion.fechaHoraInicio)} hs ·{' '}
-            {etiquetaFormato(funcion.formato)} · {funcion.idioma}
+            {nombreCine(funcion.cineNombre)} · {diaRelativo(funcion.fechaHoraInicio)} · {horaCorta(funcion.fechaHoraInicio)} hs ·{' '}
+            {etiquetaFormato(funcion.formato)} · {etiquetaIdioma(funcion.idioma)}
           </span>
         </div>
         <div className={styles.barraFuncionAcciones}>

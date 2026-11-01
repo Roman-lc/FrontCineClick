@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Poster from '../../components/ui/Poster';
 import { fechaDiaMes } from '../../lib/fechas';
-import { formatearDuracion } from '../../lib/formato';
+import { etiquetaClasificacion, formatearDuracion } from '../../lib/formato';
 import { posterGrande } from '../../lib/poster';
 import { rutaPelicula } from '../../lib/slug';
 import { useAutoplay } from '../../lib/useAutoplay';
@@ -136,7 +136,7 @@ function Diapositiva({ destacada, indice, total, activa }) {
   const datos = [
     pelicula.fechaEstreno && `Estreno ${fechaDiaMes(pelicula.fechaEstreno)}`,
     formatearDuracion(pelicula.duracionMinutos),
-    pelicula.clasificacion,
+    pelicula.clasificacion && etiquetaClasificacion(pelicula.clasificacion),
   ].filter(Boolean);
 
   return (
