@@ -1,0 +1,214 @@
+.titulo {
+    margin: 0 0 0.35rem;
+    font-size: clamp(2.2rem, 6vw, 3.5rem);
+    text-transform: uppercase;
+    line-height: 1.05;
+}
+
+.bajada {
+    margin: 0 0 1.75rem;
+    color: var(--text-muted);
+}
+
+/* ---------- Listado ---------- */
+
+.grillaCines {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+}
+
+.tarjetaCine {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.nombreCine {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.nombreCine a {
+    color: var(--text);
+    text-decoration: none;
+}
+
+.nombreCine a:hover {
+    color: var(--accent);
+}
+
+.direccion,
+.telefono {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.salas {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.35rem 0 0;
+    padding: 0;
+}
+
+.salas li {
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 0.75rem;
+}
+
+.hoy {
+    margin: 0.25rem 0 0;
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Empuja el boton al fondo: todas las tarjetas lo tienen a la misma altura */
+.verCartelera {
+    margin-top: auto;
+    text-decoration: none;
+}
+
+/* ---------- Cartelera de un cine ---------- */
+
+.volver {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.volver:hover {
+    color: var(--accent);
+}
+
+.cabeceraCine {
+    position: static;
+    margin-bottom: 2rem;
+    border: none;
+    background: none;
+}
+
+.subtitulo {
+    margin: 0 0 1rem;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+}
+
+.peliculas {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding: 0;
+}
+
+.pelicula {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 1.25rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.posterEnlace {
+    display: block;
+    text-decoration: none;
+    align-self: start;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.poster {
+    font-size: 0.9rem;
+}
+
+.peliculaInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-width: 0;
+}
+
+.peliculaTitulo {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    line-height: 1.15;
+    text-transform: uppercase;
+}
+
+.peliculaTitulo a {
+    color: var(--text);
+    text-decoration: none;
+}
+
+.peliculaTitulo a:hover {
+    color: var(--accent);
+}
+
+.peliculaDatos {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.grupoTitulo {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+}
+
+.grupoTitulo strong {
+    color: var(--text);
+}
+
+.chips {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+}
+
+@media (max-width: 560px) {
+    .pelicula {
+        grid-template-columns: 80px 1fr;
+        gap: 0.9rem;
+        padding: 0.85rem;
+    }
+
+    .peliculaTitulo {
+        font-size: 1.35rem;
+    }
+}
