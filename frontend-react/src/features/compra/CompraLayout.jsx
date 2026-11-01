@@ -7,6 +7,7 @@ import { cancelarCompra } from '../../services/compras';
 import { getFuncion, getPrecios } from '../../services/funciones';
 import { getPelicula } from '../../services/peliculas';
 import { funcionVigente } from '../../lib/fechas';
+import { rutaPelicula } from '../../lib/slug';
 import { estadoInicial, guardarCompra, leerCompraGuardada } from './estadoCompra';
 import { CompraContext, useCuentaRegresiva } from './useCompra';
 
@@ -89,7 +90,7 @@ function FlujoCompra({ funcionId }) {
     return (
       <section className="section">
         <EstadoVacio mensaje="Esta función ya no está disponible para la venta.">
-          <Link to={`/peliculas/${funcion.peliculaId}`} className="btn btn-primary">
+          <Link to={rutaPelicula(funcion.peliculaTitulo)} className="btn btn-primary">
             Ver otros horarios
           </Link>
         </EstadoVacio>

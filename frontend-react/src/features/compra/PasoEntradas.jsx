@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Ayuda from '../../components/ui/Ayuda';
 import { cancelarCompra } from '../../services/compras';
 import { formatearPrecio } from '../../lib/formato';
+import { rutaPelicula } from '../../lib/slug';
 import { MAXIMO_ENTRADAS, cantidadDeEntradas } from './estadoCompra';
 import PasoCompra from './PasoCompra';
 import { useCompra } from './useCompra';
@@ -32,7 +33,7 @@ export default function PasoEntradas() {
     <PasoCompra
       titulo="Entradas"
       paso={1}
-      onAtras={() => navigate(`/peliculas/${funcion.peliculaId}`)}
+      onAtras={() => navigate(rutaPelicula(funcion.peliculaTitulo))}
       accion={{
         texto: 'Continuar',
         deshabilitado: total < 1,

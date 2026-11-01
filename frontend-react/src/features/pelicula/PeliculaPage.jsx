@@ -1,33 +1,47 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getCines } from '../../services/cines';
 import { getFunciones } from '../../services/funciones';
-import { getPelicula } from '../../services/peliculas';
+import { getPeliculaPorSlug } from '../../services/peliculas';
 import Cargando from '../../components/ui/Cargando';
 import EstadoVacio from '../../components/ui/EstadoVacio';
 import MensajeError from '../../components/ui/MensajeError';
-import { escribirFiltros, leerFiltros } from '../../lib/filtrosUrl';
+import { rutaPelicula, aSlug } from '../../lib/slug';
 import FichaPelicula from './FichaPelicula';
 import HorariosPelicula from './HorariosPelicula';
 import BarraFuncionElegida from '../compra/BarraFuncionElegida';
 import styles from './pelicula.module.css';
 
-// La key reinicia el estado al pasar de una pelicula a otra
+// La URL es /peliculas/<slug del titulo>. El cine y el dia elegidos en la cartelera llegan en el
+// estado de la navegacion (no en la URL). La key reinicia todo al pasar de una pelicula a otra.
 export default function PeliculaPage() {
-  const { id } = useParams();
-  return <DetallePelicula key={id} id={id} />;
+  const { slug } = useParams();
+  return <DetallePelicula key={slug} slug={slug} />;
 }
 
-function DetallePelicula({ id }) {
-  const [searchParams, setSearchParams] = useSearchParams();
+function DetallePelicula({ slug }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [filtros, setFiltros] = useState(() => ({
+    cineId: location.state?.cineId ?? '',
+    dia: location.state?.dia ?? '',
+    formatos: [],
+    idioma: '',
+  }));
   const [intento, setIntento] = useState(0);
   const [estado, setEstado] = useState({ cargando: true, error: null, datos: null });
   const [elegida, setElegida] = useState(null);
 
   useEffect(() => {
     let ignorar = false;
-    Promise.all([getPelicula(id), getCines(), getFunciones({ peliculaId: id })])
-      .then(([pelicula, cines, funciones]) => {
+    getPeliculaPorSlug(slug)
+      .then(async (pelicula) => {
+        // Un link viejo con el id (/peliculas/45) se reemplaza por el del titulo
+        if (aSlug(pelicula.titulo) !== slug) {
+          navigate(rutaPelicula(pelicula.titulo), { replace: true, state: location.state });
+          return;
+        }
+        const [cines, funciones] = await Promise.all([getCines(), getFunciones({ peliculaId: pelicula.id })]);
         if (!ignorar) setEstado({ cargando: false, error: null, datos: { pelicula, cines, funciones } });
       })
       .catch((error) => {
@@ -36,10 +50,9 @@ function DetallePelicula({ id }) {
     return () => {
       ignorar = true;
     };
-  }, [id, intento]);
+  }, [slug, intento, navigate, location.state]);
 
-  const filtros = leerFiltros(searchParams);
-  const cambiarFiltros = (cambios) => setSearchParams((actuales) => escribirFiltros(actuales, cambios), { replace: true });
+  const cambiarFiltros = (cambios) => setFiltros((actuales) => ({ ...actuales, ...cambios }));
 
   if (estado.cargando) {
     return (

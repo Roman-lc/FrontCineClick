@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import PeliculaCard from '../../components/ui/PeliculaCard';
 import { fechaDiaMes } from '../../lib/fechas';
+import { rutaPelicula } from '../../lib/slug';
 import BotonAviso from '../listaEspera/BotonAviso';
 import { useListaEspera } from '../listaEspera/useListaEspera';
 import styles from './cartelera.module.css';
@@ -19,7 +20,7 @@ export default function ProximosEstrenos({ proximos }) {
       <p className={styles.bajada}>Comprá tus entradas en preventa o pedí que te avisemos cuando salgan a la venta.</p>
       <ul className={styles.grilla}>
         {proximos.map(({ pelicula, categoria }) => {
-          const detalle = `/peliculas/${pelicula.id}`;
+          const detalle = rutaPelicula(pelicula.titulo);
           const preventa = categoria === 'PREVENTA';
           return (
             <li key={pelicula.id}>

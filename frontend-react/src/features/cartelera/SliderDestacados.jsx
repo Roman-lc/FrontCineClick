@@ -4,6 +4,7 @@ import Poster from '../../components/ui/Poster';
 import { fechaDiaMes } from '../../lib/fechas';
 import { formatearDuracion } from '../../lib/formato';
 import { posterGrande } from '../../lib/poster';
+import { rutaPelicula } from '../../lib/slug';
 import { useAutoplay } from '../../lib/useAutoplay';
 import { useMediaQuery } from '../../lib/useMediaQuery';
 import styles from './slider.module.css';
@@ -158,7 +159,7 @@ function Diapositiva({ destacada, indice, total, activa }) {
         <h2 className={styles.titulo}>{pelicula.titulo}</h2>
         <p className={styles.datos}>{datos.join(' · ')}</p>
         <p className={styles.sinopsis}>{pelicula.sinopsis}</p>
-        <Link to={`/peliculas/${pelicula.id}`} className={`btn btn-primary ${styles.boton}`}>
+        <Link to={rutaPelicula(pelicula.titulo)} className={`btn btn-primary ${styles.boton}`}>
           {BOTONES[categoria]}
         </Link>
       </div>

@@ -33,8 +33,3 @@ export function escribirFiltros(searchParams, cambios) {
   return nuevos;
 }
 
-// Query string para llevar el cine y el dia de una pantalla a otra: "?cine=1&dia=2026-10-31"
-export function queryCineYDia(cineId, dia) {
-  const qs = escribirFiltros(new URLSearchParams(), { cineId, dia }).toString();
-  return qs ? `?${qs}` : '';
-}

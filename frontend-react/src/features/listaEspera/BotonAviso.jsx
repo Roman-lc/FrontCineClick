@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../app/AuthContext';
 import { useToast } from '../../components/ui/ToastProvider';
 import { anotarEnListaEspera, quitarDeListaEspera } from '../../services/listaEspera';
+import { rutaPelicula } from '../../lib/slug';
 import { rutaLogin } from '../../lib/volver';
 import styles from './BotonAviso.module.css';
 
@@ -18,7 +19,7 @@ export default function BotonAviso({ pelicula, anotada, onCambio, className = ''
 
   const alternar = async () => {
     if (!user?.clienteId) {
-      navigate(rutaLogin(`/peliculas/${pelicula.id}`));
+      navigate(rutaLogin(rutaPelicula(pelicula.titulo)));
       return;
     }
     setEnviando(true);

@@ -9,6 +9,7 @@ import styles from './cartelera.module.css';
 // - con un cine elegido: hasta 2 filas de chips; si no entran, el ultimo lugar es "+N" (va al detalle);
 // - con "todos los cines": solo el cine con la funcion mas proxima (1 fila) y "y N cines más".
 // Tocar un horario lo elige (onElegir) y la pagina muestra la barra para comprar.
+// enlaceDetalle: { to, state } del detalle de la pelicula (para "+N" y "y N cines más").
 export default function HorariosDelDia({ funciones, agruparPorCine, elegidaId, onElegir, enlaceDetalle }) {
   const [zona, porFila] = useChipsPorFila();
   const chip = { elegidaId, onElegir, enlaceDetalle };
@@ -36,7 +37,7 @@ export default function HorariosDelDia({ funciones, agruparPorCine, elegidaId, o
       <p className={styles.horariosCine}>{cine}</p>
       <ListaChips funciones={delCine} maximo={porFila} {...chip} />
       {otros.length > 0 && (
-        <Link to={enlaceDetalle} className={styles.masCines}>
+        <Link to={enlaceDetalle.to} state={enlaceDetalle.state} className={styles.masCines}>
           y {otros.length} {otros.length === 1 ? 'cine' : 'cines'} más ›
         </Link>
       )}
@@ -58,7 +59,8 @@ function ListaChips({ funciones, maximo, elegidaId, onElegir, enlaceDetalle }) {
       {sobran && (
         <li>
           <Link
-            to={enlaceDetalle}
+            to={enlaceDetalle.to}
+            state={enlaceDetalle.state}
             className={`${styles.chip} ${styles.chipMas}`}
             aria-label={`Ver ${resto} ${resto === 1 ? 'horario' : 'horarios'} más`}
           >

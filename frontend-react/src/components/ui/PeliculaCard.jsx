@@ -8,7 +8,7 @@ import styles from './PeliculaCard.module.css';
 // No va adentro de un enlace para que cada horario tenga su propio clic.
 // Todas las tarjetas miden lo mismo: el titulo reserva 2 lineas, los formatos 1 y los horarios
 // tienen su propia altura fija (ver HorariosDelDia).
-export default function PeliculaCard({ pelicula, to, estreno = false, children }) {
+export default function PeliculaCard({ pelicula, to, estadoEnlace, estreno = false, children }) {
   const duracion = formatearDuracionCorta(pelicula.duracionMinutos);
   const formatos = listarFormatos(pelicula.formatosDisponibles);
   const poster = <Poster pelicula={pelicula} className={styles.poster} />;
@@ -18,7 +18,7 @@ export default function PeliculaCard({ pelicula, to, estreno = false, children }
       <div className={styles.posterCaja}>
         {to ? (
           // Duplica el enlace del titulo solo para el mouse: se saltea con teclado y lector de pantalla
-          <Link to={to} className={styles.enlacePoster} tabIndex={-1} aria-hidden="true">
+          <Link to={to} state={estadoEnlace} className={styles.enlacePoster} tabIndex={-1} aria-hidden="true">
             {poster}
           </Link>
         ) : (
@@ -41,7 +41,7 @@ export default function PeliculaCard({ pelicula, to, estreno = false, children }
 
       <div className={styles.info}>
         <div className={styles.filaTitulo}>
-          <h3 className={styles.titulo}>{to ? <Link to={to}>{pelicula.titulo}</Link> : pelicula.titulo}</h3>
+          <h3 className={styles.titulo}>{to ? <Link to={to} state={estadoEnlace}>{pelicula.titulo}</Link> : pelicula.titulo}</h3>
           {pelicula.clasificacion && (
             <span className={styles.calificacion} title="Calificación">
               {pelicula.clasificacion}

@@ -9,7 +9,8 @@ import MensajeError from '../../components/ui/MensajeError';
 import EstadoVacio from '../../components/ui/EstadoVacio';
 import IconoEstrella from '../../components/ui/IconoEstrella';
 import SelectorCine from '../../components/ui/SelectorCine';
-import { escribirFiltros, leerFiltros, queryCineYDia } from '../../lib/filtrosUrl';
+import { escribirFiltros, leerFiltros } from '../../lib/filtrosUrl';
+import { rutaPelicula } from '../../lib/slug';
 import BarraFiltros from './BarraFiltros';
 import HorariosDelDia from './HorariosDelDia';
 import ProximosEstrenos from './ProximosEstrenos';
@@ -161,10 +162,11 @@ export default function HomePage() {
       {cartelera.length > 0 && (
         <ul className={styles.grilla}>
           {cartelera.map(({ pelicula, funciones }) => {
-            const detalle = `/peliculas/${pelicula.id}${queryCineYDia(filtros.cineId, dia)}`;
+            // El cine y el dia viajan en el estado de la navegacion, asi la URL queda limpia
+            const detalle = { to: rutaPelicula(pelicula.titulo), state: { cineId: filtros.cineId, dia } };
             return (
               <li key={pelicula.id}>
-                <PeliculaCard pelicula={pelicula} to={detalle} estreno={esEstreno(pelicula)}>
+                <PeliculaCard pelicula={pelicula} to={detalle.to} estadoEnlace={detalle.state} estreno={esEstreno(pelicula)}>
                   <HorariosDelDia
                     funciones={funciones}
                     agruparPorCine={!filtros.cineId}

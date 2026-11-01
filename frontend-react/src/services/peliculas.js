@@ -1,4 +1,5 @@
-import { api } from './http';
+import { ApiError, api } from './http';
+import { aSlug } from '../lib/slug';
 import { USE_MOCKS, simular, simularNoEncontrado } from '../mocks/simular';
 import { peliculasMock } from '../mocks/peliculas';
 import { destacadasMock, proximosEstrenosMock } from '../mocks/destacadas';
@@ -9,6 +10,15 @@ import { destacadasMock, proximosEstrenosMock } from '../mocks/destacadas';
 export async function getPeliculas() {
   if (USE_MOCKS) return simular(peliculasMock);
   return api.get('/api/peliculas');
+}
+
+// La API no busca por slug: se busca en la lista de peliculas activas. Si el slug es un numero
+// (los links viejos del estilo /peliculas/45) se busca por id.
+export async function getPeliculaPorSlug(slug) {
+  const pelicula = (await getPeliculas()).find((p) => aSlug(p.titulo) === slug);
+  if (pelicula) return pelicula;
+  if (/^\d+$/.test(slug)) return getPelicula(slug);
+  throw new ApiError(404, `Pelicula no encontrada: ${slug}`);
 }
 
 export async function getPelicula(id) {

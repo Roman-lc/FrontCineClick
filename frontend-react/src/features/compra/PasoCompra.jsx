@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../components/ui/ToastProvider';
 import { cancelarCompra } from '../../services/compras';
+import { rutaPelicula } from '../../lib/slug';
 import { useMediaQuery } from '../../lib/useMediaQuery';
 import { borrarCompra, formatearReloj } from './estadoCompra';
 import { IconoAtras, IconoCerrar } from './iconos';
@@ -28,7 +29,7 @@ export default function PasoCompra({ titulo, paso, onAtras, accion, extraResumen
       cancelarCompra(estado.reserva.compra.id).catch(() => {});
     }
     borrarCompra();
-    navigate(`/peliculas/${funcion.peliculaId}`);
+    navigate(rutaPelicula(funcion.peliculaTitulo));
   };
 
   return (

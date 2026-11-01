@@ -57,7 +57,7 @@ export default function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/cines" element={<PaginaPendiente titulo="Cines" etapa={3} />} />
-        <Route path="/peliculas/:id" element={<PeliculaPage />} />
+        <Route path="/peliculas/:slug" element={<PeliculaPage />} />
         <Route path="/promociones" element={<PaginaPendiente titulo="Promociones" etapa={3} />} />
         <Route path="/grupo" element={<GrupoPage />} />
         <Route path="/terminos" element={<LegalesPage key="terminos" tipo="terminos" />} />
