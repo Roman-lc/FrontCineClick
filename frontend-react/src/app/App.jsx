@@ -3,8 +3,6 @@ import Layout from '../components/layout/Layout';
 import { useAuth } from './AuthContext';
 import HomePage from '../features/cartelera/HomePage';
 import LoginPage from '../features/auth/LoginPage';
-import FuncionesPage from '../features/funciones/FuncionesPage';
-import DetallePage from '../features/detalle/DetallePage';
 import CompraLayout from '../features/compra/CompraLayout';
 import PasoEntradas from '../features/compra/PasoEntradas';
 import PasoButacas from '../features/compra/PasoButacas';
@@ -80,10 +78,6 @@ export default function App() {
           <Route path="butacas" element={<PasoButacas />} />
           <Route path="pago" element={<PasoPago />} />
         </Route>
-
-        {/* Pantallas del vanilla que siguen en uso hasta que las reemplace la etapa 3 */}
-        <Route path="/funciones" element={<FuncionesPage />} />
-        <Route path="/detalle" element={<DetallePage />} />
 
         <Route path="/admin" element={<RequireAdmin><AdminPage /></RequireAdmin>} />
         <Route path="/admin/validar" element={<RequireAdmin><PaginaPendiente titulo="Validar entradas" etapa={5} /></RequireAdmin>} />
