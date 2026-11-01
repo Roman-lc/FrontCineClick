@@ -98,3 +98,44 @@ export function diaRelativo(fechaIso) {
 export function fechaDiaMes(iso) {
   return new Date(iso + 'T00:00:00').toLocaleDateString('es-AR', { day: 'numeric', month: 'long' });
 }
+
+const DIAS_LARGOS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+
+// '2026-10-31T14:00:00' -> 'Sáb 31/10 · 14:00'
+export function fechaFuncionCorta(fechaIso) {
+  const fecha = fechaIso.split('T')[0];
+  return `${diaSemanaCorto(fecha)} ${fechaCorta(fecha)} · ${horaCorta(fechaIso)}`;
+}
+
+// '2026-10-31T14:00:00' -> 'Sábado 31 de octubre · 14:00'
+export function fechaFuncionLarga(fechaIso) {
+  const fecha = fechaIso.split('T')[0];
+  const d = new Date(fecha + 'T00:00:00');
+  return `${DIAS_LARGOS[d.getDay()]} ${fechaDiaMes(fecha)} · ${horaCorta(fechaIso)}`;
+}
+
+// '2026-10-30T22:14:05' -> '30/10 22:14'
+export function fechaHoraBreve(fechaIso) {
+  return `${fechaCorta(fechaIso.split('T')[0])} ${horaCorta(fechaIso)}`;
+}
+
+// Dias de calendario entre hoy y la fecha (0 = hoy, 1 = mañana, negativo = ya paso)
+export function diasHasta(fechaIso) {
+  const desde = new Date(hoyISO() + 'T00:00:00');
+  const hasta = new Date(fechaIso.split('T')[0] + 'T00:00:00');
+  return Math.round((hasta - desde) / 86400000);
+}
+
+// 'Hoy', 'Mañana', 'En 3 días'
+export function cuandoFalta(fechaIso) {
+  const dias = diasHasta(fechaIso);
+  if (dias <= 0) return 'Hoy';
+  if (dias === 1) return 'Mañana';
+  return `En ${dias} días`;
+}
+
+// Fecha y hora local para inputs datetime-local: '2026-11-01T14:05'
+export function ahoraParaInput(fecha = new Date()) {
+  const dos = (n) => String(n).padStart(2, '0');
+  return `${fecha.getFullYear()}-${dos(fecha.getMonth() + 1)}-${dos(fecha.getDate())}T${dos(fecha.getHours())}:${dos(fecha.getMinutes())}`;
+}
