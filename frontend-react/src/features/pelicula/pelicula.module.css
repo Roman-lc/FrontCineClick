@@ -124,7 +124,7 @@
 /* 5 dias contiguos de igual ancho */
 .dias {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(var(--cantidad-dias, 5), minmax(0, 1fr));
     margin-bottom: 1rem;
     border: 1px solid var(--border);
     border-radius: var(--radius);

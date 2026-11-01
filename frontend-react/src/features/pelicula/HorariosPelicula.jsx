@@ -5,8 +5,8 @@ import FiltroIdioma from '../../components/filtros/FiltroIdioma';
 import EstadoVacio from '../../components/ui/EstadoVacio';
 import IconoButaca from '../../components/ui/IconoButaca';
 import SelectorCine from '../../components/ui/SelectorCine';
-import { NIVELES_DISPONIBILIDAD, nivelDisponibilidad } from '../../lib/disponibilidad';
-import { diaYFechaCortos, fechaDeFuncion, fechaLarga, funcionVigente, horaCorta, hoyISO } from '../../lib/fechas';
+import { NIVELES_DISPONIBILIDAD } from '../../lib/disponibilidad';
+import { fechaDeFuncion, fechaLarga, funcionVigente, hoyISO } from '../../lib/fechas';
 import { etiquetaFormato } from '../../lib/formato';
 import BotonAviso from '../listaEspera/BotonAviso';
 import { useListaEspera } from '../listaEspera/useListaEspera';
@@ -17,6 +17,8 @@ import {
   diasDelSelector,
   funcionesVigentesDeCine,
 } from './horarios';
+import ChipHorario from './ChipHorario';
+import SelectorDias from './SelectorDias';
 import styles from './pelicula.module.css';
 
 export default function HorariosPelicula({ pelicula, cines, funciones, filtros, onCambiar, elegidaId, onElegir }) {
@@ -69,23 +71,7 @@ export default function HorariosPelicula({ pelicula, cines, funciones, filtros, 
     <div className={styles.horarios}>
       {encabezado}
 
-      <div className={styles.dias} role="group" aria-label="Día">
-        {dias.map((fecha) => {
-          const { dia: nombre, fecha: corta } = diaYFechaCortos(fecha);
-          return (
-            <button
-              key={fecha}
-              type="button"
-              className={styles.dia}
-              aria-pressed={fecha === dia}
-              onClick={() => onCambiar({ dia: fecha })}
-            >
-              <span className={styles.diaNombre}>{nombre}</span>
-              <span className={styles.diaFecha}>{corta}</span>
-            </button>
-          );
-        })}
-      </div>
+      <SelectorDias dias={dias} valor={dia} onCambiar={(fecha) => onCambiar({ dia: fecha })} />
 
       <BarraSegmentos etiqueta="Filtros de horarios">
         <FiltroFormatos formatos={formatos} seleccionados={filtros.formatos} onCambiar={(f) => onCambiar({ formatos: f })} />
@@ -157,37 +143,5 @@ export default function HorariosPelicula({ pelicula, cines, funciones, filtros, 
         </div>
       )}
     </div>
-  );
-}
-
-function ChipHorario({ funcion, elegida, onElegir }) {
-  const hora = horaCorta(funcion.fechaHoraInicio);
-  const nivel = nivelDisponibilidad(funcion);
-  const contenido = (
-    <>
-      <span className={styles[nivel.clave]}>
-        <IconoButaca />
-      </span>
-      {hora}hs
-    </>
-  );
-
-  if (nivel.clave === 'completa') {
-    return (
-      <span className={`${styles.chip} ${styles.chipCompleta}`} aria-disabled="true" aria-label={`${hora}, completa`}>
-        {contenido}
-      </span>
-    );
-  }
-  return (
-    <button
-      type="button"
-      className={styles.chip}
-      aria-pressed={elegida}
-      onClick={() => onElegir(elegida ? null : funcion)}
-      aria-label={`${hora}, disponibilidad ${nivel.etiqueta.toLowerCase()}`}
-    >
-      {contenido}
-    </button>
   );
 }
