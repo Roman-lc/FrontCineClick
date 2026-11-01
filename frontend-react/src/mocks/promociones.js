@@ -5,10 +5,22 @@ export const promocionesMock = [
   {
     id: 1,
     codigo: 'ESTRENO10',
-    descripcion: '10% de descuento en compras online',
+    titulo: 'Estrenos online',
+    descripcion: 'Para cualquier función y formato. Un código por compra, hasta 10 entradas.',
     porcentajeDescuento: 10,
     fechaInicio: sumarDiasISO(hoyISO(), -1),
     fechaFin: sumarDiasISO(hoyISO(), 60),
+    activa: true,
+  },
+  // Vence pronto: muestra el aviso de "Vence en N días"
+  {
+    id: 2,
+    codigo: 'FINDE15',
+    titulo: 'Fin de semana largo',
+    descripcion: 'Para cualquier función. Un código por compra.',
+    porcentajeDescuento: 15,
+    fechaInicio: sumarDiasISO(hoyISO(), -3),
+    fechaFin: sumarDiasISO(hoyISO(), 2),
     activa: true,
   },
 ];
