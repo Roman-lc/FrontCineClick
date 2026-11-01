@@ -1,0 +1,157 @@
+.admin {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* <header>: el estilo global ya lo deja sticky debajo de la franja de administrador */
+.cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 56px;
+    padding: 0.4rem 1.5rem;
+}
+
+.logo {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding-top: 0.35rem;
+    color: var(--accent-text);
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    text-decoration: none;
+}
+
+.panel {
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+.botonMenu {
+    display: none;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.botonMenu[aria-expanded='true'] svg {
+    transform: rotate(180deg);
+}
+
+.cuerpo {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    flex: 1;
+}
+
+.lateral {
+    position: sticky;
+    top: calc(56px + var(--alto-barra-admin));
+    align-self: start;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    height: calc(100vh - 56px - var(--alto-barra-admin));
+    padding: 1.25rem 0.75rem;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+}
+
+.lista {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.enlace {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 44px;
+    padding: 0.4rem 0.85rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--text-muted);
+    font: inherit;
+    font-weight: 600;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.enlace:hover {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+/* Seccion actual: barra de acento a la izquierda y texto en el tono oscuro del acento */
+.activo {
+    background: var(--surface-2);
+    color: var(--accent-text);
+    box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.salir {
+    margin-top: auto;
+}
+
+.contenido {
+    min-width: 0;
+    padding: 2rem;
+}
+
+.menuMovil {
+    position: sticky;
+    top: calc(56px + var(--alto-barra-admin));
+    z-index: 90;
+    padding: 0.5rem 16px 1rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    box-shadow: 0 12px 24px color-mix(in srgb, var(--sombra) 12%, transparent);
+}
+
+@media (max-width: 900px) {
+    .botonMenu {
+        display: inline-flex;
+    }
+
+    .cuerpo {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lateral {
+        display: none;
+    }
+
+    .cabecera {
+        padding: 0.4rem 16px;
+    }
+
+    .contenido {
+        padding: 1.25rem 16px 2rem;
+    }
+}

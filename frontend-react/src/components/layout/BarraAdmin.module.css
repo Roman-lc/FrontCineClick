@@ -1,0 +1,71 @@
+/* Fija arriba (sticky) pero ocupando su lugar en el flujo: no tapa el header, que se corre
+   --alto-barra-admin hacia abajo cuando esta franja existe */
+.barra {
+    position: sticky;
+    top: 0;
+    z-index: 150;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    height: 36px;
+    padding: 0 2rem;
+    background: var(--admin-bar);
+    color: var(--admin-bar-text);
+    font-size: 0.85rem;
+}
+
+.sesion {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    margin: 0;
+    font-weight: 600;
+}
+
+.sesion svg {
+    flex-shrink: 0;
+}
+
+.texto {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.nombre {
+    font-weight: 400;
+}
+
+/* El area tactil llega a 36px de alto, toda la franja */
+.enlace {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    height: 36px;
+    padding: 0 0.25rem;
+    color: var(--admin-bar-text);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.enlace:hover {
+    text-decoration-thickness: 2px;
+}
+
+.enlace:focus-visible {
+    outline: 2px solid var(--admin-bar-text);
+    outline-offset: -2px;
+}
+
+@media (max-width: 560px) {
+    .barra {
+        padding: 0 16px;
+    }
+
+    .nombre {
+        display: none;
+    }
+}
