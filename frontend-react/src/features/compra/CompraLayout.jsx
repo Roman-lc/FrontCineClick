@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, Outlet, useParams } from 'react-router-dom';
-import Cargando from '../../components/ui/Cargando';
+import EstadoError from '../../components/ui/EstadoError';
 import EstadoVacio from '../../components/ui/EstadoVacio';
-import MensajeError from '../../components/ui/MensajeError';
+import { EsqueletoCompra } from '../../components/ui/Esqueletos';
 import { cancelarCompra } from '../../services/compras';
 import { getFuncion, getPrecios } from '../../services/funciones';
 import { getPelicula } from '../../services/peliculas';
@@ -58,7 +58,7 @@ function FlujoCompra({ funcionId }) {
   if (carga.cargando) {
     return (
       <section className="section">
-        <Cargando texto="Cargando la función..." />
+        <EsqueletoCompra />
       </section>
     );
   }
@@ -67,14 +67,14 @@ function FlujoCompra({ funcionId }) {
     return (
       <section className="section">
         {carga.error.status === 404 ? (
-          <EstadoVacio mensaje="La función que buscás no existe.">
+          <EstadoVacio titulo="No encontramos esa función" mensaje="Elegí otro horario desde la cartelera.">
             <Link to="/" className="btn btn-primary">
               Volver a la cartelera
             </Link>
           </EstadoVacio>
         ) : (
-          <MensajeError
-            mensaje={carga.error.message}
+          <EstadoError
+            titulo="No pudimos cargar la función"
             onReintentar={() => {
               setCarga({ cargando: true, error: null, datos: null });
               setIntento((n) => n + 1);
@@ -89,7 +89,7 @@ function FlujoCompra({ funcionId }) {
   if (!funcionVigente(funcion) && !estado.reserva) {
     return (
       <section className="section">
-        <EstadoVacio mensaje="Esta función ya no está disponible para la venta.">
+        <EstadoVacio titulo="Esta función ya no está a la venta" mensaje="Ya empezó o se canceló. Elegí otro horario.">
           <Link to={rutaPelicula(funcion.peliculaTitulo)} className="btn btn-primary">
             Ver otros horarios
           </Link>

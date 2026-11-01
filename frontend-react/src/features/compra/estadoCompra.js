@@ -1,3 +1,4 @@
+import { edadDeClasificacion } from '../../lib/formato';
 // Estado de la compra en curso. Se guarda en sessionStorage para no perderlo al ir y volver entre
 // pasos o al recargar: { funcionId, entradas: { GENERAL: 2, MENOR: 1 }, butacas: [{ id, codigo }],
 // reserva: null | { compra: CompraResponseDTO, fin: ms en que vence segun el reloj de esta PC } }
@@ -74,10 +75,9 @@ export function formatearReloj(segundos) {
   return `${String(minutos).padStart(2, '0')}:${String(segundos % 60).padStart(2, '0')}`;
 }
 
-// '+13' -> 13, 'ATP' -> 0
+// MAS_13 -> 13, ATP -> 0
 export function edadMinima(clasificacion) {
-  const edad = Number.parseInt(String(clasificacion ?? '').replace('+', ''), 10);
-  return Number.isNaN(edad) ? 0 : edad;
+  return edadDeClasificacion(clasificacion);
 }
 
 export function textoDeclaracionMenores(edad) {

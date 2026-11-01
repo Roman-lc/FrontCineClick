@@ -43,10 +43,10 @@
 
 .pantalla path {
     fill: none;
-    stroke: var(--accent);
+    stroke: var(--text-muted);
     stroke-width: 3;
     vector-effect: non-scaling-stroke;
-    filter: drop-shadow(0 6px 8px rgba(245, 179, 1, 0.45));
+    filter: drop-shadow(0 6px 8px color-mix(in srgb, var(--text) 25%, transparent));
 }
 
 .fila {
@@ -70,7 +70,7 @@
     width: var(--tam);
     height: var(--tam);
     padding: 0;
-    border: 1px solid #4a4a58;
+    border: 1px solid var(--border-input);
     border-radius: 7px 7px 4px 4px;
     background: var(--surface-2);
     color: var(--text-muted);
@@ -82,27 +82,29 @@
 }
 
 .butaca:hover:not(:disabled) {
-    border-color: var(--accent);
+    border-color: var(--text);
     color: var(--text);
 }
 
 .silla {
-    border-color: var(--info);
-    color: var(--info);
+    border-color: var(--text);
+    color: var(--text);
 }
 
 .elegida,
 .elegida.silla {
     border-color: var(--accent);
     background: var(--accent);
-    color: var(--accent-text);
+    color: var(--on-accent);
 }
 
+/* Ocupada: fondo --border con la X en --text-muted y opacidad 0,5 */
 .ocupada,
 .ocupada.silla {
     border-color: var(--border);
-    background: transparent;
-    color: #5f5f6e;
+    background: var(--border);
+    color: var(--text-muted);
+    opacity: 0.5;
     cursor: not-allowed;
 }
 
@@ -127,10 +129,10 @@
     place-items: center;
     width: 18px;
     height: 18px;
-    border: 1px solid #4a4a58;
+    border: 1px solid var(--border-input);
     border-radius: 5px 5px 3px 3px;
     background: var(--surface-2);
-    color: var(--info);
+    color: var(--text);
 }
 
 .muestraElegida {
@@ -140,8 +142,9 @@
 
 .muestraOcupada {
     border-color: var(--border);
-    background: transparent;
-    color: #5f5f6e;
+    background: var(--border);
+    color: var(--text-muted);
+    opacity: 0.5;
 }
 
 @media (max-width: 560px) {

@@ -10,7 +10,7 @@
     z-index: auto;
     background: none;
     display: grid;
-    grid-template-columns: 2.5rem 1fr 2.5rem;
+    grid-template-columns: 44px 1fr 44px;
     align-items: center;
     gap: 0.5rem;
     padding-bottom: 1rem;
@@ -28,17 +28,17 @@
 }
 
 .reloj {
-    color: var(--accent);
+    color: var(--text);
     font-variant-numeric: tabular-nums;
 }
 
 .botonIcono {
     display: grid;
     place-items: center;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 44px;
+    height: 44px;
     padding: 0;
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-input);
     border-radius: 50%;
     background: var(--surface);
     color: var(--text);
@@ -47,8 +47,8 @@
 }
 
 .botonIcono:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+    border-color: var(--text);
+    color: var(--text);
 }
 
 .columnas {
@@ -72,7 +72,7 @@
     padding: 0.75rem 1rem;
     border: 1px solid var(--danger);
     border-radius: var(--radius-sm);
-    background: rgba(255, 92, 92, 0.1);
+    background: color-mix(in srgb, var(--danger) 10%, transparent);
     color: var(--text);
 }
 
@@ -122,7 +122,7 @@
     height: 2.75rem;
     border-radius: var(--radius-sm);
     background: var(--surface-2);
-    color: var(--accent);
+    color: var(--text-muted);
 }
 
 .iconoPoster {
@@ -245,7 +245,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    color: var(--accent);
+    color: var(--text);
 }
 
 /* ---------- Paso 1: tipos de entrada ---------- */
@@ -270,20 +270,6 @@
     gap: 0.85rem;
 }
 
-.ticket {
-    display: flex;
-    align-items: stretch;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--surface);
-}
-
-.ticketDatos {
-    flex: 1;
-    min-width: 0;
-    padding: 1rem 1.25rem;
-}
-
 .ticketNombre {
     display: flex;
     align-items: center;
@@ -294,47 +280,24 @@
 
 .ticketPrecio {
     margin: 0;
-    color: var(--accent);
+    color: var(--text);
     font-size: 1.1rem;
     font-weight: 700;
 }
 
-/* El borde punteado con dos muescas separa la info del contador, como un ticket troquelado */
 .contador {
-    position: relative;
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    padding: 1rem 1.25rem;
-    border-left: 2px dashed var(--border);
-}
-
-.contador::before,
-.contador::after {
-    content: '';
-    position: absolute;
-    left: -9px;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: var(--bg);
-}
-
-.contador::before {
-    top: -9px;
-}
-
-.contador::after {
-    bottom: -9px;
 }
 
 .contadorBoton {
     display: grid;
     place-items: center;
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 44px;
+    height: 44px;
     padding: 0;
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-input);
     border-radius: 50%;
     background: var(--surface-2);
     color: var(--text);
@@ -344,8 +307,8 @@
 }
 
 .contadorBoton:hover:not(:disabled) {
-    border-color: var(--accent);
-    color: var(--accent);
+    border-color: var(--text);
+    color: var(--text);
 }
 
 .contadorBoton:disabled {
@@ -364,7 +327,7 @@
 .avisoMaximo {
     min-height: 1.5rem;
     margin: 1rem 0 0;
-    color: var(--accent);
+    color: var(--text);
     font-weight: 600;
 }
 
@@ -415,7 +378,7 @@
     gap: 0.85rem;
     min-width: min(100%, 280px);
     padding: 0.9rem 1.1rem;
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-input);
     border-radius: var(--radius);
     background: var(--surface);
     color: var(--text-muted);
@@ -425,11 +388,11 @@
 .metodo:has(input:checked) {
     border-color: var(--accent);
     box-shadow: inset 0 0 0 1px var(--accent);
-    color: var(--accent);
+    color: var(--text);
 }
 
 .metodo:has(input:focus-visible) {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--focus);
     outline-offset: 2px;
 }
 
@@ -527,7 +490,8 @@
     padding: 0;
     border: none;
     background: none;
-    color: var(--accent);
+    color: var(--text);
+    text-decoration: underline;
     font: inherit;
     text-decoration: underline;
     cursor: pointer;
@@ -552,7 +516,7 @@
     padding: 1.5rem;
     border: 1px solid var(--danger);
     border-radius: var(--radius);
-    background: rgba(255, 92, 92, 0.08);
+    background: color-mix(in srgb, var(--danger) 8%, transparent);
 }
 
 .vencidaTitulo {
@@ -619,95 +583,6 @@
     font-weight: 700;
 }
 
-/* ---------- Confirmacion ---------- */
-
-.confirmacion {
-    max-width: 720px;
-}
-
-.confirmacionCabecera {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
-}
-
-.tilde {
-    display: grid;
-    place-items: center;
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 50%;
-    background: var(--success);
-    color: #0f0f14;
-    font-size: 1.8rem;
-    font-weight: 700;
-}
-
-.confirmacionFuncion {
-    margin-bottom: 1.75rem;
-    padding: 1rem 1.25rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--surface);
-    color: var(--text-muted);
-}
-
-.confirmacionFuncion p {
-    margin: 0.15rem 0;
-}
-
-.confirmacionPelicula {
-    color: var(--text);
-    font-size: 1.2rem;
-    font-weight: 700;
-}
-
-.entradasConfirmadas {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin: 1rem 0 1.5rem;
-}
-
-.entradaConfirmada {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    padding: 1rem 1.25rem;
-    border: 1px dashed var(--border);
-    border-radius: var(--radius);
-    background: var(--surface);
-}
-
-.entradaConfirmada p {
-    margin: 0;
-}
-
-.entradaButaca {
-    font-weight: 700;
-}
-
-.codigoEntrada {
-    padding: 0.4rem 0.8rem;
-    border-radius: var(--radius-sm);
-    background: var(--surface-2);
-    color: var(--accent);
-    font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
-    font-size: 1.25rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-}
-
-.confirmacion .desglose {
-    margin-bottom: 1.5rem;
-}
-
 /* ---------- Barra de funcion elegida (cartelera y detalle) ---------- */
 
 .espacioBarra {
@@ -725,9 +600,9 @@
     justify-content: space-between;
     gap: 1rem;
     padding: 0.85rem max(16px, calc((100vw - var(--ancho-max)) / 2));
-    border-top: 1px solid var(--accent);
+    border-top: 1px solid var(--border);
     background: var(--surface);
-    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 -8px 24px color-mix(in srgb, var(--sombra) 50%, transparent);
 }
 
 .barraFuncionDatos {
@@ -785,8 +660,8 @@
         left: 0;
         z-index: 50;
         padding: 0.75rem 16px;
-        border-top: 1px solid var(--accent);
-        box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.5);
+        border-top: 1px solid var(--border);
+        box-shadow: 0 -8px 24px color-mix(in srgb, var(--sombra) 50%, transparent);
     }
 
     .contenido > .detallePago {
@@ -820,5 +695,22 @@
     .ticketDatos,
     .contador {
         padding: 0.85rem 1rem;
+    }
+}
+
+/* Con una barra fija abajo, el pie de pagina deja lugar para que no quede tapado */
+:global(body):has(.barraFuncion) :global(footer) {
+    padding-bottom: 6rem;
+}
+
+@media (max-width: 860px) {
+    :global(body):has(.barraTotal) :global(footer) {
+        padding-bottom: 5.5rem;
+    }
+}
+
+@media (max-width: 560px) {
+    :global(body):has(.barraFuncion) :global(footer) {
+        padding-bottom: 9rem;
     }
 }

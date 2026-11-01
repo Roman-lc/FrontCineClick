@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Ayuda from '../../components/ui/Ayuda';
+import TarjetaTicket from '../../components/ui/TarjetaTicket';
 import { cancelarCompra } from '../../services/compras';
 import { formatearPrecio } from '../../lib/formato';
 import { rutaPelicula } from '../../lib/slug';
@@ -43,9 +44,7 @@ export default function PasoEntradas() {
       <h2 className={styles.subtitulo}>Elegí el tipo de entrada</h2>
       {agruparPorSeccion(precios).map(([seccion, tipos]) => (
         <section key={seccion} className={styles.grupoEntradas} aria-label={seccion}>
-          <h3 className={styles.grupoTitulo}>
-            {seccion}
-          </h3>
+          <h3 className={styles.grupoTitulo}>{seccion}</h3>
           <ul className={styles.tickets}>
             {tipos.map((tipo) => (
               <li key={tipo.tipo}>
@@ -69,39 +68,39 @@ export default function PasoEntradas() {
 
 // Cada tipo de entrada es un "ticket": datos a la izquierda y contador a la derecha
 function TicketEntrada({ tipo, cantidad, puedeSumar, onCambiar }) {
-  return (
-    <div className={styles.ticket}>
-      <div className={styles.ticketDatos}>
-        <p className={styles.ticketNombre}>
-          {tipo.nombre}
-          <Ayuda etiqueta={`Condiciones de la entrada ${tipo.nombre}`}>{tipo.condiciones}</Ayuda>
-        </p>
-        <p className={styles.ticketPrecio}>{formatearPrecio(tipo.precio)}</p>
-      </div>
-      <div className={styles.contador} role="group" aria-label={`Cantidad de entradas ${tipo.nombre}`}>
-        <button
-          type="button"
-          className={styles.contadorBoton}
-          onClick={() => onCambiar(-1)}
-          disabled={cantidad === 0}
-          aria-label={`Quitar una entrada ${tipo.nombre}`}
-        >
-          −
-        </button>
-        <output className={styles.contadorValor} aria-live="polite">
-          {cantidad}
-        </output>
-        <button
-          type="button"
-          className={styles.contadorBoton}
-          onClick={() => onCambiar(1)}
-          disabled={!puedeSumar}
-          aria-label={`Sumar una entrada ${tipo.nombre}`}
-        >
-          +
-        </button>
-      </div>
+  const contador = (
+    <div className={styles.contador} role="group" aria-label={`Cantidad de entradas ${tipo.nombre}`}>
+      <button
+        type="button"
+        className={styles.contadorBoton}
+        onClick={() => onCambiar(-1)}
+        disabled={cantidad === 0}
+        aria-label={`Quitar una entrada ${tipo.nombre}`}
+      >
+        −
+      </button>
+      <output className={styles.contadorValor} aria-live="polite">
+        {cantidad}
+      </output>
+      <button
+        type="button"
+        className={styles.contadorBoton}
+        onClick={() => onCambiar(1)}
+        disabled={!puedeSumar}
+        aria-label={`Sumar una entrada ${tipo.nombre}`}
+      >
+        +
+      </button>
     </div>
+  );
+  return (
+    <TarjetaTicket lateral={contador}>
+      <p className={styles.ticketNombre}>
+        {tipo.nombre}
+        <Ayuda etiqueta={`Condiciones de la entrada ${tipo.nombre}`}>{tipo.condiciones}</Ayuda>
+      </p>
+      <p className={styles.ticketPrecio}>{formatearPrecio(tipo.precio)}</p>
+    </TarjetaTicket>
   );
 }
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import IconoButaca from '../../components/ui/IconoButaca';
 import Poster from '../../components/ui/Poster';
 import { diaRelativo, horaCorta } from '../../lib/fechas';
-import { etiquetaFormato, formatearPrecio } from '../../lib/formato';
+import { etiquetaFormato, etiquetaIdioma, formatearPrecio, nombreCine } from '../../lib/formato';
 import { renglonesDeEntradas } from './estadoCompra';
 import { IconoCalendario, IconoEntrada, IconoFlecha } from './iconos';
 import { useCompra } from './useCompra';
@@ -25,11 +25,11 @@ export default function ResumenCompra({ paso, accion, esMovil, extra }) {
       <Seccion icono={<Poster pelicula={pelicula} className={styles.miniatura} cargaDiferida={false} />} etiqueta="Película" poster>
         <strong>{pelicula.titulo}</strong>
         <span>
-          {etiquetaFormato(funcion.formato)} · {funcion.idioma}
+          {etiquetaFormato(funcion.formato)} · {etiquetaIdioma(funcion.idioma)}
         </span>
       </Seccion>
       <Seccion icono={<IconoCalendario />} etiqueta="Cine, día y horario">
-        <strong>{funcion.cineNombre}</strong>
+        <strong>{nombreCine(funcion.cineNombre)}</strong>
         <span>{funcion.salaNombre}</span>
         <span>
           {diaRelativo(funcion.fechaHoraInicio)} · {horaCorta(funcion.fechaHoraInicio)}

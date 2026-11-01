@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../app/AuthContext';
-import Cargando from '../../components/ui/Cargando';
-import MensajeError from '../../components/ui/MensajeError';
+import EstadoError from '../../components/ui/EstadoError';
+import { EsqueletoFilas } from '../../components/ui/Esqueletos';
 import { useToast } from '../../components/ui/ToastProvider';
 import { cancelarCompra, crearReserva } from '../../services/compras';
 import { getButacas } from '../../services/funciones';
@@ -25,7 +25,7 @@ function MapaDelPaso({ cantidad }) {
   const { mostrarAviso } = useToast();
   const navigate = useNavigate();
   const [butacas, setButacas] = useState(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(false);
   const [intento, setIntento] = useState(0);
   const [aviso, setAviso] = useState('');
   const [reservando, setReservando] = useState(false);
@@ -46,8 +46,8 @@ function MapaDelPaso({ cantidad }) {
       .then((lista) => {
         if (!ignorar) setButacas(lista);
       })
-      .catch((err) => {
-        if (!ignorar) setError(err.message);
+      .catch(() => {
+        if (!ignorar) setError(true);
       });
     return () => {
       ignorar = true;
@@ -85,7 +85,7 @@ function MapaDelPaso({ cantidad }) {
       navigate(`/compra/${funcion.id}/pago`);
     } catch (err) {
       if (err.status !== 409) {
-        setAviso(err.message);
+        setAviso('No pudimos reservar las butacas. Probá de nuevo en unos segundos.');
       } else {
         // Alguien tomo una de las butacas: se refresca el mapa y se quitan solo las que ya no estan libres
         const lista = await getButacas(funcion.id).catch(() => null);
@@ -120,20 +120,20 @@ function MapaDelPaso({ cantidad }) {
         </span>
       </p>
       {aviso && (
-        <p className={styles.alerta} role="alert">
+        <p className={styles.alerta} role="alert" data-icono="error">
           {aviso}
         </p>
       )}
       {error && (
-        <MensajeError
-          mensaje={error}
+        <EstadoError
+          titulo="No pudimos cargar la sala"
           onReintentar={() => {
-            setError('');
+            setError(false);
             setIntento((n) => n + 1);
           }}
         />
       )}
-      {!butacas && !error && <Cargando texto="Cargando la sala..." />}
+      {!butacas && !error && <EsqueletoFilas cantidad={1} alto={420} etiqueta="Cargando la sala" />}
       {butacas && <MapaButacas butacas={butacas} elegidas={elegidas} onAlternar={alternar} />}
     </PasoCompra>
   );

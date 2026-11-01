@@ -125,7 +125,7 @@ function Campo({ id, etiqueta, error, ayuda, className = '', children }) {
       </div>
       {children}
       {error && (
-        <p id={`${id}-error`} className={styles.errorCampo}>
+        <p id={`${id}-error`} className={styles.errorCampo} data-icono="error">
           {error}
         </p>
       )}

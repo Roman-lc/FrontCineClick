@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../app/AuthContext';
 import Modal from '../../components/ui/Modal';
 import { aplicarPromocion, getCompra, pagarCompra } from '../../services/compras';
 import { formatearPrecio } from '../../lib/formato';
+import { borrarPromoGuardada, leerPromoGuardada } from '../../lib/promoGuardada';
 import {
   detectarMarca,
   validarCodigoSeguridad,
@@ -12,6 +13,7 @@ import {
   validarTitular,
   validarVencimiento,
 } from '../../lib/tarjeta';
+import { etiquetaClasificacion } from '../../lib/formato';
 import { IDS_CAMPOS, borrarCompra, edadMinima, nuevaReserva, textoDeclaracionMenores } from './estadoCompra';
 import FormularioTarjeta from './FormularioTarjeta';
 import { METODOS_PAGO } from './metodosPago';
@@ -62,7 +64,7 @@ function FormularioPago() {
         if (ignorar) return;
         if (actual.estado === 'CONFIRMADA') {
           borrarCompra();
-          navigate(`/compra/confirmacion/${actual.id}`, { replace: true });
+          navigate(`/compra/confirmacion/${actual.id}`, { replace: true, state: { desdePago: true } });
         } else if (actual.estado !== 'PENDIENTE_PAGO' || !actual.segundosRestantes) {
           setReservaPerdida(true);
         } else {
@@ -122,7 +124,7 @@ function FormularioPago() {
       });
       if (pago.estado === 'APROBADO') {
         borrarCompra();
-        navigate(`/compra/confirmacion/${compra.id}`, { replace: true });
+        navigate(`/compra/confirmacion/${compra.id}`, { replace: true, state: { desdePago: true } });
         return;
       }
       setErrorPago('El pago fue rechazado. Revisá los datos de la tarjeta o probá con otra. Tu reserva sigue activa.');
@@ -132,12 +134,12 @@ function FormularioPago() {
         const actual = await getCompra(compra.id).catch(() => null);
         if (actual?.estado === 'CONFIRMADA') {
           borrarCompra();
-          navigate(`/compra/confirmacion/${compra.id}`, { replace: true });
+          navigate(`/compra/confirmacion/${compra.id}`, { replace: true, state: { desdePago: true } });
           return;
         }
         setReservaPerdida(true);
       } else {
-        setErrorPago(err.message);
+        setErrorPago('No pudimos procesar el pago. Probá de nuevo en unos segundos; tu reserva sigue activa.');
       }
     }
     setProcesando(false);
@@ -162,7 +164,7 @@ function FormularioPago() {
     >
       {vencida ? (
         <div className={styles.vencida} role="alert">
-          <p className={styles.vencidaTitulo}>Se terminó el tiempo de tu reserva</p>
+          <p className={styles.vencidaTitulo} data-icono="error">Se terminó el tiempo de tu reserva</p>
           <p>Las butacas se liberaron. Podés volver a elegirlas si siguen disponibles.</p>
           <button type="button" className="btn btn-primary" onClick={() => navigate(`/compra/${funcion.id}/butacas`)}>
             Elegir butacas de nuevo
@@ -208,7 +210,13 @@ function FormularioPago() {
               <h3 id="titulo-tarjeta" className={styles.bloqueTitulo}>
                 Datos de la tarjeta
               </h3>
-              <FormularioTarjeta valores={valores} errores={erroresVisibles} marca={marca} onCambiar={cambiar} onSalir={salir} />
+              <FormularioTarjeta
+                valores={valores}
+                errores={erroresVisibles}
+                marca={marca}
+                onCambiar={cambiar}
+                onSalir={salir}
+              />
             </section>
           )}
 
@@ -234,7 +242,7 @@ function FormularioPago() {
                 error={erroresVisibles.menores}
                 onCambiar={(v) => cambiar('menores', v)}
               >
-                {textoDeclaracionMenores(edad)} (película {pelicula.clasificacion})
+                {textoDeclaracionMenores(edad)} (película {etiquetaClasificacion(pelicula.clasificacion)})
               </Casilla>
             )}
             <Casilla id="acepta-novedades" marcada={valores.novedades} onCambiar={(v) => cambiar('novedades', v)}>
@@ -252,7 +260,7 @@ function FormularioPago() {
           </section>
 
           {errorPago && (
-            <p className={styles.alerta} role="alert">
+            <p className={styles.alerta} role="alert" data-icono="error">
               {errorPago}
             </p>
           )}
@@ -290,7 +298,7 @@ function Casilla({ id, marcada, error, onCambiar, children }) {
       />
       <label htmlFor={id}>{children}</label>
       {error && (
-        <p id={`${id}-error`} className={styles.errorCampo}>
+        <p id={`${id}-error`} className={styles.errorCampo} data-icono="error">
           {error}
         </p>
       )}
@@ -307,27 +315,47 @@ function DetallePago({ compra, deshabilitado, onAplicar }) {
   const total = Number(compra.total);
   const descuento = subtotal - total;
 
-  const aplicar = async (e) => {
+  const aplicarCodigo = useCallback(
+    async (valor, desdePromociones = false) => {
+      setAplicando(true);
+      setError('');
+      try {
+        await onAplicar(valor);
+        setCodigo('');
+        if (desdePromociones) borrarPromoGuardada();
+      } catch (err) {
+        setError(motivoRechazo(err));
+        // Si el codigo elegido en Promociones no sirve, se descarta para que no vuelva a intentarse
+        if (desdePromociones) borrarPromoGuardada();
+      }
+      setAplicando(false);
+    },
+    [onAplicar],
+  );
+
+  // Codigo elegido con "Usar en mi compra": se precarga y se aplica solo al llegar al pago
+  const promoIntentada = useRef(false);
+  useEffect(() => {
+    const guardada = leerPromoGuardada();
+    if (promoIntentada.current || !guardada || compra.codigoPromocion || deshabilitado) return;
+    promoIntentada.current = true;
+    setCodigo(guardada);
+    aplicarCodigo(guardada, true);
+  }, [compra.codigoPromocion, deshabilitado, aplicarCodigo]);
+
+  const aplicar = (e) => {
     e.preventDefault();
     if (!codigo.trim()) {
       setError('Ingresá un código.');
       return;
     }
-    setAplicando(true);
-    setError('');
-    try {
-      await onAplicar(codigo.trim());
-      setCodigo('');
-    } catch (err) {
-      setError(err.status === 404 ? 'Ese código no existe.' : err.message);
-    }
-    setAplicando(false);
+    aplicarCodigo(codigo.trim());
   };
 
   return (
     <div className={styles.detallePago}>
       {compra.codigoPromocion ? (
-        <p className={styles.promoAplicada}>Código {compra.codigoPromocion} aplicado</p>
+        <p className={styles.promoAplicada} data-icono="ok">Código {compra.codigoPromocion} aplicado</p>
       ) : (
         <form className={styles.promo} onSubmit={aplicar} noValidate>
           <label htmlFor="codigo-promocional" className={styles.etiquetaCampo}>
@@ -348,7 +376,7 @@ function DetallePago({ compra, deshabilitado, onAplicar }) {
             </button>
           </div>
           {error && (
-            <p id="codigo-promocional-error" className={styles.errorCampo} role="alert">
+            <p id="codigo-promocional-error" className={styles.errorCampo} role="alert" data-icono="error">
               {error}
             </p>
           )}
@@ -373,4 +401,12 @@ function DetallePago({ compra, deshabilitado, onAplicar }) {
       </dl>
     </div>
   );
+}
+
+// Motivo en lenguaje claro (nunca el mensaje tecnico del backend)
+function motivoRechazo(err) {
+  if (err.status === 404) return 'Ese código no existe.';
+  if (err.status === 400) return 'Ese código no está vigente.';
+  if (err.status === 409) return 'La reserva venció: elegí las butacas de nuevo para usar el código.';
+  return 'No pudimos aplicar el código. Probá de nuevo.';
 }
