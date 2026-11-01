@@ -26,6 +26,7 @@ import NoEncontradaPage from '../features/error/NoEncontradaPage';
 import LegalesPage from '../features/legales/LegalesPage';
 import CinesPage from '../features/cines/CinesPage';
 import CinePage from '../features/cines/CinePage';
+import PromocionesPage from '../features/promociones/PromocionesPage';
 
 // Solo controla lo que muestra la interfaz: la API no tiene autenticacion (limitacion conocida).
 function RequireAdmin({ children }) {
@@ -61,7 +62,7 @@ export default function App() {
         <Route path="/cines" element={<CinesPage />} />
         <Route path="/cines/:slug" element={<CinePage />} />
         <Route path="/peliculas/:slug" element={<PeliculaPage />} />
-        <Route path="/promociones" element={<PaginaPendiente titulo="Promociones" etapa={3} />} />
+        <Route path="/promociones" element={<PromocionesPage />} />
         <Route path="/grupo" element={<GrupoPage />} />
         <Route path="/terminos" element={<LegalesPage key="terminos" tipo="terminos" />} />
         <Route path="/privacidad" element={<LegalesPage key="privacidad" tipo="privacidad" />} />
