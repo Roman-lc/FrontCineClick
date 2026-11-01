@@ -1,0 +1,180 @@
+.seleccion {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.campoSeleccion {
+    display: flex;
+    flex: 1 1 240px;
+    flex-direction: column;
+    gap: 0.35rem;
+    max-width: 420px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.columnas {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+}
+
+.panelControl,
+.panelResultado {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.funcionActual {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.funcionActual strong {
+    color: var(--text);
+    font-size: 1.15rem;
+}
+
+.formCodigo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.filaCodigo {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.filaCodigo :global(.btn) {
+    min-height: 52px;
+}
+
+/* Codigo en monoespaciada grande: se lee de un vistazo y el cero cruzado no se confunde con la O */
+.inputCodigo {
+    min-height: 52px;
+    font-family: Consolas, ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
+    font-size: 1.4rem;
+    font-variant-numeric: slashed-zero;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+.escaner {
+    margin-top: 0.75rem;
+}
+
+.video {
+    width: 100%;
+    max-width: 360px;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    object-fit: cover;
+}
+
+.errorCamara {
+    margin: 0;
+    color: var(--text);
+}
+
+/* ---------- Resultado ---------- */
+
+.esperando {
+    margin: 0;
+    padding: 2rem 1rem;
+    border: 1px dashed var(--border-input);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.resultado {
+    padding: 1.25rem;
+    border: 2px solid;
+    border-radius: var(--radius);
+}
+
+.resultado p {
+    margin: 0;
+}
+
+.valida {
+    border-color: var(--success);
+    background: color-mix(in srgb, var(--success) 10%, transparent);
+}
+
+.rechazada {
+    border-color: var(--danger);
+    background: color-mix(in srgb, var(--danger) 8%, transparent);
+}
+
+.resultadoTitulo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.resultadoCodigo {
+    margin-top: 0.5rem !important;
+    font-family: Consolas, ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
+    font-size: 1.1rem;
+    font-variant-numeric: slashed-zero;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+.resultadoDetalle {
+    margin-top: 0.35rem !important;
+    color: var(--text);
+}
+
+.historialTitulo {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+.historial {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.88rem;
+}
+
+.historial li {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.45rem 0;
+    border-top: 1px solid var(--border);
+}
+
+.historialCodigo {
+    font-family: Consolas, ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+}
+
+@media (max-width: 900px) {
+    .columnas {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
