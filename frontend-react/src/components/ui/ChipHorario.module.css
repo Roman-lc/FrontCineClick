@@ -1,0 +1,82 @@
+.chip {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1rem;
+    width: var(--ancho-chip, auto);
+    min-width: 64px;
+    min-height: 44px;
+    padding: 0.3rem var(--relleno-chip, 0.65rem);
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    color: var(--text);
+    font: inherit;
+    line-height: 1.2;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+button.chip:hover {
+    border-color: var(--text);
+}
+
+.linea {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.hora {
+    font-size: 0.95rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.detalle {
+    max-width: 100%;
+    overflow: hidden;
+    color: var(--text-muted);
+    font-size: 0.65rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chip[aria-pressed='true'] {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--on-accent);
+}
+
+.chip[aria-pressed='true'] .detalle,
+.chip[aria-pressed='true'] .linea > span:first-child {
+    color: var(--on-accent);
+}
+
+.agotada {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.agotada .hora {
+    text-decoration: line-through;
+}
+
+/* Disponibilidad (mismos colores que la leyenda del detalle) */
+.alta {
+    color: var(--avail-alta);
+}
+
+.media {
+    color: var(--avail-media);
+}
+
+.baja {
+    color: var(--avail-baja);
+}
+
+.completa {
+    color: var(--avail-completa);
+}
