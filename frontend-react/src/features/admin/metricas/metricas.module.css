@@ -1,0 +1,503 @@
+/* ---------- Encabezado y filtros ---------- */
+
+.encabezado {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.actualizado {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0.4rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+}
+
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.selectCine {
+    width: auto;
+    min-width: 180px;
+}
+
+.fechas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.fecha {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* ---------- Grilla ---------- */
+
+.indicadores {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.dosColumnas {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    align-items: start;
+}
+
+.dosColumnas > .bloque,
+.bloque {
+    margin-bottom: 1rem;
+}
+
+.bloque {
+    min-width: 0;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.bloqueTitulo {
+    margin: 0 0 1rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+.secundario {
+    margin: 0 0 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.numero {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* ---------- Indicadores ---------- */
+
+.indicador {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-height: 118px;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.indicador p {
+    margin: 0;
+}
+
+.indicadorEtiqueta {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.indicadorValor {
+    font-size: 1.9rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+}
+
+.variacion,
+.sinComparacion {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.sinComparacion {
+    font-weight: 400;
+}
+
+.sube {
+    color: var(--success);
+}
+
+.baja {
+    color: var(--danger);
+}
+
+/* ---------- Proximas funciones ---------- */
+
+/* La lista puede ser larga (todas las funciones de hoy y manana): se desplaza dentro del bloque */
+.proximas {
+    max-height: 30rem;
+    overflow-y: auto;
+    margin: 0 -0.5rem;
+    padding: 0 0.5rem;
+}
+
+.verTodas {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.grupoFunciones + .grupoFunciones {
+    margin-top: 1rem;
+}
+
+.grupoTitulo {
+    margin: 0 0 0.4rem;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.listaFunciones {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.listaFunciones li + li {
+    border-top: 1px solid var(--border);
+}
+
+.filaFuncion {
+    display: grid;
+    grid-template-columns: 3.2rem minmax(0, 1fr) 9rem;
+    grid-template-areas: 'hora datos ocupacion' 'hora datos badge';
+    align-items: center;
+    gap: 0.1rem 0.75rem;
+    min-height: 52px;
+    padding: 0.45rem 0.5rem;
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    text-decoration: none;
+}
+
+.filaFuncion:hover {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+.horaFuncion {
+    grid-area: hora;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.datosFuncion {
+    grid-area: datos;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.peliculaFuncion {
+    overflow: hidden;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.datosFuncion .secundario {
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+.ocupacionFuncion,
+.ocupacionCelda {
+    grid-area: ocupacion;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+}
+
+.badge {
+    grid-area: badge;
+    justify-self: start;
+    padding: 0.05rem 0.5rem;
+    border-radius: 999px;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.badgeAgotada {
+    background: var(--surface-2);
+    color: var(--text);
+    box-shadow: inset 0 0 0 1px var(--border-input);
+}
+
+/* Barra de ocupacion */
+.barra {
+    flex: 1;
+    min-width: 48px;
+    height: 6px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--surface-2);
+}
+
+.barraRelleno {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--text);
+}
+
+/* ---------- Conversion y asistencia ---------- */
+
+.numeroGrande {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin: 0 0 0.75rem;
+    font-size: 2.4rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+}
+
+.numeroGrandeTexto {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+.apilada {
+    display: flex;
+    gap: 2px;
+    height: 14px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+    border-radius: 999px;
+    background: var(--surface-2);
+}
+
+.apilada > span {
+    flex-basis: 0;
+}
+
+.pagadas {
+    background: var(--success);
+}
+
+.vencidas {
+    background: var(--avail-media);
+}
+
+.canceladas {
+    background: var(--danger);
+}
+
+.pendientes {
+    background: var(--border-input);
+}
+
+.leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.85rem;
+}
+
+.leyenda li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.muestra {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    margin-right: 0.4rem;
+    border-radius: 2px;
+}
+
+.leyenda .muestra {
+    margin-right: 0;
+}
+
+/* ---------- Graficos ---------- */
+
+.selectorRanking {
+    margin-bottom: 0.75rem;
+}
+
+.grafico {
+    width: 100%;
+    min-width: 0;
+}
+
+.anillo {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    align-items: center;
+    gap: 1rem;
+}
+
+.anilloGrafico {
+    position: relative;
+    width: 100%;
+    max-width: 220px;
+}
+
+.anilloCentro {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    pointer-events: none;
+}
+
+.anilloCentro strong {
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+.anilloCentro span {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.tablaChica {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.tablaChica th,
+.tablaChica td {
+    padding: 0.4rem 0.25rem;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+}
+
+.tablaChica thead th {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.tablaChica td {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.tablaChica tbody th {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+}
+
+/* ---------- Mapa de calor ---------- */
+
+.calorCaja {
+    overflow-x: auto;
+}
+
+.calor {
+    display: grid;
+    grid-template-columns: 2.6rem repeat(var(--horas), minmax(26px, 1fr));
+    gap: 3px;
+    min-width: max-content;
+    font-size: 0.72rem;
+}
+
+.calorFila {
+    display: contents;
+}
+
+.calorHora {
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.calorDia {
+    align-self: center;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* Intensidad: mezcla del color del texto con la superficie segun la cantidad de entradas */
+.celda {
+    height: 26px;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--text) var(--intensidad), var(--surface-2));
+}
+
+/* ---------- Mobile: una columna ---------- */
+
+@media (max-width: 1100px) {
+    .indicadores {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .dosColumnas {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 520px) {
+    .indicadores {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .anillo {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
+    }
+
+    .filaFuncion {
+        grid-template-columns: 3rem minmax(0, 1fr);
+        grid-template-areas: 'hora datos' 'hora ocupacion' 'hora badge';
+    }
+
+    .numeroGrande {
+        font-size: 2rem;
+    }
+}
