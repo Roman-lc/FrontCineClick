@@ -20,10 +20,21 @@
     cursor: help;
 }
 
+/* El circulo es chico, pero el area tactil mide 44x44 */
+.boton::after {
+    content: '';
+    position: absolute;
+    inset: -12px;
+}
+
+.boton {
+    position: relative;
+}
+
 .boton:hover,
 .boton[aria-expanded='true'] {
-    border-color: var(--accent);
-    color: var(--accent);
+    border-color: var(--text);
+    color: var(--text);
 }
 
 .burbuja {
@@ -37,7 +48,7 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     background: var(--surface-2);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--sombra) 45%, transparent);
     color: var(--text);
     font-size: 0.8rem;
     font-weight: 400;

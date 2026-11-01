@@ -1,16 +1,18 @@
 import { useState, createContext, useContext } from 'react';
+import { Link } from 'react-router-dom';
 
 const ToastContext = createContext(null);
 
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
 
-  const mostrarAviso = (mensaje, tipo = 'info') => {
+  // opciones.enlace: { texto, to } muestra un enlace dentro del aviso (ej. "Ir a la cartelera")
+  const mostrarAviso = (mensaje, tipo = 'info', opciones = {}) => {
     const id = Date.now() + Math.random();
-    setToasts((t) => [...t, { id, mensaje, tipo }]);
+    setToasts((t) => [...t, { id, mensaje, tipo, enlace: opciones.enlace }]);
     setTimeout(() => {
       setToasts((t) => t.filter((x) => x.id !== id));
-    }, 4000);
+    }, opciones.enlace ? 7000 : 4000);
   };
 
   const confirmar = (mensaje, opciones = {}) => {
@@ -41,14 +43,22 @@ export function ToastProvider({ children }) {
               <div className="modal" role="alertdialog" aria-modal="true">
                 <p className="modal-mensaje">{t.mensaje}</p>
                 <div className="modal-acciones">
-                  <button type="button" className="btn btn-secondary" onClick={() => t.resolve(false)}>{t.textoCancelar}</button>
-                  <button type="button" className={`btn ${t.peligro ? 'btn-danger' : 'btn-primary'}`} onClick={() => t.resolve(true)}>{t.textoOk}</button>
+                  <button type="button" className="btn" onClick={() => t.resolve(false)}>{t.textoCancelar}</button>
+                  <button type="button" className={`btn ${t.peligro === 'borrado' ? 'btn-danger-lleno' : t.peligro ? 'btn-danger' : 'btn-primary'}`} onClick={() => t.resolve(true)}>{t.textoOk}</button>
                 </div>
               </div>
             </div>
           ) : (
             <div key={t.id} className={`aviso aviso-${t.tipo} visible`} role={t.tipo === 'error' ? 'alert' : 'status'}>
               {t.mensaje}
+              {t.enlace && (
+                <>
+                  {' '}
+                  <Link to={t.enlace.to} className="aviso-enlace">
+                    {t.enlace.texto}
+                  </Link>
+                </>
+              )}
             </div>
           )
         ))}
