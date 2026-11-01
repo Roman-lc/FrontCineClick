@@ -39,7 +39,7 @@ async function request(path, options = {}) {
 const conCuerpo = (body) => (body === undefined ? undefined : JSON.stringify(body));
 
 export const api = {
-  get: (path) => request(path),
+  get: (path, opciones) => request(path, opciones),
   post: (path, body) => request(path, { method: 'POST', body: conCuerpo(body) }),
   put: (path, body) => request(path, { method: 'PUT', body: conCuerpo(body) }),
   patch: (path, body) => request(path, { method: 'PATCH', body: conCuerpo(body) }),

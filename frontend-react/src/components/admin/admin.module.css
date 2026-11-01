@@ -1,0 +1,659 @@
+/* Estilos compartidos de las pantallas de gestion del panel. Todo sale de los tokens, asi funciona
+   con el tema claro de /admin (y con el oscuro, si algun dia se reutiliza afuera). */
+
+/* ---------- Encabezado y filtros ---------- */
+
+.encabezado {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.titulo {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 2.6rem);
+    text-transform: uppercase;
+    line-height: 1.05;
+}
+
+.botonAgregar {
+    min-height: 44px;
+}
+
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.buscador {
+    position: relative;
+    flex: 1 1 260px;
+    max-width: 360px;
+}
+
+.buscador svg {
+    position: absolute;
+    top: 50%;
+    left: 0.75rem;
+    color: var(--text-muted);
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.buscador .control {
+    padding-left: 2.2rem;
+}
+
+.segmentos {
+    display: inline-flex;
+    padding: 3px;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+}
+
+.segmento {
+    min-height: 38px;
+    padding: 0.3rem 0.9rem;
+    border: none;
+    border-radius: calc(var(--radius-sm) - 2px);
+    background: none;
+    color: var(--text-muted);
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.segmento:hover {
+    color: var(--text);
+}
+
+.segmento[aria-pressed='true'] {
+    background: var(--surface-2);
+    color: var(--text);
+    box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.filtros .filtroSelect {
+    width: auto;
+    min-width: 180px;
+}
+
+.resultado {
+    min-height: 1.3rem;
+    margin: 0 0 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* ---------- Tabla ---------- */
+
+.tablaCaja {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+}
+
+.tabla th {
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-align: left;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.tabla td {
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+.tabla tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.tabla tbody tr:hover {
+    background: color-mix(in srgb, var(--surface-2) 60%, transparent);
+}
+
+.filaInactiva td:not(:last-child) {
+    color: var(--text-muted);
+}
+
+.colAcciones {
+    text-align: right !important;
+}
+
+.principal {
+    font-weight: 600;
+}
+
+.secundario {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.sinDato {
+    color: var(--text-muted);
+}
+
+.numero {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.tabla .miniatura {
+    width: 64px;
+    aspect-ratio: 16 / 9;
+    border-radius: 4px;
+    font-size: 0.6rem !important;
+    letter-spacing: 0 !important;
+}
+
+.tabla .miniaturaPoster {
+    width: 36px;
+    border-radius: 4px;
+    font-size: 0.5rem;
+}
+
+.codigo {
+    font-family: Consolas, ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
+    font-variant-numeric: slashed-zero;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+}
+
+/* ---------- Acciones de fila ---------- */
+
+.acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.35rem;
+}
+
+.botonIcono {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.botonIcono:hover {
+    border-color: var(--text-muted);
+    color: var(--text);
+}
+
+.botonIconoPeligro:hover {
+    border-color: var(--danger);
+    background: color-mix(in srgb, var(--danger) 10%, transparent);
+    color: var(--danger);
+}
+
+/* Tooltip con el mismo texto del aria-label: aparece con hover y con el foco del teclado */
+.botonIcono::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    z-index: 5;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    background: var(--text);
+    color: var(--surface);
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(-50%);
+    transition: opacity 0.12s;
+    pointer-events: none;
+}
+
+/* El ultimo boton de la fila alinea el tooltip a la derecha, para que no se corte contra el borde */
+.botonIcono:last-child::after {
+    left: auto;
+    right: 0;
+    transform: none;
+}
+
+.botonIcono:hover::after,
+.botonIcono:focus-visible::after {
+    opacity: 1;
+}
+
+/* ---------- Badges de estado ---------- */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.badgeActivo {
+    background: color-mix(in srgb, var(--success) 12%, transparent);
+    color: var(--success);
+}
+
+.badgeInactivo {
+    background: var(--surface-2);
+    color: var(--text-muted);
+}
+
+/* ---------- Drawer ---------- */
+
+.drawer {
+    position: fixed;
+    inset: 0 0 0 auto;
+    width: min(480px, 100vw);
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-left: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: -16px 0 40px color-mix(in srgb, var(--sombra) 18%, transparent);
+}
+
+.drawer[open] {
+    animation: entrar 0.2s ease-out;
+}
+
+.drawer::backdrop {
+    background: color-mix(in srgb, var(--sombra) 45%, transparent);
+}
+
+@keyframes entrar {
+    from {
+        transform: translateX(24px);
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .drawer[open] {
+        animation: none;
+    }
+}
+
+.drawerPanel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.drawerCabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1rem 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.drawerTitulo {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.botonCerrar {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.botonCerrar:hover {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+.drawerCuerpo {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+.drawerPie {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+}
+
+.drawerPie :global(.btn) {
+    min-height: 44px;
+}
+
+/* ---------- Formulario ---------- */
+
+/* ~20px entre campos: el label nunca queda pegado al campo anterior */
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.fila {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+}
+
+.filaCalle {
+    grid-template-columns: minmax(0, 1fr) 120px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+.etiqueta {
+    padding: 0;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.opcional {
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.control {
+    width: 100%;
+    min-height: 44px;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.95rem;
+}
+
+textarea.control {
+    min-height: 110px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.control[aria-invalid='true'] {
+    border-color: var(--danger);
+}
+
+.control:disabled {
+    background: var(--surface-2);
+    color: var(--text-muted);
+}
+
+.ayuda,
+.error {
+    margin: 0;
+    font-size: 0.82rem;
+    line-height: 1.4;
+}
+
+.ayuda {
+    color: var(--text-muted);
+}
+
+.error {
+    color: var(--danger);
+    font-weight: 600;
+}
+
+.errorGeneral {
+    margin: 0;
+    padding: 0.75rem 1rem;
+    border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--danger) 8%, transparent);
+    color: var(--danger);
+    font-weight: 600;
+}
+
+.casillas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.25rem;
+}
+
+.casilla {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.casilla input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent);
+}
+
+.vistaPrevia {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.vistaPrevia > :first-child {
+    flex: 1;
+    min-width: 0;
+}
+
+.vistaPrevia .fotoPrevia {
+    flex-shrink: 0;
+    width: 128px;
+    margin-top: 1.75rem;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem !important;
+}
+
+.vistaPrevia .posterPrevio {
+    flex-shrink: 0;
+    width: 72px;
+    margin-top: 1.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.6rem;
+}
+
+/* Indicador de carga dentro del boton Guardar */
+.girando {
+    width: 16px;
+    height: 16px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: girar 0.7s linear infinite;
+}
+
+@keyframes girar {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .girando {
+        animation-duration: 2s;
+    }
+}
+
+/* ---------- Dialogo de confirmacion ---------- */
+
+.dialogo {
+    width: min(440px, calc(100vw - 32px));
+    margin: auto;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: 0 20px 48px color-mix(in srgb, var(--sombra) 25%, transparent);
+}
+
+.dialogo::backdrop {
+    background: color-mix(in srgb, var(--sombra) 50%, transparent);
+}
+
+.dialogoTitulo {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-body);
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.dialogoMensaje {
+    margin: 0 0 1.5rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.dialogoAcciones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.dialogoAcciones :global(.btn) {
+    min-height: 44px;
+}
+
+/* ---------- Inicio del panel ---------- */
+
+.bajada {
+    margin: 0 0 1.5rem;
+    color: var(--text-muted);
+}
+
+.tarjetas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tarjeta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    height: 100%;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text);
+    text-decoration: none;
+}
+
+.tarjeta:hover {
+    border-color: var(--text);
+}
+
+.tarjetaTitulo {
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.tarjetaTexto {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+@media (max-width: 560px) {
+    .fila,
+    .filaCalle {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .buscador {
+        max-width: none;
+    }
+
+    .vistaPrevia {
+        flex-direction: column;
+    }
+
+    .vistaPrevia .fotoPrevia,
+    .vistaPrevia .posterPrevio {
+        margin-top: 0;
+    }
+}
+
+/* Eliminar: siempre con borde y texto carmesi (destructivo) */
+.botonIconoPeligro {
+    border-color: var(--danger);
+    color: var(--danger);
+}
