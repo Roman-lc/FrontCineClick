@@ -1,26 +1,30 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import Cargando from '../../components/ui/Cargando';
+import BadgeCalificacion from '../../components/ui/BadgeCalificacion';
+import BadgeFormato from '../../components/ui/BadgeFormato';
+import ChipHorario from '../../components/ui/ChipHorario';
+import EstadoError from '../../components/ui/EstadoError';
 import EstadoVacio from '../../components/ui/EstadoVacio';
-import MensajeError from '../../components/ui/MensajeError';
+import { EsqueletoFilas } from '../../components/ui/Esqueletos';
 import Poster from '../../components/ui/Poster';
 import { getCines } from '../../services/cines';
 import { getFunciones } from '../../services/funciones';
 import { getPeliculas } from '../../services/peliculas';
 import { ApiError } from '../../services/http';
-import { fechaDeFuncion, funcionVigente, hoyISO, sumarDiasISO } from '../../lib/fechas';
-import { etiquetaFormato, etiquetaGenero, formatearDuracion } from '../../lib/formato';
+import { diaRelativo, fechaDeFuncion, funcionVigente, hoyISO, sumarDiasISO } from '../../lib/fechas';
+import { etiquetaGenero, etiquetaIdioma, formatearDuracion, nombreCine } from '../../lib/formato';
 import { aSlug, rutaPelicula } from '../../lib/slug';
 import BarraFuncionElegida from '../compra/BarraFuncionElegida';
-import ChipHorario from '../pelicula/ChipHorario';
 import SelectorDias from '../pelicula/SelectorDias';
 import { agruparPorFormatoEIdioma } from '../pelicula/horarios';
-import { etiquetaSala } from './salas';
+import DatosCine from './DatosCine';
+import FotoCine from './FotoCine';
+import { formatosDelCine, horarioDelCine, urlComoLlegar, urlMapaEmbebido } from './cines';
 import styles from './cines.module.css';
 
 const DIAS = 7;
 
-// /cines/<slug del nombre>: datos del cine y su cartelera dia por dia. La key reinicia al cambiar de cine.
+// /cines/<slug del nombre>: datos del cine, mapa y cartelera dia por dia. La key reinicia al cambiar de cine.
 export default function CinePage() {
   const { slug } = useParams();
   return <CarteleraDelCine key={slug} slug={slug} />;
@@ -52,7 +56,8 @@ function CarteleraDelCine({ slug }) {
   if (estado.cargando) {
     return (
       <section className="section">
-        <Cargando texto="Cargando cartelera..." />
+        <div className={`${styles.banner} ${styles.bannerEsqueleto}`} aria-hidden="true" />
+        <EsqueletoFilas cantidad={3} alto={150} etiqueta="Cargando cartelera" />
       </section>
     );
   }
@@ -61,14 +66,14 @@ function CarteleraDelCine({ slug }) {
     return (
       <section className="section">
         {estado.error.status === 404 ? (
-          <EstadoVacio mensaje="El cine que buscás no existe.">
+          <EstadoVacio titulo="No encontramos ese cine" mensaje="Puede que haya cambiado de nombre o que ya no esté activo.">
             <Link to="/cines" className="btn btn-primary">
               Ver todos los cines
             </Link>
           </EstadoVacio>
         ) : (
-          <MensajeError
-            mensaje={estado.error.message}
+          <EstadoError
+            titulo="No pudimos cargar la cartelera del cine"
             onReintentar={() => {
               setEstado({ cargando: true, error: null, datos: null });
               setIntento((n) => n + 1);
@@ -80,45 +85,65 @@ function CarteleraDelCine({ slug }) {
   }
 
   const { cine, peliculas, funciones } = estado.datos;
+  const nombre = nombreCine(cine.nombre);
   const vigentes = funciones.filter(funcionVigente);
   const dias = Array.from({ length: DIAS }, (_, i) => sumarDiasISO(hoyISO(), i));
   const conFunciones = new Set(vigentes.map(fechaDeFuncion));
   const dia = diaElegido ?? dias.find((d) => conFunciones.has(d)) ?? dias[0];
+  const otroDia = dias.find((d) => d > dia && conFunciones.has(d));
   const cartelera = carteleraDelDia(vigentes, peliculas, dia);
 
   return (
     <section className="section">
-      <title>{`${cine.nombre} | CineClick`}</title>
+      <title>{`${nombre} | CineClick`}</title>
       <Link to="/cines" className={styles.volver}>
         ‹ Todos los cines
       </Link>
 
       <header className={styles.cabeceraCine}>
-        <h1 className={styles.titulo}>{cine.nombre}</h1>
-        <p className={styles.direccion}>
-          {cine.direccion}
-          {cine.ciudad && `, ${cine.ciudad}`}
-          {cine.telefono && ` · Tel. ${cine.telefono}`}
-        </p>
-        <ul className={styles.salas} aria-label="Salas">
-          {cine.salas
-            .filter((s) => s.activa !== false)
-            .map((sala) => (
-              <li key={sala.id}>{etiquetaSala(sala)}</li>
-            ))}
-        </ul>
+        <FotoCine cine={cine} className={styles.banner} cargaDiferida={false} />
+        <h1 className={styles.titulo}>{nombre}</h1>
+        <DatosCine cine={cine} horario={horarioDelCine(funciones)} formatos={formatosDelCine(cine, funciones)} />
       </header>
+
+      {/* Si el mapa no carga, el enlace "Cómo llegar" sigue a la vista debajo */}
+      <div className={styles.mapa}>
+        <iframe
+          src={urlMapaEmbebido(cine)}
+          title={`Mapa con la ubicación de ${nombre}`}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
+      </div>
+      <p className={styles.mapaEnlace}>
+        <a href={urlComoLlegar(cine)} target="_blank" rel="noopener noreferrer" className={styles.comoLlegar}>
+          Cómo llegar ›<span className="visually-hidden"> (se abre en otra pestaña)</span>
+        </a>
+      </p>
 
       <h2 className={styles.subtitulo}>Cartelera</h2>
       <SelectorDias dias={dias} valor={dia} onCambiar={setDiaElegido} />
 
       {cartelera.length === 0 ? (
-        <EstadoVacio mensaje={`No hay funciones para este día en ${cine.nombre}.`} />
+        <EstadoVacio
+          titulo="No hay funciones para este día"
+          mensaje={otroDia ? `Probá con ${diaRelativo(otroDia).toLowerCase()}.` : `${nombre} todavía no tiene funciones programadas.`}
+        >
+          {otroDia ? (
+            <button type="button" className="btn btn-primary" onClick={() => setDiaElegido(otroDia)}>
+              Ver {diaRelativo(otroDia).toLowerCase()}
+            </button>
+          ) : (
+            <Link to="/cines" className="btn btn-primary">
+              Ver otros cines
+            </Link>
+          )}
+        </EstadoVacio>
       ) : (
         <ul className={styles.peliculas}>
           {cartelera.map(({ pelicula, funciones: delDia }) => {
             const enlace = { to: rutaPelicula(pelicula.titulo), state: { cineId: String(cine.id), dia } };
-            const datos = [pelicula.clasificacion, formatearDuracion(pelicula.duracionMinutos), etiquetaGenero(pelicula.genero)];
+            const datos = [formatearDuracion(pelicula.duracionMinutos), etiquetaGenero(pelicula.genero)];
             return (
               <li key={pelicula.id} className={styles.pelicula}>
                 <Link to={enlace.to} state={enlace.state} className={styles.posterEnlace} tabIndex={-1} aria-hidden="true">
@@ -130,11 +155,14 @@ function CarteleraDelCine({ slug }) {
                       {pelicula.titulo}
                     </Link>
                   </h3>
-                  <p className={styles.peliculaDatos}>{datos.filter(Boolean).join(' · ')}</p>
+                  <p className={styles.peliculaDatos}>
+                    <BadgeCalificacion clasificacion={pelicula.clasificacion} />
+                    <span>{datos.filter(Boolean).join(' · ')}</span>
+                  </p>
                   {agruparPorFormatoEIdioma(delDia).map((grupo) => (
                     <div key={`${grupo.formato}|${grupo.idioma}`} className={styles.grupo}>
                       <p className={styles.grupoTitulo}>
-                        <strong>{etiquetaFormato(grupo.formato)}</strong> · {grupo.idioma.toUpperCase()}
+                        <BadgeFormato formato={grupo.formato} /> · {etiquetaIdioma(grupo.idioma).toUpperCase()}
                       </p>
                       <ul className={styles.chips}>
                         {grupo.funciones.map((funcion) => (
