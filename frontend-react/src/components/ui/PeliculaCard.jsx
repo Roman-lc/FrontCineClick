@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
-import { formatearDuracionCorta, listarFormatos } from '../../lib/formato';
+import { ORDEN_FORMATOS, formatearDuracionCorta } from '../../lib/formato';
+import BadgeCalificacion from './BadgeCalificacion';
+import BadgeFormato from './BadgeFormato';
 import IconoEstrella from './IconoEstrella';
 import Poster from './Poster';
 import styles from './PeliculaCard.module.css';
@@ -10,7 +12,7 @@ import styles from './PeliculaCard.module.css';
 // tienen su propia altura fija (ver HorariosDelDia).
 export default function PeliculaCard({ pelicula, to, estadoEnlace, estreno = false, children }) {
   const duracion = formatearDuracionCorta(pelicula.duracionMinutos);
-  const formatos = listarFormatos(pelicula.formatosDisponibles);
+  const formatos = [...(pelicula.formatosDisponibles ?? [])].sort((a, b) => ORDEN_FORMATOS.indexOf(a) - ORDEN_FORMATOS.indexOf(b));
   const poster = <Poster pelicula={pelicula} className={styles.poster} />;
 
   return (
@@ -42,14 +44,13 @@ export default function PeliculaCard({ pelicula, to, estadoEnlace, estreno = fal
       <div className={styles.info}>
         <div className={styles.filaTitulo}>
           <h3 className={styles.titulo}>{to ? <Link to={to} state={estadoEnlace}>{pelicula.titulo}</Link> : pelicula.titulo}</h3>
-          {pelicula.clasificacion && (
-            <span className={styles.calificacion} title="Calificación">
-              {pelicula.clasificacion}
-            </span>
-          )}
+          <BadgeCalificacion clasificacion={pelicula.clasificacion} />
         </div>
-        <p className={styles.formatos} title={formatos || undefined}>
-          {formatos}
+        <p className={styles.formatos}>
+          <span className="visually-hidden">Formatos: </span>
+          {formatos.map((f) => (
+            <BadgeFormato key={f} formato={f} />
+          ))}
         </p>
         {children}
       </div>

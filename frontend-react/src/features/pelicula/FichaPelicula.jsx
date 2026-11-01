@@ -1,21 +1,41 @@
+import BadgeCalificacion from '../../components/ui/BadgeCalificacion';
+import BadgeFormato from '../../components/ui/BadgeFormato';
 import Poster from '../../components/ui/Poster';
 import IconoGenero from '../../components/ui/IconoGenero';
 import { fechaLarga } from '../../lib/fechas';
 import {
+  ORDEN_FORMATOS,
   clasificacionCompleta,
   etiquetaGenero,
   formatearDuracion,
   formatearDuracionCorta,
-  listarFormatos,
 } from '../../lib/formato';
 import styles from './pelicula.module.css';
 
 export default function FichaPelicula({ pelicula }) {
   // Las filas sin dato no se muestran (por ejemplo, el distribuidor no existe en el modelo)
+  const formatos = [...(pelicula.formatosDisponibles ?? [])].sort((a, b) => ORDEN_FORMATOS.indexOf(a) - ORDEN_FORMATOS.indexOf(b));
   const datos = [
-    ['Formatos disponibles', listarFormatos(pelicula.formatosDisponibles)],
+    [
+      'Formatos disponibles',
+      formatos.length > 0 && (
+        <span key="formatos" className={styles.badges}>
+          {formatos.map((f) => (
+            <BadgeFormato key={f} formato={f} />
+          ))}
+        </span>
+      ),
+    ],
     ['Duración', formatearDuracion(pelicula.duracionMinutos)],
-    ['Clasificación', clasificacionCompleta(pelicula.clasificacion)],
+    [
+      'Clasificación',
+      pelicula.clasificacion && (
+        <span key="clasificacion" className={styles.badges}>
+          <BadgeCalificacion clasificacion={pelicula.clasificacion} />
+          <span aria-hidden="true">{clasificacionCompleta(pelicula.clasificacion)}</span>
+        </span>
+      ),
+    ],
     ['Fecha de estreno', pelicula.fechaEstreno && fechaLarga(pelicula.fechaEstreno)],
     ['Distribuidor', pelicula.distribuidor],
   ].filter(([, valor]) => valor);
@@ -30,12 +50,6 @@ export default function FichaPelicula({ pelicula }) {
           <span className={`${styles.pastillaPoster} ${styles.pastillaIzquierda}`}>
             <span className="visually-hidden">Duración: </span>
             {formatearDuracionCorta(pelicula.duracionMinutos)}
-          </span>
-        )}
-        {pelicula.clasificacion && (
-          <span className={`${styles.pastillaPoster} ${styles.pastillaDerecha}`}>
-            <span className="visually-hidden">Clasificación: </span>
-            {pelicula.clasificacion}
           </span>
         )}
       </div>

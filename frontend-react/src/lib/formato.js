@@ -1,5 +1,7 @@
 // Textos para mostrar los enums y montos que llegan del backend.
 
+import { CLASIFICACIONES, IDIOMAS, itemDe } from './catalogos';
+
 const GENEROS = {
   ACCION: 'Acción',
   COMEDIA: 'Comedia',
@@ -15,7 +17,17 @@ const FORMATOS = {
   TRES_D: '3D',
   IMAX: 'IMAX',
   CUATRO_D: '4D',
+  COMFORT: 'Comfort',
+  PREMIUM: 'Premium',
+  XD: 'XD',
 };
+
+// Orden fijo para mostrar formatos de funcion y tipos de sala juntos (Comfort y XD todavia no existen
+// en el backend, pero quedan ubicados para cuando se agreguen)
+export const ORDEN_FORMATOS = ['DOS_D', 'TRES_D', 'COMFORT', 'PREMIUM', 'XD', 'IMAX', 'CUATRO_D'];
+
+// Formatos que se muestran con mas presencia (BadgeFormato destacado)
+export const FORMATOS_ESPECIALES = ['PREMIUM', 'XD', 'IMAX', 'CUATRO_D'];
 
 const PESOS = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' });
 
@@ -50,28 +62,33 @@ export function formatearDuracionCorta(minutos) {
   return resto ? `${horas}h ${resto}m` : `${horas}h`;
 }
 
-// El backend manda los formatos como un Set (sin orden fijo): ['IMAX', 'DOS_D'] -> "2D · IMAX"
-export function listarFormatos(formatos = []) {
-  const orden = Object.keys(FORMATOS);
-  return [...formatos]
-    .sort((a, b) => orden.indexOf(a) - orden.indexOf(b))
-    .map(etiquetaFormato)
-    .join(' · ');
+// Clasificacion: MAS_13 -> "+13" (etiqueta) y "Apta para mayores de 13 años" (completa)
+export function etiquetaClasificacion(clasificacion) {
+  return itemDe(CLASIFICACIONES, clasificacion).texto;
 }
-
-const CLASIFICACIONES = {
-  ATP: 'Apta para todo público',
-  '+13': 'Apta para mayores de 13 años',
-  '+16': 'Apta para mayores de 16 años',
-  '+18': 'Apta para mayores de 18 años',
-};
 
 export function clasificacionCompleta(clasificacion) {
-  return CLASIFICACIONES[clasificacion] ?? clasificacion ?? '';
+  const item = itemDe(CLASIFICACIONES, clasificacion);
+  return item.completo ?? item.texto;
 }
 
-const IDIOMAS_CORTOS = { Castellano: 'Cast.', Subtitulada: 'Subt.' };
+// Edad minima de la clasificacion (0 para ATP o si no se conoce)
+export function edadDeClasificacion(clasificacion) {
+  return itemDe(CLASIFICACIONES, clasificacion).edad ?? 0;
+}
+
+// Idioma: CASTELLANO -> "Castellano" (o "Cast." en la version corta)
+export function etiquetaIdioma(idioma) {
+  return itemDe(IDIOMAS, idioma).texto;
+}
 
 export function etiquetaIdiomaCorta(idioma) {
-  return IDIOMAS_CORTOS[idioma] ?? idioma ?? '';
+  const item = itemDe(IDIOMAS, idioma);
+  return item.corto ?? item.texto;
+}
+
+// Dentro de la app los cines se muestran sin la marca: "CineClick Abasto" -> "Abasto".
+// El nombre completo queda para los documentos (entradas, mails).
+export function nombreCine(nombre) {
+  return (nombre ?? '').replace(/^CineClick\s+/i, '');
 }

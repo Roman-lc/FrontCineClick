@@ -36,8 +36,8 @@
     width: 28px;
     height: 28px;
     border-radius: var(--radius-sm);
-    background: var(--accent);
-    color: var(--accent-text);
+    background: var(--tag-bg);
+    color: var(--tag-text);
 }
 
 .badgeDuracion,
@@ -47,7 +47,7 @@
     right: 0.6rem;
     padding: 0.2rem 0.6rem;
     border-radius: 999px;
-    background: rgba(15, 15, 20, 0.75);
+    background: color-mix(in srgb, var(--bg) 75%, transparent);
     color: var(--text);
     font-size: 0.75rem;
     font-weight: 600;
@@ -106,26 +106,21 @@
 }
 
 .titulo a:hover {
-    color: var(--accent);
+    color: var(--accent-text);
 }
 
-.calificacion {
-    flex-shrink: 0;
-    padding: 0.1rem 0.4rem;
-    border: 1px solid var(--text-muted);
-    border-radius: 4px;
-    color: var(--text);
-    font-size: 0.7rem;
-    font-weight: 700;
-    line-height: 1.4;
-}
-
+/* Una sola fila de badges con alto fijo: si no entran, se cortan (todas las tarjetas miden igual) */
 .formatos {
-    min-height: 1.4em;
+    display: flex;
+    gap: 0.3rem;
+    height: 1.3rem;
+    margin: 0;
     overflow: hidden;
-    color: var(--text-muted);
-    font-size: 0.8rem;
-    line-height: 1.4;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+}
+
+/* "Estreno": etiqueta clara sobre el poster */
+.badgeEstreno {
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    backdrop-filter: none;
 }

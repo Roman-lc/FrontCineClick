@@ -1,0 +1,98 @@
+.ticket {
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.principal {
+    flex: 1;
+    min-width: 0;
+    padding: 1rem 1.25rem;
+}
+
+/* El borde punteado con dos muescas separa el talon, como un ticket troquelado */
+.lateral {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    border-left: 2px dashed var(--border-input);
+}
+
+.lateral::before,
+.lateral::after {
+    content: '';
+    position: absolute;
+    left: -9px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--bg);
+}
+
+.lateral::before {
+    top: -9px;
+}
+
+.lateral::after {
+    bottom: -9px;
+}
+
+@media (max-width: 560px) {
+    .principal,
+    .lateral {
+        padding: 0.85rem 1rem;
+    }
+
+    .apilada {
+        flex-direction: column;
+    }
+
+    .apilada .lateral {
+        border-top: 2px dashed var(--border-input);
+        border-left: none;
+    }
+
+    .apilada .lateral::before,
+    .apilada .lateral::after {
+        top: -9px;
+        bottom: auto;
+    }
+
+    .apilada .lateral::before {
+        left: -9px;
+    }
+
+    .apilada .lateral::after {
+        right: -9px;
+        left: auto;
+    }
+}
+
+/* Talon siempre abajo, con el perforado horizontal */
+.vertical {
+    flex-direction: column;
+}
+
+.vertical .lateral {
+    border-top: 2px dashed var(--border-input);
+    border-left: none;
+}
+
+.vertical .lateral::before,
+.vertical .lateral::after {
+    top: -9px;
+    bottom: auto;
+}
+
+.vertical .lateral::before {
+    left: -9px;
+}
+
+.vertical .lateral::after {
+    right: -9px;
+    left: auto;
+}
