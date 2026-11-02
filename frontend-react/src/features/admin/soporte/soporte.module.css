@@ -1,0 +1,15 @@
+.mensaje {
+    min-width: 220px;
+    max-width: 360px;
+}
+
+.mensaje summary {
+    min-height: 24px;
+    cursor: pointer;
+}
+
+.mensaje p {
+    margin: 0.4rem 0 0;
+    color: var(--text-muted);
+    white-space: pre-line;
+}

@@ -13,6 +13,8 @@ const SECCIONES = [
   { to: '/admin/funciones', texto: 'Funciones' },
   { to: '/admin/promociones', texto: 'Promociones' },
   { to: '/admin/validar', texto: 'Validar entradas' },
+  { to: '/admin/arrepentimientos', texto: 'Arrepentimientos' },
+  { to: '/admin/soporte', texto: 'Soporte' },
 ];
 
 const claseEnlace = ({ isActive }) => `${styles.enlace} ${isActive ? styles.activo : ''}`;

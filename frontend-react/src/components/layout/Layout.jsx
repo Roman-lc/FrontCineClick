@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from './Header';
+import AyudaFlotante from './AyudaFlotante';
 import BarraAdmin from './BarraAdmin';
 import { useAuth } from '../../app/AuthContext';
 import { useColorDeTema } from '../../lib/useColorDeTema';
@@ -35,6 +36,7 @@ export default function Layout() {
         <Outlet />
       </main>
       <Footer />
+      <AyudaFlotante />
     </>
   );
 }

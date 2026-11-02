@@ -110,6 +110,11 @@ export default function Header() {
                 </li>
               )}
               <li>
+                <NavLink to="/soporte" className={claseEnlace}>
+                  Ayuda
+                </NavLink>
+              </li>
+              <li>
                 <button type="button" className={styles.seccion} onClick={salir}>
                   Cerrar sesión
                 </button>

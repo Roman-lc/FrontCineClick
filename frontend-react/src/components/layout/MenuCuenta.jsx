@@ -96,6 +96,11 @@ export default function MenuCuenta({ user, isAdmin, onSalir }) {
               </Link>
             </li>
           )}
+          <li role="none">
+            <Link role="menuitem" tabIndex={-1} to="/soporte" className={styles.opcionMenu}>
+              Ayuda
+            </Link>
+          </li>
           <li role="separator" className={styles.divisor} />
           <li role="none">
             <button

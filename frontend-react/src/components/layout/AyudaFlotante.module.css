@@ -1,0 +1,41 @@
+.ayuda {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 45;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 48px;
+    padding: 0 1.1rem;
+    border: 1px solid var(--border-input);
+    border-radius: 999px;
+    background: var(--surface);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--sombra) 45%, transparent);
+    color: var(--text);
+    font-weight: 600;
+    text-decoration: none;
+    transition: bottom 0.2s, border-color 0.15s;
+}
+
+.ayuda:hover {
+    border-color: var(--text);
+    color: var(--text);
+}
+
+/* Con la barra de la funcion elegida abajo, el boton sube para no taparla */
+:global(body):has([data-barra-funcion]) .ayuda {
+    bottom: calc(var(--alto-barra-funcion, 5.5rem) + 1rem);
+}
+
+@media (max-width: 860px) {
+    :global(body):has([data-barra-funcion]) .ayuda {
+        bottom: calc(var(--alto-barra-funcion-movil, 8.5rem) + 1rem);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ayuda {
+        transition: none;
+    }
+}
