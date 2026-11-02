@@ -12,6 +12,13 @@ dist
 dist-ssr
 *.local
 
+# Variables de entorno reales y certificados locales (solo se versiona .env.example)
+.env
+.env.*
+!.env.example
+certs/
+*.pem
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
