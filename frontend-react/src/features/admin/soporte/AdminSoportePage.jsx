@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import BadgeEstado from '../../../components/admin/BadgeEstado';
 import PaginaGestion, { SinDato } from '../../../components/admin/PaginaGestion';
 import { useListado } from '../../../components/admin/useListado';
 import admin from '../../../components/admin/admin.module.css';
-import { useToast } from '../../../components/ui/ToastProvider';
+import { useToast } from '../../../components/ui/useToast';
 import { fechaHoraBreve } from '../../../lib/fechas';
 import { clave } from '../../../lib/normalizar';
 import { adminSoporte } from '../../../services/admin';
@@ -79,7 +80,7 @@ export default function AdminSoportePage() {
               </td>
               <td>
                 {MOTIVOS[c.motivo] ?? c.motivo}
-                <span className={admin.secundario}>{c.compraId ? `Compra N° ${c.compraId}` : <SinDato />}</span>
+                <span className={admin.secundario}>{c.compraId ? <Link to={`/admin/compras?compra=${c.compraId}`}>Compra N° {c.compraId}</Link> : <SinDato />}</span>
               </td>
               <td className={styles.mensaje}>
                 <details>

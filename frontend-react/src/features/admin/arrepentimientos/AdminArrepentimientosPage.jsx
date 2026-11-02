@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import BadgeEstado from '../../../components/admin/BadgeEstado';
 import PaginaGestion, { SinDato } from '../../../components/admin/PaginaGestion';
 import { useConfirmacion } from '../../../components/admin/useConfirmacion';
 import { useListado } from '../../../components/admin/useListado';
 import admin from '../../../components/admin/admin.module.css';
-import { useToast } from '../../../components/ui/ToastProvider';
+import { useToast } from '../../../components/ui/useToast';
 import { fechaHoraBreve } from '../../../lib/fechas';
 import { formatearPrecio } from '../../../lib/formato';
 import { clave } from '../../../lib/normalizar';
@@ -97,7 +98,9 @@ export default function AdminArrepentimientosPage() {
                 <tr key={s.id}>
                   <td className={admin.codigo}>{s.codigo}</td>
                   <td>
-                    <span className={admin.principal}>N° {s.compraId}</span>
+                    <Link to={`/admin/compras?compra=${s.compraId}`} className={admin.principal}>
+                      N° {s.compraId}
+                    </Link>
                     <span className={admin.secundario}>{s.peliculaTitulo}</span>
                   </td>
                   <td className={admin.numero}>{fechaHoraBreve(s.fecha)}</td>

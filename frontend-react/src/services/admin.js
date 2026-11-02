@@ -49,6 +49,18 @@ export function getMetricas({ desde, hasta, cineId }) {
   return api.get(`/api/admin/metricas?desde=${desde}&hasta=${hasta}${filtroCine}`);
 }
 
+// Compras de todos los clientes, solo lectura. Filtros opcionales: codigo (N° de compra o codigo de entrada), email,
+// cineId, estado, desde y hasta ('yyyy-mm-dd', por fecha de compra), pagina (desde 0) y tamano.
+// Devuelve PaginaDTO { contenido: [CompraAdminDTO], pagina, tamano, totalElementos, totalPaginas }.
+export const adminCompras = {
+  buscar: (filtros) => {
+    const query = new URLSearchParams(Object.entries(filtros).filter(([, v]) => v !== undefined && v !== null && v !== ''));
+    return api.get(`/api/admin/compras?${query}`);
+  },
+  // DetalleCompraAdminDTO: { compra (CompraResponseDTO), clienteEmail, promocion, arrepentimiento, consultas }
+  detalle: (id) => api.get(`/api/admin/compras/${id}`),
+};
+
 // Solicitudes publicas: arrepentimientos (aprobar o rechazar las que quedaron fuera de plazo) y soporte
 export const adminArrepentimientos = {
   listar: () => api.get('/api/admin/arrepentimientos'),

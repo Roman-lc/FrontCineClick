@@ -1,0 +1,104 @@
+.filtro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.filtro select,
+.filtro input {
+    min-width: 150px;
+}
+
+.fila {
+    cursor: pointer;
+}
+
+.fila:hover td {
+    background: var(--surface-2);
+}
+
+/* El N° de compra es el boton accesible de la fila (la fila entera tambien abre el detalle) */
+.abrir {
+    min-height: 32px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--accent-text);
+    font: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+}
+
+.paginacion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.9rem;
+}
+
+.detalle {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.seccion {
+    margin: 0 0 0.6rem;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+.datos {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 0.45rem 1rem;
+    margin: 0;
+}
+
+.datos dt {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+}
+
+.datos dd {
+    margin: 0;
+}
+
+.aviso {
+    margin: 0;
+    color: var(--text-muted);
+}
+
+.consultas {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0 0 0.6rem;
+    padding: 0;
+    list-style: none;
+}
+
+.mensaje {
+    margin: 0.3rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    white-space: pre-line;
+}
+
+.enlace {
+    display: inline-block;
+    margin-top: 0.5rem;
+    color: var(--accent-text);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
