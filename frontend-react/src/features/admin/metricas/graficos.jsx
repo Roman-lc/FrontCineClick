@@ -99,28 +99,30 @@ export function TiposEntrada({ tipos }) {
           <span>entradas</span>
         </p>
       </div>
-      <table className={styles.tablaChica}>
-        <caption className="visually-hidden">Entradas vendidas por tipo</caption>
-        <thead>
-          <tr>
-            <th scope="col">Tipo</th>
-            <th scope="col">Cantidad</th>
-            <th scope="col">Ingresos</th>
-          </tr>
-        </thead>
-        <tbody>
-          {datos.map((t) => (
-            <tr key={t.tipo}>
-              <th scope="row">
-                <span className={styles.muestra} style={{ background: t.fill }} aria-hidden="true" />
-                {t.nombre}
-              </th>
-              <td>{miles(t.cantidad)}</td>
-              <td>{pesos(t.ingresos)}</td>
+      <div className={styles.tablaChicaCaja}>
+        <table className={styles.tablaChica}>
+          <caption className="visually-hidden">Entradas vendidas por tipo</caption>
+          <thead>
+            <tr>
+              <th scope="col">Tipo</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Ingresos</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {datos.map((t) => (
+              <tr key={t.tipo}>
+                <th scope="row">
+                  <span className={styles.muestra} style={{ background: t.fill }} aria-hidden="true" />
+                  {t.nombre}
+                </th>
+                <td>{miles(t.cantidad)}</td>
+                <td>{pesos(t.ingresos)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

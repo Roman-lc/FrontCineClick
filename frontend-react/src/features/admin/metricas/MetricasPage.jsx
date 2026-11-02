@@ -380,21 +380,20 @@ function BarraOcupacion({ fraccion }) {
   );
 }
 
+// Solo las proximas en empezar (el backend manda las de hoy y mañana); el resto, en "Ver todas las funciones"
+const MAXIMO_PROXIMAS = 5;
+
 function ProximasFunciones({ funciones }) {
   const hoy = hoyISO();
+  const proximas = [...funciones].sort((a, b) => a.inicio.localeCompare(b.inicio)).slice(0, MAXIMO_PROXIMAS);
   const grupos = [
-    { titulo: 'Hoy', funciones: funciones.filter((f) => fechaDeFuncion({ fechaHoraInicio: f.inicio }) === hoy) },
-    { titulo: 'Mañana', funciones: funciones.filter((f) => fechaDeFuncion({ fechaHoraInicio: f.inicio }) !== hoy) },
+    { titulo: 'Hoy', funciones: proximas.filter((f) => fechaDeFuncion({ fechaHoraInicio: f.inicio }) === hoy) },
+    { titulo: 'Mañana', funciones: proximas.filter((f) => fechaDeFuncion({ fechaHoraInicio: f.inicio }) !== hoy) },
   ].filter((g) => g.funciones.length);
 
   return (
     <>
-      <div
-        className={styles.proximas}
-        tabIndex={0}
-        role="region"
-        aria-label={`${funciones.length} funciones de hoy y mañana`}
-      >
+      <div className={styles.proximas} role="region" aria-label={`Las ${proximas.length} próximas funciones`}>
         {grupos.map((grupo) => (
           <div key={grupo.titulo} className={styles.grupoFunciones}>
             <h3 className={styles.grupoTitulo}>{grupo.titulo}</h3>

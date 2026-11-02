@@ -151,10 +151,8 @@
 
 /* ---------- Proximas funciones ---------- */
 
-/* La lista puede ser larga (todas las funciones de hoy y manana): se desplaza dentro del bloque */
+/* Lista corta (las proximas 5): sin desplazamiento propio, asi la rueda del mouse mueve la pagina */
 .proximas {
-    max-height: 30rem;
-    overflow-y: auto;
     margin: 0 -0.5rem;
     padding: 0 0.5rem;
 }
@@ -401,6 +399,13 @@
     font-size: 0.75rem;
 }
 
+/* Si un monto no entra, la tabla se desplaza dentro de su bloque y no ensancha la pagina */
+.tablaChicaCaja {
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+}
+
 .tablaChica {
     width: 100%;
     border-collapse: collapse;
@@ -469,6 +474,14 @@
 }
 
 /* ---------- Mobile: una columna ---------- */
+
+/* En media columna (pantallas medianas con el menu lateral) el anillo va arriba de la tabla */
+@media (max-width: 1200px) {
+    .anillo {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
+    }
+}
 
 @media (max-width: 1100px) {
     .indicadores {
