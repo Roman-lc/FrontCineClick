@@ -33,6 +33,7 @@ const ESTADOS = [
   { valor: 'todos', texto: 'Todas' },
 ];
 
+const POR_PAGINA = 100;
 const yaEmpezo = (f) => new Date(f.fechaHoraInicio) <= new Date();
 
 function estadoDe(f) {
@@ -63,6 +64,8 @@ export default function AdminFuncionesPage() {
   const [busqueda, setBusqueda] = useState('');
   const [estado, setEstado] = useState('proximas');
   const [cineFiltro, setCineFiltro] = useState('');
+  // Con miles de funciones (las pasadas incluidas) la tabla se dibuja de a POR_PAGINA filas; con otro filtro vuelve a empezar
+  const [mostradas, setMostradas] = useState({ filtro: '', cantidad: POR_PAGINA });
 
   const peliculaDe = (id) => peliculas.find((p) => String(p.id) === String(id));
 
@@ -187,6 +190,9 @@ export default function AdminFuncionesPage() {
   const filtradas = funciones
     .filter((f) => cumpleFiltro(f, estado) && (!cineFiltro || String(f.cineId) === cineFiltro) && clave(f.peliculaTitulo).includes(clave(busqueda)))
     .sort((a, b) => (estado === 'pasadas' ? b.fechaHoraInicio.localeCompare(a.fechaHoraInicio) : a.fechaHoraInicio.localeCompare(b.fechaHoraInicio)));
+  const filtroActual = `${estado}|${cineFiltro}|${busqueda}`;
+  const limite = mostradas.filtro === filtroActual ? mostradas.cantidad : POR_PAGINA;
+  const visibles = filtradas.slice(0, limite);
 
   const props = (campo) => ({
     value: valores[campo],
@@ -244,7 +250,7 @@ export default function AdminFuncionesPage() {
             </tr>
           </thead>
           <tbody>
-            {filtradas.map((f) => {
+            {visibles.map((f) => {
               const est = estadoDe(f);
               const editable = f.estado !== 'CANCELADA' && !yaEmpezo(f);
               return (
@@ -291,6 +297,16 @@ export default function AdminFuncionesPage() {
             })}
           </tbody>
         </table>
+        {filtradas.length > limite && (
+          <div className={styles.verMas}>
+            <span>
+              Mostrando {limite} de {filtradas.length}
+            </span>
+            <button type="button" className="btn btn-sm" onClick={() => setMostradas({ filtro: filtroActual, cantidad: limite + POR_PAGINA })}>
+              Mostrar {Math.min(POR_PAGINA, filtradas.length - limite)} más
+            </button>
+          </div>
+        )}
       </PaginaGestion>
 
       <Drawer

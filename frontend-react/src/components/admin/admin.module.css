@@ -657,3 +657,16 @@ textarea.control {
     border-color: var(--danger);
     color: var(--danger);
 }
+
+/* "Mostrar mas" debajo de una tabla larga */
+.verMas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
