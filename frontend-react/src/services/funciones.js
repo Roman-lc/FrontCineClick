@@ -2,6 +2,7 @@ import { api } from './http';
 import { USE_MOCKS, simular, simularNoEncontrado } from '../mocks/simular';
 import { funcionesMock } from '../mocks/funciones';
 import { butacasMock, preciosMock } from '../mocks/compras';
+import { combinablesMock } from '../mocks/combinables';
 
 // FuncionResponseDTO: { id, peliculaId, peliculaTitulo, cineId, cineNombre, salaId, salaNombre,
 //   fechaHoraInicio, fechaHoraFin (sin zona horaria: hora local del cine), precioBase, formato,
@@ -25,6 +26,14 @@ export async function getFunciones({ peliculaId, cineId, fecha } = {}) {
   if (fecha) query.set('fecha', fecha);
   const qs = query.toString();
   return api.get(`/api/funciones${qs ? `?${qs}` : ''}`);
+}
+
+// Doble funcion: CombinablesResponseDTO { elegida: { funcionId, pelicula, inicio, finEstimado }, antes: [...],
+//   despues: [...] } con { funcionId, pelicula, urlPoster, formato, idioma, sala, inicio, finEstimado, minutosEntre,
+//   butacasLibres }. El fin es estimado (inicio + duracion + publicidad).
+export async function getCombinables(id) {
+  if (USE_MOCKS) return combinablesMock(id);
+  return api.get(`/api/funciones/${id}/combinables`);
 }
 
 export async function getFuncion(id) {

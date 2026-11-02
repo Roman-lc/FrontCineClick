@@ -191,7 +191,7 @@ export default function HomePage() {
 
       <ProximosEstrenos proximos={estrenos.proximos} />
 
-      {elegida && <BarraFuncionElegida funcion={elegida} onQuitar={() => setElegida(null)} />}
+      {elegida && <BarraFuncionElegida funcion={elegida} onQuitar={() => setElegida(null)} onCambiar={setElegida} />}
     </section>
   );
 }

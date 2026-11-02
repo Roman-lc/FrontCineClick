@@ -217,6 +217,16 @@
     font-weight: 700;
 }
 
+.descuentoEntrada {
+    color: var(--success);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.otraFuncion {
+    margin-bottom: 2rem;
+}
+
 .requisito {
     color: var(--text);
     font-size: 0.85rem;

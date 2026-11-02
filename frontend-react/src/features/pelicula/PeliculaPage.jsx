@@ -102,7 +102,7 @@ function DetallePelicula({ slug }) {
         elegidaId={elegida?.id}
         onElegir={setElegida}
       />
-      {elegida && <BarraFuncionElegida funcion={elegida} onQuitar={() => setElegida(null)} />}
+      {elegida && <BarraFuncionElegida funcion={elegida} onQuitar={() => setElegida(null)} onCambiar={setElegida} />}
     </section>
   );
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import { useAuth } from '../../app/AuthContext';
 import BadgeCalificacion from '../../components/ui/BadgeCalificacion';
@@ -13,6 +13,7 @@ import { fechaFuncionLarga, fechaHoraCorta } from '../../lib/fechas';
 import { etiquetaFormato, etiquetaIdioma, formatearPrecio, nombreCine } from '../../lib/formato';
 import { direccionCine, ubicacionCine, urlComoLlegar } from '../cines/cines';
 import { NOMBRES_TIPO, REQUISITO_TIPO, descargarCalendario, estadoDeCompra, textoEntradas } from '../cuenta/compras';
+import PanelCombinables from './PanelCombinables';
 import styles from './detalle.module.css';
 
 const ESTADO_ENTRADA = { USADA: 'Usada', CANCELADA: 'Cancelada' };
@@ -29,6 +30,7 @@ export default function ConfirmacionPage() {
   const { state } = useLocation();
   const desdePago = Boolean(state?.desdePago);
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [intento, setIntento] = useState(0);
   const [estado, setEstado] = useState({ cargando: true, error: null, compra: null });
 
@@ -93,6 +95,7 @@ export default function ConfirmacionPage() {
   const tieneDireccion = Boolean(funcion.calle);
   const direccion = tieneDireccion ? `${direccionCine(funcion)}, ${ubicacionCine(funcion)}` : '';
   const descuento = Number(compra.subtotal) - Number(compra.total);
+  const conDescuento = compra.entradas.filter((e) => Number(e.descuento) > 0).length;
 
   return (
     <section className={`section ${styles.detalle}`}>
@@ -182,6 +185,11 @@ export default function ConfirmacionPage() {
                   <p>
                     {NOMBRES_TIPO[entrada.tipo] ?? entrada.tipo} · {formatearPrecio(entrada.precioUnitario)}
                   </p>
+                  {Number(entrada.descuento) > 0 && (
+                    <p className={styles.descuentoEntrada}>
+                      Descuento {compra.codigoPromocion}: −{formatearPrecio(entrada.descuento)}
+                    </p>
+                  )}
                   {REQUISITO_TIPO[entrada.tipo] && <p className={styles.requisito}>{REQUISITO_TIPO[entrada.tipo]}</p>}
                   {!desdePago && (
                     <p className={styles.estadoEntrada}>{estadoEntrada ? estadoEntrada : 'Sin usar'}</p>
@@ -193,6 +201,15 @@ export default function ConfirmacionPage() {
         </ul>
       </section>
 
+      {situacion.clave === 'proxima' && (
+        <section className={styles.otraFuncion} aria-labelledby="titulo-otra">
+          <h2 id="titulo-otra" className={styles.subtitulo}>
+            ¿Te quedás para otra?
+          </h2>
+          <PanelCombinables funcionId={funcion.id} onElegir={(s) => navigate(`/compra/${s.funcionId}/entradas`)} />
+        </section>
+      )}
+
       <dl className={styles.desglose}>
         <div>
           <dt>Subtotal</dt>
@@ -200,7 +217,10 @@ export default function ConfirmacionPage() {
         </div>
         {compra.codigoPromocion && descuento > 0 && (
           <div className={styles.descuento}>
-            <dt>Descuento ({compra.codigoPromocion})</dt>
+            <dt>
+              Descuento ({compra.codigoPromocion}
+              {conDescuento < compra.entradas.length && `, en ${conDescuento} de ${compra.entradas.length} entradas`})
+            </dt>
             <dd>−{formatearPrecio(descuento)}</dd>
           </div>
         )}
@@ -235,6 +255,11 @@ export default function ConfirmacionPage() {
               <button type="button" className="btn btn-primary" onClick={() => descargarCalendario({ compra, funcion, direccion })}>
                 Agregar al calendario
               </button>
+            )}
+            {compra.estado === 'CONFIRMADA' && situacion.clave === 'proxima' && (
+              <Link to="/arrepentimiento" state={{ compraId: compra.id, email: user.email }} className="btn btn-danger">
+                Arrepentirme de esta compra
+              </Link>
             )}
           </>
         )}
