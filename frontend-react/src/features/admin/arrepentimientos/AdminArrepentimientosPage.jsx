@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useAuth } from '../../../app/AuthContext';
 import BadgeEstado from '../../../components/admin/BadgeEstado';
 import PaginaGestion, { SinDato } from '../../../components/admin/PaginaGestion';
 import { useConfirmacion } from '../../../components/admin/useConfirmacion';
@@ -25,10 +24,9 @@ const FILTROS = [
 ];
 
 export default function AdminArrepentimientosPage() {
-  const { user } = useAuth();
   const { mostrarAviso } = useToast();
   const [confirmar, dialogo] = useConfirmacion();
-  const listado = useListado(() => adminArrepentimientos.listar(user.usuarioId));
+  const listado = useListado(() => adminArrepentimientos.listar());
   const solicitudes = listado.datos ?? [];
   const [busqueda, setBusqueda] = useState('');
   const [estado, setEstado] = useState('FUERA_DE_PLAZO');
@@ -50,7 +48,7 @@ export default function AdminArrepentimientosPage() {
     );
     if (!seguro) return;
     try {
-      await (aprobar ? adminArrepentimientos.aprobar(solicitud.id, user.usuarioId) : adminArrepentimientos.rechazar(solicitud.id, user.usuarioId));
+      await (aprobar ? adminArrepentimientos.aprobar(solicitud.id) : adminArrepentimientos.rechazar(solicitud.id));
       mostrarAviso(aprobar ? `${solicitud.codigo} aprobada: la compra quedó anulada` : `${solicitud.codigo} rechazada`, 'exito');
       listado.recargar();
     } catch {

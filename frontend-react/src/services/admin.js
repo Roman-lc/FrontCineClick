@@ -1,7 +1,7 @@
 import { api } from './http';
 
-// Endpoints del panel. Van siempre contra la API (no tienen mocks): el panel necesita
-// el backend corriendo. Los listados piden tambien lo inactivo.
+// Endpoints del panel. Solo responden a un administrador: http.js manda el id del usuario en X-Usuario-Id
+// (la API no tiene tokens; es un control basico, no una autenticacion real). Los listados piden tambien lo inactivo.
 
 export const adminCines = {
   listar: () => api.get('/api/cines?incluirInactivos=true'),
@@ -43,23 +43,21 @@ export const adminPromociones = {
   eliminar: (id) => api.delete(`/api/promociones/${id}`),
 };
 
-// Metricas del panel (MetricasResponseDTO). El backend solo responde a un administrador: el id del usuario
-// viaja en X-Usuario-Id (la API no tiene sesiones; es un control basico, no una autenticacion real).
-export function getMetricas({ desde, hasta, cineId }, usuarioId) {
+// Metricas del panel (MetricasResponseDTO)
+export function getMetricas({ desde, hasta, cineId }) {
   const filtroCine = cineId ? `&cineId=${cineId}` : '';
-  return api.get(`/api/admin/metricas?desde=${desde}&hasta=${hasta}${filtroCine}`, { headers: { 'X-Usuario-Id': String(usuarioId) } });
+  return api.get(`/api/admin/metricas?desde=${desde}&hasta=${hasta}${filtroCine}`);
 }
 
 // Solicitudes publicas: arrepentimientos (aprobar o rechazar las que quedaron fuera de plazo) y soporte
-const comoAdmin = (usuarioId) => ({ headers: { 'X-Usuario-Id': String(usuarioId) } });
 export const adminArrepentimientos = {
-  listar: (usuarioId) => api.get('/api/admin/arrepentimientos', comoAdmin(usuarioId)),
-  aprobar: (id, usuarioId) => api.patch(`/api/admin/arrepentimientos/${id}/aprobar`, undefined, comoAdmin(usuarioId)),
-  rechazar: (id, usuarioId) => api.patch(`/api/admin/arrepentimientos/${id}/rechazar`, undefined, comoAdmin(usuarioId)),
+  listar: () => api.get('/api/admin/arrepentimientos'),
+  aprobar: (id) => api.patch(`/api/admin/arrepentimientos/${id}/aprobar`),
+  rechazar: (id) => api.patch(`/api/admin/arrepentimientos/${id}/rechazar`),
 };
 export const adminSoporte = {
-  listar: (usuarioId) => api.get('/api/admin/soporte', comoAdmin(usuarioId)),
-  resolver: (id, usuarioId) => api.patch(`/api/admin/soporte/${id}/resolver`, undefined, comoAdmin(usuarioId)),
+  listar: () => api.get('/api/admin/soporte'),
+  resolver: (id) => api.patch(`/api/admin/soporte/${id}/resolver`),
 };
 
 // Control de ingreso: marca la entrada como usada si es de esa funcion y esta pagada.

@@ -1,42 +1,31 @@
-import { useState, useEffect, createContext, useContext } from 'react';
+import { useState, createContext, useContext } from 'react';
+import { guardarSesion, leerSesion } from '../lib/sesion';
 
 const AuthContext = createContext(null);
 
-const STORAGE_KEY = 'cineclick_user';
-
-// La sesion es solo para la interfaz: la API no tiene autenticacion (limitacion conocida).
+// La sesion es solo para la interfaz: la API no tiene autenticacion con tokens (limitacion conocida).
+// Se guarda en el momento del login, antes de que las pantallas siguientes pidan datos con X-Usuario-Id.
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch {
-      return null;
-    }
-  });
-
-  useEffect(() => {
-    try {
-      if (user) localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
-      else localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      // Sin acceso al storage la sesion dura hasta recargar
-    }
-  }, [user]);
+  const [user, setUser] = useState(leerSesion);
 
   // data: LoginResponseDTO
   const login = (data) => {
-    setUser({
+    const usuario = {
       usuarioId: data.usuarioId ?? null,
       clienteId: data.clienteId ?? null,
       nombre: data.nombre || data.nombreCompleto || data.email,
       apellido: data.apellido || '',
       email: data.email || '',
       rol: data.rol || '',
-    });
+    };
+    guardarSesion(usuario);
+    setUser(usuario);
   };
 
-  const logout = () => setUser(null);
+  const logout = () => {
+    guardarSesion(null);
+    setUser(null);
+  };
 
   return (
     <AuthContext.Provider value={{ user, login, logout, isAdmin: user?.rol === 'ADMIN', isLoggedIn: !!user }}>

@@ -1,6 +1,5 @@
 import { useEffect, useId, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { useAuth } from '../../../app/AuthContext';
 import admin from '../../../components/admin/admin.module.css';
 import EstadoError from '../../../components/ui/EstadoError';
 import EstadoVacio from '../../../components/ui/EstadoVacio';
@@ -43,7 +42,6 @@ function haceCuanto(fecha, ahora) {
 }
 
 export default function MetricasPage() {
-  const { user } = useAuth();
   const [params, setParams] = useSearchParams();
   const filtros = leerFiltros(params);
   const rangoInvalido = filtros.desde > filtros.hasta;
@@ -65,13 +63,13 @@ export default function MetricasPage() {
   useEffect(() => {
     if (rangoInvalido) return undefined;
     let ignorar = false;
-    getMetricas({ desde: filtros.desde, hasta: filtros.hasta, cineId: filtros.cine }, user?.usuarioId)
+    getMetricas({ desde: filtros.desde, hasta: filtros.hasta, cineId: filtros.cine })
       .then((datos) => !ignorar && setEstado({ consulta, error: false, datos, actualizado: Date.now() }))
       .catch(() => !ignorar && setEstado({ consulta, error: true, datos: null, actualizado: null }));
     return () => {
       ignorar = true;
     };
-  }, [consulta, rangoInvalido, user?.usuarioId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [consulta, rangoInvalido]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Solo se refresca el texto "Actualizado hace N min"; los datos no se recargan solos
   useEffect(() => {

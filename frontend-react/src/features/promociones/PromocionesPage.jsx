@@ -6,7 +6,7 @@ import { EsqueletoTarjetas } from '../../components/ui/Esqueletos';
 import TarjetaTicket from '../../components/ui/TarjetaTicket';
 import { useToast } from '../../components/ui/ToastProvider';
 import { useAuth } from '../../app/AuthContext';
-import { condicionesDe, diasCortos, estadoPromocion, usosRestantes } from '../../lib/promociones';
+import { condicionesDe, diasCortos, usosRestantes } from '../../lib/promociones';
 import { getPromocionesVigentes } from '../../services/promociones';
 import { fechaDiaMes, hoyISO } from '../../lib/fechas';
 import { guardarPromo } from '../../lib/promoGuardada';
@@ -16,18 +16,18 @@ const DIAS_PARA_AVISAR = 3;
 
 export default function PromocionesPage() {
   const { user } = useAuth();
-  // Con sesion de cliente, el backend dice si cada promocion la puede usar y, si no, por que
+  // Con sesion de cliente, el backend dice si cada promocion la puede usar y, si no, por que (X-Usuario-Id lo
+  // agrega http.js). Se vuelve a pedir cuando cambia la sesion.
   const usuarioId = user?.clienteId ? user.usuarioId : undefined;
   const [intento, setIntento] = useState(0);
   const [estado, setEstado] = useState({ cargando: true, error: false, promociones: [] });
 
   useEffect(() => {
     let ignorar = false;
-    getPromocionesVigentes(usuarioId)
+    getPromocionesVigentes()
       .then((promociones) => {
-        // No se muestran las agotadas, vencidas ni programadas (el backend ya las filtra; esto cubre los mocks)
-        const activas = promociones.filter((p) => estadoPromocion(p) === 'Activa');
-        if (!ignorar) setEstado({ cargando: false, error: false, promociones: activas });
+        // El backend ya deja afuera las agotadas, vencidas y programadas
+        if (!ignorar) setEstado({ cargando: false, error: false, promociones });
       })
       .catch(() => {
         if (!ignorar) setEstado({ cargando: false, error: true, promociones: [] });

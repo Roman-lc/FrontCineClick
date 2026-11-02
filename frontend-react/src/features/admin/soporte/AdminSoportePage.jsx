@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useAuth } from '../../../app/AuthContext';
 import BadgeEstado from '../../../components/admin/BadgeEstado';
 import PaginaGestion, { SinDato } from '../../../components/admin/PaginaGestion';
 import { useListado } from '../../../components/admin/useListado';
@@ -18,16 +17,15 @@ const FILTROS = [
 ];
 
 export default function AdminSoportePage() {
-  const { user } = useAuth();
   const { mostrarAviso } = useToast();
-  const listado = useListado(() => adminSoporte.listar(user.usuarioId));
+  const listado = useListado(() => adminSoporte.listar());
   const consultas = listado.datos ?? [];
   const [busqueda, setBusqueda] = useState('');
   const [estado, setEstado] = useState('ABIERTA');
 
   const resolver = async (consulta) => {
     try {
-      await adminSoporte.resolver(consulta.id, user.usuarioId);
+      await adminSoporte.resolver(consulta.id);
       mostrarAviso(`${consulta.numero} marcada como resuelta`, 'exito');
       listado.recargar();
     } catch {
