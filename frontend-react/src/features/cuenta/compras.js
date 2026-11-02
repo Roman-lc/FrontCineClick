@@ -1,5 +1,6 @@
 // Estado de una compra tal como lo ve el cliente, y textos y archivos que se arman a partir de ella.
 
+// - Arrepentida: se anulo con el boton de arrepentimiento (se muestra junto con las canceladas)
 // - Cancelada: la compra se cancelo, la reserva vencio sin pagarse o se cancelo la funcion
 // - Usada: todas sus entradas ya pasaron por el control de ingreso
 // - Función pasada: la funcion ya empezo y las entradas no se usaron (todas)
@@ -8,6 +9,7 @@
 export function estadoDeCompra(compra, ahora = new Date()) {
   const funcion = compra.funcion;
   if (compra.estado === 'PENDIENTE_PAGO' && compra.segundosRestantes > 0) return null;
+  if (compra.estado === 'ARREPENTIDA') return { clave: 'cancelada', texto: 'Arrepentida' };
   if (compra.estado !== 'CONFIRMADA' || funcion?.estado === 'CANCELADA') return { clave: 'cancelada', texto: 'Cancelada' };
   const entradas = compra.entradas ?? [];
   if (entradas.length > 0 && entradas.every((e) => e.estado === 'USADA')) return { clave: 'usada', texto: 'Usada' };
