@@ -72,9 +72,11 @@ export const adminSoporte = {
   resolver: (id) => api.patch(`/api/admin/soporte/${id}/resolver`),
 };
 
-// Control de ingreso: marca la entrada como usada si es de esa funcion y esta pagada.
-// ValidacionEntradaResponseDTO: { resultado: 'VALIDA' | 'YA_USADA' | 'OTRA_FUNCION' | 'NO_CONFIRMADA', codigo,
-//   funcionId, peliculaTitulo, cineNombre, salaNombre, fechaHoraInicio, codigoButaca }. Un codigo que no existe da 404.
-export function validarEntrada(codigo, funcionId) {
-  return api.post(`/api/entradas/${encodeURIComponent(codigo)}/validar`, { funcionId: Number(funcionId) });
+// Control de ingreso: el codigo alcanza (el backend deduce pelicula, sala, butaca y horario) y el cine del puesto.
+// ValidacionEntradaResponseDTO: { resultado: 'VALIDA' | 'YA_USADA' | 'OTRO_CINE' | 'FUERA_DE_HORARIO' | 'ANULADA',
+//   motivo: 'DEMASIADO_TEMPRANO' | 'FUNCION_TERMINADA' | 'OTRO_DIA' (solo FUERA_DE_HORARIO), codigo, peliculaTitulo,
+//   cineId, cineNombre, salaNombre, codigoButaca, fechaHoraInicio, tipo, usadaEn, ingresoDesde, ingresoHasta }.
+// 200 para todo codigo que existe (solo VALIDA la marca como usada); 404 si no existe.
+export function validarEntrada(codigo, cineId) {
+  return api.post(`/api/entradas/${encodeURIComponent(codigo)}/validar`, { cineId: Number(cineId) });
 }
