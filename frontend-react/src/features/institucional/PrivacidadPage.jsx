@@ -102,9 +102,11 @@ const SECCIONES = [
     titulo: '7. Seguridad',
     contenido: (
       <p>
-        Tomamos medidas técnicas y organizativas para proteger tus datos: no guardamos los datos completos de la tarjeta, el panel de
-        administración está restringido al personal autorizado y solo se accede a tus datos cuando hace falta para atenderte. Al ser un
-        proyecto académico, estas medidas son de ejemplo y no equivalen a las de un servicio en producción.
+        Tomamos medidas técnicas y organizativas para proteger tus datos: la contraseña no se guarda tal como la escribís sino como
+        un hash con BCrypt (no se puede volver a leer, solo comprobar al iniciar sesión), no guardamos los datos completos de la
+        tarjeta, el panel de administración está restringido al personal autorizado y solo se accede a tus datos cuando hace falta
+        para atenderte. Al ser un proyecto académico, estas medidas son de ejemplo y no equivalen a las de un servicio en producción:
+        por ejemplo, la sesión no usa tokens.
       </p>
     ),
   },
