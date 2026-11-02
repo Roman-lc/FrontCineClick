@@ -12,6 +12,23 @@
     min-width: 150px;
 }
 
+/* En el celular los filtros ocupan todo el ancho: el email solo y el resto de a dos */
+@media (max-width: 560px) {
+    .filtro {
+        flex: 1 1 calc(50% - 0.75rem);
+    }
+
+    .filtro:first-of-type {
+        flex-basis: 100%;
+    }
+
+    .filtro select,
+    .filtro input {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
 .fila {
     cursor: pointer;
 }

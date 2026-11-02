@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import EstadoError from '../ui/EstadoError';
 import EstadoVacio from '../ui/EstadoVacio';
 import { EsqueletoFilas } from '../ui/Esqueletos';
@@ -36,6 +37,18 @@ export default function PaginaGestion({
   vacio,
   children,
 }) {
+  // En el celular la tabla se ve como tarjetas (ver .tablaCaja[data-tarjetas] en admin.module.css): cada celda
+  // lleva el titulo de su columna en data-label. Se recalcula en cada render porque las filas cambian con los filtros.
+  const caja = useRef(null);
+  useEffect(() => {
+    const tabla = caja.current?.querySelector('table');
+    if (!tabla) return;
+    const titulos = [...tabla.querySelectorAll('thead th')].map((th) => (th.classList.contains(styles.colAcciones) ? '' : th.textContent.trim()));
+    for (const fila of tabla.querySelectorAll('tbody tr')) {
+      [...fila.children].forEach((celda, i) => celda.setAttribute('data-label', titulos[i] ?? ''));
+    }
+  });
+
   return (
     <section>
       <title>{`${titulo} | Panel | CineClick`}</title>
@@ -93,7 +106,9 @@ export default function PaginaGestion({
               <EstadoVacio titulo="No hay resultados con estos filtros" mensaje="Probá con otra búsqueda o con otro estado." />
             )
           ) : (
-            <div className={styles.tablaCaja}>{children}</div>
+            <div ref={caja} className={styles.tablaCaja} data-tarjetas>
+              {children}
+            </div>
           )}
         </>
       )}

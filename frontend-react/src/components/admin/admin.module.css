@@ -642,6 +642,21 @@ textarea.control {
         max-width: none;
     }
 
+    /* Los filtros de estado se acomodan en varias lineas en lugar de cortarse */
+    .segmentos {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .segmento {
+        flex: 1 1 auto;
+    }
+
+    .filtros .filtroSelect {
+        flex: 1 1 100%;
+    }
+
     .vistaPrevia {
         flex-direction: column;
     }
@@ -656,6 +671,78 @@ textarea.control {
 .botonIconoPeligro {
     border-color: var(--danger);
     color: var(--danger);
+}
+
+/* ---------- Tablas de gestion en el celular: una tarjeta por fila ----------
+   PaginaGestion copia el titulo de cada columna en data-label; aca se muestra a la izquierda de cada dato. */
+@media (max-width: 640px) {
+    .tablaCaja[data-tarjetas] {
+        overflow: visible;
+        border: none;
+        background: none;
+    }
+
+    .tablaCaja[data-tarjetas] .tabla thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
+
+    .tablaCaja[data-tarjetas] .tabla,
+    .tablaCaja[data-tarjetas] .tabla tbody {
+        display: block;
+    }
+
+    .tablaCaja[data-tarjetas] .tabla tr {
+        display: block;
+        margin-bottom: 0.75rem;
+        padding: 0.4rem 0.9rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--surface);
+    }
+
+    .tablaCaja[data-tarjetas] .tabla td {
+        position: relative;
+        display: block;
+        min-height: 2.2rem;
+        padding: 0.45rem 0 0.45rem 7.25rem;
+        border-bottom: 1px solid var(--border);
+        white-space: normal;
+    }
+
+    .tablaCaja[data-tarjetas] .tabla tbody tr td:last-child {
+        border-bottom: none;
+    }
+
+    .tablaCaja[data-tarjetas] .tabla td::before {
+        content: attr(data-label);
+        position: absolute;
+        top: 0.55rem;
+        left: 0;
+        width: 6.75rem;
+        color: var(--text-muted);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+
+    /* La celda de acciones no lleva titulo: los botones van solos, alineados a la izquierda */
+    .tablaCaja[data-tarjetas] .tabla td[data-label=''] {
+        padding-left: 0;
+    }
+
+    .tablaCaja[data-tarjetas] .tabla td[data-label='']::before {
+        content: none;
+    }
+
+    .tablaCaja[data-tarjetas] .acciones {
+        justify-content: flex-start;
+    }
 }
 
 /* "Mostrar mas" debajo de una tabla larga */
