@@ -69,6 +69,7 @@ export const FORMATOS_FUNCION = [
 
 export const TIPOS_SALA = [
   { valor: 'TRADICIONAL', texto: 'Tradicional' },
+  { valor: 'TRES_D', texto: '3D' },
   { valor: 'PREMIUM', texto: 'Premium' },
   { valor: 'IMAX', texto: 'IMAX' },
   { valor: 'CUATRO_D', texto: '4D' },
