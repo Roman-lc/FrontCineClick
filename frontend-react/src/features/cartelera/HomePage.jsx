@@ -17,6 +17,8 @@ import BarraFiltros from './BarraFiltros';
 import HorariosDelDia from './HorariosDelDia';
 import ProximosEstrenos from './ProximosEstrenos';
 import SliderDestacados from './SliderDestacados';
+import CuentasDemo from '../../components/demo/CuentasDemo';
+import { DEMO_ACTIVA } from '../../lib/cuentasDemo';
 import BarraFuncionElegida from '../compra/BarraFuncionElegida';
 import {
   armarCartelera,
@@ -96,6 +98,8 @@ export default function HomePage() {
       <title>Cartelera | CineClick</title>
 
       {estrenos.cargando ? <EsqueletoSlider /> : <SliderDestacados destacadas={estrenos.destacadas} />}
+
+      {DEMO_ACTIVA && <CuentasDemo plegable />}
 
       <div className={styles.encabezado}>
         <h1 className={styles.titulo}>Películas en cartelera</h1>

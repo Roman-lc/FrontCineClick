@@ -4,6 +4,8 @@ import { useAuth } from '../../app/useAuth';
 import { iniciarSesion, registrarCliente } from '../../services/auth';
 import { useToast } from '../../components/ui/useToast';
 import { rutaVolverSegura } from '../../lib/volver';
+import CuentasDemo from '../../components/demo/CuentasDemo';
+import { DEMO_ACTIVA } from '../../lib/cuentasDemo';
 
 // modoInicial: 'login' o 'registro' (la ruta /registro abre directo la pestaña de crear cuenta).
 // ?volver=/compra/12/entradas hace que despues de ingresar se vuelva a esa pantalla.
@@ -135,6 +137,8 @@ export default function LoginPage({ modoInicial = 'login' }) {
           </form>
         </div>
       )}
+
+      {DEMO_ACTIVA && <CuentasDemo destino={volver || undefined} />}
     </section>
   );
 }
