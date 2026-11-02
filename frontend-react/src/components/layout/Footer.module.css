@@ -15,12 +15,8 @@
 }
 
 .marca .logo {
-    margin-bottom: 0.5rem;
-    color: var(--accent);
-    font-family: var(--font-display);
-    font-size: 1.8rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.75rem;
 }
 
 .tituloColumna {

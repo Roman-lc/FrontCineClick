@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="public/brand/cineclick-logo-oscuro.svg">
+    <img src="public/brand/cineclick-logo-claro.svg" alt="CineClick" height="64">
+  </picture>
+</p>
+
 # CineClick · Frontend
 
 Frontend en React (Vite + React Router, JavaScript) del TPO CineClick. Consume la API Spring Boot del repositorio [`CineClick`](https://github.com/LucasGagliani/CineClick) (backend). Todos los datos salen de la API: no hay mocks ni datos de respaldo.

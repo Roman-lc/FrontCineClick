@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../app/useAuth';
+import Logo from '../ui/Logo';
 import MenuCuenta from './MenuCuenta';
 import styles from './Header.module.css';
 
@@ -42,8 +43,10 @@ export default function Header() {
   return (
     <header>
       <nav className={styles.barra} aria-label="Principal">
+        {/* Completo en desktop; en el celular solo el icono (el CSS muestra uno u otro) */}
         <Link to="/" className={styles.logo}>
-          CineClick
+          <Logo height={32} className={styles.logoCompleto} />
+          <Logo height={28} showText={false} className={styles.logoIcono} />
         </Link>
 
         <ul className={styles.secciones}>

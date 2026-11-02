@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="frontend-react/public/brand/cineclick-logo-oscuro.svg">
+    <img src="frontend-react/public/brand/cineclick-logo-claro.svg" alt="CineClick" height="64">
+  </picture>
+</p>
+
 # CineClick · Frontend
 
 TPO de Aplicaciones Interactivas: sitio de venta de entradas de cine.

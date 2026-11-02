@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Logo from '../ui/Logo';
 import styles from './Footer.module.css';
 
 const DEFENSA_CONSUMIDOR = 'https://www.argentina.gob.ar/economia/industria-y-comercio/defensadelconsumidor';
@@ -8,7 +9,7 @@ export default function Footer() {
     <footer>
       <div className={styles.footer}>
         <div className={styles.marca}>
-          <p className={styles.logo}>CineClick</p>
+          <Logo height={32} className={styles.logo} />
           <p>Comprá tus entradas online, elegí tu butaca y entrá con el código.</p>
         </div>
 

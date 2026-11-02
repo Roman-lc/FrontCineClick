@@ -12,12 +12,15 @@
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    color: var(--accent);
-    font-family: var(--font-display);
-    font-size: 2rem;
-    letter-spacing: 0.06em;
-    line-height: 1;
     text-decoration: none;
+}
+
+.logoCompleto {
+    display: block;
+}
+
+.logoIcono {
+    display: none;
 }
 
 .secciones {
@@ -219,6 +222,14 @@
 
     .hamburguesa {
         display: grid;
+    }
+
+    .logoCompleto {
+        display: none;
+    }
+
+    .logoIcono {
+        display: block;
     }
 }
 

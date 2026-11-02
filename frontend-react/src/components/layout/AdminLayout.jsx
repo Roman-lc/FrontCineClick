@@ -2,6 +2,7 @@ import { Suspense, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../app/useAuth';
 import { EsqueletoFilas } from '../ui/Esqueletos';
+import Logo from '../ui/Logo';
 import BarraAdmin from './BarraAdmin';
 import { useColorDeTema } from '../../lib/useColorDeTema';
 import styles from './AdminLayout.module.css';
@@ -75,7 +76,8 @@ export default function AdminLayout() {
       <BarraAdmin />
       <header className={styles.cabecera}>
         <Link to="/admin" className={styles.logo}>
-          CineClick <span className={styles.panel}>Panel</span>
+          <Logo height={28} />
+          <span className={styles.panel}>Panel</span>
         </Link>
         <button
           type="button"
