@@ -129,6 +129,41 @@
     color: var(--text);
 }
 
+.badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0 0 0.75rem;
+    padding: 0;
+    list-style: none;
+}
+
+.badge {
+    padding: 0.1rem 0.55rem;
+    border-radius: 999px;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+/* No la puede usar este cliente: se atenua y se explica por que (sin el boton "Usar en mi compra") */
+.atenuada .beneficio,
+.atenuada .tituloPromo,
+.atenuada .condiciones,
+.atenuada .badges,
+.atenuada .codigoFila {
+    opacity: 0.55;
+}
+
+.motivoNoUsable {
+    margin: 0.75rem 0 0;
+    color: var(--text);
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
 .vigencia {
     margin: 0;
     color: var(--text-muted);

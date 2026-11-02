@@ -18,13 +18,15 @@ import { IDS_CAMPOS, borrarCompra, edadMinima, nuevaReserva, textoDeclaracionMen
 import FormularioTarjeta from './FormularioTarjeta';
 import { METODOS_PAGO } from './metodosPago';
 import PasoCompra from './PasoCompra';
-import { InformacionCompra, TerminosYCondiciones } from './TextosCompra';
+import TerminosYCondiciones from '../institucional/TerminosYCondiciones';
+import { InformacionCompra } from './TextosCompra';
 import { useCompra } from './useCompra';
 import styles from './compra.module.css';
 
 const IDS = { ...IDS_CAMPOS, terminos: 'acepta-terminos', menores: 'acepta-menores' };
-// Orden en que se busca el primer error al tocar "Pagar"
+// Orden en que se busca el primer error al tocar "Pagar". Sin cargo (total en $ 0) no se pide tarjeta.
 const CAMPOS = ['numero', 'vencimiento', 'codigo', 'titular', 'dni', 'terminos', 'menores'];
+const CAMPOS_SIN_CARGO = ['terminos', 'menores'];
 
 export default function PasoPago() {
   const { funcion, estado } = useCompra();
@@ -79,6 +81,8 @@ function FormularioPago() {
     };
   }, [navigate, actualizar]);
 
+  const sinCargo = Number(compra.total) === 0;
+  const campos = sinCargo ? CAMPOS_SIN_CARGO : CAMPOS;
   const marca = detectarMarca(valores.numero);
   const edad = edadMinima(pelicula.clasificacion);
   const pideDeclaracion = edad >= 13;
@@ -107,8 +111,8 @@ function FormularioPago() {
   const vencida = reservaPerdida || (segundosRestantes === 0 && !procesando);
 
   const pagar = async () => {
-    setVisibles(new Set(CAMPOS));
-    const primero = CAMPOS.find((c) => errores[c]);
+    setVisibles(new Set(campos));
+    const primero = campos.find((c) => errores[c]);
     if (primero) {
       document.getElementById(IDS[primero])?.focus();
       return;
@@ -116,12 +120,17 @@ function FormularioPago() {
     setProcesando(true);
     setErrorPago('');
     try {
-      const pago = await pagarCompra(compra.id, {
-        metodoPago: metodo.metodoPago,
-        marca: marca.nombre,
-        ultimos4: valores.numero.slice(-4),
-        aceptaTerminos: valores.terminos,
-      });
+      const pago = await pagarCompra(
+        compra.id,
+        sinCargo
+          ? { metodoPago: null, marca: null, ultimos4: null, aceptaTerminos: valores.terminos }
+          : {
+              metodoPago: metodo.metodoPago,
+              marca: marca.nombre,
+              ultimos4: valores.numero.slice(-4),
+              aceptaTerminos: valores.terminos,
+            },
+      );
       if (pago.estado === 'APROBADO') {
         borrarCompra();
         navigate(`/compra/confirmacion/${compra.id}`, { replace: true, state: { desdePago: true } });
@@ -129,7 +138,15 @@ function FormularioPago() {
       }
       setErrorPago('El pago fue rechazado. Revisá los datos de la tarjeta o probá con otra. Tu reserva sigue activa.');
     } catch (err) {
-      if (err.status === 409) {
+      if (err.status === 400 && compra.codigoPromocion) {
+        // La promocion dejo de valer entre el resumen y el pago: el backend la quito y recalculo el total, y la
+        // reserva sigue activa. Se muestra el total nuevo para que el cliente decida si paga sin descuento.
+        const actual = await getCompra(compra.id).catch(() => null);
+        if (actual) actualizar({ reserva: nuevaReserva(actual) });
+        setErrorPago(
+          `${err.message}. Quitamos el código ${compra.codigoPromocion}${actual ? ` y el total ahora es ${formatearPrecio(actual.total)}` : ''}. Si estás de acuerdo, podés pagar sin descuento.`,
+        );
+      } else if (err.status === 409) {
         // Puede ser que la reserva haya vencido o que un intento anterior ya se haya aprobado
         const actual = await getCompra(compra.id).catch(() => null);
         if (actual?.estado === 'CONFIRMADA') {
@@ -150,7 +167,7 @@ function FormularioPago() {
       titulo="Pago"
       paso={3}
       onAtras={() => navigate(`/compra/${funcion.id}/butacas`)}
-      accion={{ texto: 'Pagar', onClick: pagar, cargando: procesando, deshabilitado: vencida }}
+      accion={{ texto: sinCargo ? 'Confirmar' : 'Pagar', onClick: pagar, cargando: procesando, deshabilitado: vencida }}
       extraResumen={
         <DetallePago
           compra={compra}
@@ -164,7 +181,9 @@ function FormularioPago() {
     >
       {vencida ? (
         <div className={styles.vencida} role="alert">
-          <p className={styles.vencidaTitulo} data-icono="error">Se terminó el tiempo de tu reserva</p>
+          <p className={styles.vencidaTitulo} data-icono="error">
+            Se terminó el tiempo de tu reserva
+          </p>
           <p>Las butacas se liberaron. Podés volver a elegirlas si siguen disponibles.</p>
           <button type="button" className="btn btn-primary" onClick={() => navigate(`/compra/${funcion.id}/butacas`)}>
             Elegir butacas de nuevo
@@ -172,27 +191,40 @@ function FormularioPago() {
         </div>
       ) : (
         <>
-          <fieldset className={styles.bloque}>
-            <legend className={styles.bloqueTitulo}>Método de pago</legend>
-            <div className={styles.metodos}>
-              {METODOS_PAGO.map((m) => (
-                <label key={m.id} className={styles.metodo}>
-                  <input
-                    type="radio"
-                    name="metodo-pago"
-                    className="visually-hidden"
-                    checked={metodo.id === m.id}
-                    onChange={() => setMetodo(m)}
-                  />
-                  <m.Icono />
-                  <span className={styles.metodoTexto}>
-                    <strong>{m.nombre}</strong>
-                    <span>{m.descripcion}</span>
-                  </span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
+          {sinCargo && (
+            <section className={styles.bloque} aria-labelledby="titulo-sin-cargo">
+              <h3 id="titulo-sin-cargo" className={styles.bloqueTitulo} data-icono="ok">
+                Esta compra no tiene cargo
+              </h3>
+              <p className={styles.indicacion}>
+                El descuento cubre el total: no hace falta ingresar una tarjeta. Aceptá los términos y confirmá.
+              </p>
+            </section>
+          )}
+
+          {!sinCargo && (
+            <fieldset className={styles.bloque}>
+              <legend className={styles.bloqueTitulo}>Método de pago</legend>
+              <div className={styles.metodos}>
+                {METODOS_PAGO.map((m) => (
+                  <label key={m.id} className={styles.metodo}>
+                    <input
+                      type="radio"
+                      name="metodo-pago"
+                      className="visually-hidden"
+                      checked={metodo.id === m.id}
+                      onChange={() => setMetodo(m)}
+                    />
+                    <m.Icono />
+                    <span className={styles.metodoTexto}>
+                      <strong>{m.nombre}</strong>
+                      <span>{m.descripcion}</span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          )}
 
           <section className={styles.bloque} aria-labelledby="titulo-datos">
             <h3 id="titulo-datos" className={styles.bloqueTitulo}>
@@ -205,7 +237,7 @@ function FormularioPago() {
             </div>
           </section>
 
-          {metodo.id === 'tarjeta' && (
+          {!sinCargo && metodo.id === 'tarjeta' && (
             <section className={styles.bloque} aria-labelledby="titulo-tarjeta">
               <h3 id="titulo-tarjeta" className={styles.bloqueTitulo}>
                 Datos de la tarjeta
@@ -314,6 +346,8 @@ function DetallePago({ compra, deshabilitado, onAplicar }) {
   const subtotal = Number(compra.subtotal ?? compra.total);
   const total = Number(compra.total);
   const descuento = subtotal - total;
+  const entradas = compra.entradas ?? [];
+  const conDescuento = entradas.filter((e) => Number(e.descuento) > 0);
 
   const aplicarCodigo = useCallback(
     async (valor, desdePromociones = false) => {
@@ -355,7 +389,17 @@ function DetallePago({ compra, deshabilitado, onAplicar }) {
   return (
     <div className={styles.detallePago}>
       {compra.codigoPromocion ? (
-        <p className={styles.promoAplicada} data-icono="ok">Código {compra.codigoPromocion} aplicado</p>
+        <div>
+          <p className={styles.promoAplicada} data-icono="ok">
+            Código {compra.codigoPromocion} aplicado
+          </p>
+          {conDescuento.length > 0 && conDescuento.length < entradas.length && (
+            <p className={styles.indicacion}>
+              Se aplica a {conDescuento.length} de {entradas.length} entradas (las de mayor precio):{' '}
+              {conDescuento.map((e) => `${e.codigoButaca} −${formatearPrecio(e.descuento)}`).join(', ')}.
+            </p>
+          )}
+        </div>
       ) : (
         <form className={styles.promo} onSubmit={aplicar} noValidate>
           <label htmlFor="codigo-promocional" className={styles.etiquetaCampo}>
@@ -390,7 +434,7 @@ function DetallePago({ compra, deshabilitado, onAplicar }) {
         </div>
         {descuento > 0 && (
           <div className={styles.descuento}>
-            <dt>Descuento</dt>
+            <dt>Descuento{compra.codigoPromocion ? ` (${compra.codigoPromocion})` : ''}</dt>
             <dd>− {formatearPrecio(descuento)}</dd>
           </div>
         )}
@@ -403,10 +447,11 @@ function DetallePago({ compra, deshabilitado, onAplicar }) {
   );
 }
 
-// Motivo en lenguaje claro (nunca el mensaje tecnico del backend)
+// Motivo en lenguaje claro. Las reglas de las promociones ya vuelven del backend con su mensaje para el
+// usuario ("Esta promoción vale los lunes...", "Ya usaste esta promoción"...).
 function motivoRechazo(err) {
   if (err.status === 404) return 'Ese código no existe.';
-  if (err.status === 400) return 'Ese código no está vigente.';
+  if (err.status === 400) return err.message.endsWith('.') ? err.message : `${err.message}.`;
   if (err.status === 409) return 'La reserva venció: elegí las butacas de nuevo para usar el código.';
   return 'No pudimos aplicar el código. Probá de nuevo.';
 }

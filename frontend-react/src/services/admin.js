@@ -50,6 +50,18 @@ export function getMetricas({ desde, hasta, cineId }, usuarioId) {
   return api.get(`/api/admin/metricas?desde=${desde}&hasta=${hasta}${filtroCine}`, { headers: { 'X-Usuario-Id': String(usuarioId) } });
 }
 
+// Solicitudes publicas: arrepentimientos (aprobar o rechazar las que quedaron fuera de plazo) y soporte
+const comoAdmin = (usuarioId) => ({ headers: { 'X-Usuario-Id': String(usuarioId) } });
+export const adminArrepentimientos = {
+  listar: (usuarioId) => api.get('/api/admin/arrepentimientos', comoAdmin(usuarioId)),
+  aprobar: (id, usuarioId) => api.patch(`/api/admin/arrepentimientos/${id}/aprobar`, undefined, comoAdmin(usuarioId)),
+  rechazar: (id, usuarioId) => api.patch(`/api/admin/arrepentimientos/${id}/rechazar`, undefined, comoAdmin(usuarioId)),
+};
+export const adminSoporte = {
+  listar: (usuarioId) => api.get('/api/admin/soporte', comoAdmin(usuarioId)),
+  resolver: (id, usuarioId) => api.patch(`/api/admin/soporte/${id}/resolver`, undefined, comoAdmin(usuarioId)),
+};
+
 // Control de ingreso: marca la entrada como usada si es de esa funcion y esta pagada.
 // ValidacionEntradaResponseDTO: { resultado: 'VALIDA' | 'YA_USADA' | 'OTRA_FUNCION' | 'NO_CONFIRMADA', codigo,
 //   funcionId, peliculaTitulo, cineNombre, salaNombre, fechaHoraInicio, codigoButaca }. Un codigo que no existe da 404.

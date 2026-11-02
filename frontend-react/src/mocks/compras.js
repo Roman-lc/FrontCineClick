@@ -4,6 +4,7 @@ import { funcionesMock } from './funciones';
 import { butacasDeSala } from './salas';
 import { peliculasMock } from './peliculas';
 import { cinesMock } from './cines';
+import { promocionesMock } from './promociones';
 
 // Simula las reglas del backend para la compra: reserva de 8 minutos, 409 si la butaca ya esta
 // tomada, promocion ESTRENO10 y pago rechazado con la tarjeta terminada en 0002.
@@ -179,10 +180,26 @@ function codigoEntrada() {
   return Array.from({ length: 8 }, () => alfabeto[Math.floor(Math.random() * alfabeto.length)]).join('');
 }
 
+// Descuento por entrada, como Promocion.descuentosPorEntrada: las N entradas de mayor precio y el tope de monto
+function descuentosPorEntrada(compra) {
+  const promo = compra.promocion && (promocionesMock.find((p) => p.codigo === compra.promocion) ?? { porcentajeDescuento: PROMOCIONES[compra.promocion] });
+  const descuentos = new Map();
+  if (!promo) return descuentos;
+  const porPrecio = [...compra.entradas].sort((a, b) => b.precioUnitario - a.precioUnitario);
+  let disponible = promo.montoMaximoDescuento ?? Infinity;
+  for (const entrada of porPrecio.slice(0, promo.maxEntradasConDescuento ?? porPrecio.length)) {
+    const descuento = Math.min(Math.round(entrada.precioUnitario * promo.porcentajeDescuento) / 100, disponible);
+    disponible -= descuento;
+    if (descuento > 0) descuentos.set(entrada.id, descuento);
+  }
+  return descuentos;
+}
+
 // Misma forma que CompraResponseDTO
 function aDto(compra) {
   const subtotal = compra.entradas.reduce((suma, e) => suma + e.precioUnitario, 0);
-  const descuento = compra.promocion ? Math.round(subtotal * PROMOCIONES[compra.promocion]) / 100 : 0;
+  const descuentos = descuentosPorEntrada(compra);
+  const descuento = [...descuentos.values()].reduce((suma, d) => suma + d, 0);
   const pendiente = compra.estado === 'PENDIENTE_PAGO';
   return {
     id: compra.id,
@@ -204,6 +221,7 @@ function aDto(compra) {
       codigoButaca: e.codigoButaca,
       tipo: e.tipo,
       precioUnitario: e.precioUnitario,
+      descuento: descuentos.get(e.id) ?? 0,
       estado: e.estado,
     })),
     pago: compra.pago,

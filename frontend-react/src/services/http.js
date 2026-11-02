@@ -42,6 +42,6 @@ export const api = {
   get: (path, opciones) => request(path, opciones),
   post: (path, body) => request(path, { method: 'POST', body: conCuerpo(body) }),
   put: (path, body) => request(path, { method: 'PUT', body: conCuerpo(body) }),
-  patch: (path, body) => request(path, { method: 'PATCH', body: conCuerpo(body) }),
+  patch: (path, body, opciones = {}) => request(path, { method: 'PATCH', body: conCuerpo(body), ...opciones }),
   delete: (path) => request(path, { method: 'DELETE' }),
 };

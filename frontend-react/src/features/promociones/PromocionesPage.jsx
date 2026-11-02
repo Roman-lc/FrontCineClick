@@ -5,6 +5,8 @@ import EstadoVacio from '../../components/ui/EstadoVacio';
 import { EsqueletoTarjetas } from '../../components/ui/Esqueletos';
 import TarjetaTicket from '../../components/ui/TarjetaTicket';
 import { useToast } from '../../components/ui/ToastProvider';
+import { useAuth } from '../../app/AuthContext';
+import { condicionesDe, diasCortos, estadoPromocion, usosRestantes } from '../../lib/promociones';
 import { getPromocionesVigentes } from '../../services/promociones';
 import { fechaDiaMes, hoyISO } from '../../lib/fechas';
 import { guardarPromo } from '../../lib/promoGuardada';
@@ -13,14 +15,19 @@ import styles from './promociones.module.css';
 const DIAS_PARA_AVISAR = 3;
 
 export default function PromocionesPage() {
+  const { user } = useAuth();
+  // Con sesion de cliente, el backend dice si cada promocion la puede usar y, si no, por que
+  const usuarioId = user?.clienteId ? user.usuarioId : undefined;
   const [intento, setIntento] = useState(0);
   const [estado, setEstado] = useState({ cargando: true, error: false, promociones: [] });
 
   useEffect(() => {
     let ignorar = false;
-    getPromocionesVigentes()
+    getPromocionesVigentes(usuarioId)
       .then((promociones) => {
-        if (!ignorar) setEstado({ cargando: false, error: false, promociones });
+        // No se muestran las agotadas, vencidas ni programadas (el backend ya las filtra; esto cubre los mocks)
+        const activas = promociones.filter((p) => estadoPromocion(p) === 'Activa');
+        if (!ignorar) setEstado({ cargando: false, error: false, promociones: activas });
       })
       .catch(() => {
         if (!ignorar) setEstado({ cargando: false, error: true, promociones: [] });
@@ -28,7 +35,7 @@ export default function PromocionesPage() {
     return () => {
       ignorar = true;
     };
-  }, [intento]);
+  }, [intento, usuarioId]);
 
   return (
     <section className="section">
@@ -83,7 +90,12 @@ function diasHasta(fechaIso) {
   return Math.round((hasta - desde) / 86_400_000);
 }
 
-function textoVigencia(fechaFin) {
+function quedaMenosDeUnDia(vigenciaHasta) {
+  return new Date(vigenciaHasta) - new Date() < 86_400_000;
+}
+
+function textoVigencia(vigenciaHasta) {
+  const fechaFin = vigenciaHasta.slice(0, 10);
   const dias = diasHasta(fechaFin);
   if (dias > DIAS_PARA_AVISAR) return { texto: `Válida hasta el ${fechaDiaMes(fechaFin)}`, pronto: false };
   if (dias <= 0) return { texto: 'Vence hoy', pronto: true };
@@ -94,7 +106,15 @@ function TarjetaPromocion({ promo }) {
   const { mostrarAviso } = useToast();
   const [copiado, setCopiado] = useState(false);
   const codigo = useRef(null);
-  const vigencia = textoVigencia(promo.fechaFin);
+  const vigencia = textoVigencia(promo.vigenciaHasta);
+  const noUsable = promo.usablePorUsuario === false;
+  const restantes = usosRestantes(promo);
+  const badges = [
+    diasCortos(promo.diasSemana) !== 'Todos' && diasCortos(promo.diasSemana).toUpperCase(),
+    promo.soloPrimeraCompra && 'Bienvenida',
+    quedaMenosDeUnDia(promo.vigenciaHasta) && 'Por tiempo limitado',
+    restantes !== null && restantes < promo.usosMaximosTotales * 0.2 && `Quedan ${restantes}`,
+  ].filter(Boolean);
 
   // Sin titulo propio (promociones viejas) se usa el codigo, asi la descripcion no repite el beneficio
   const titulo = promo.titulo || `Código ${promo.codigo}`;
@@ -128,9 +148,11 @@ function TarjetaPromocion({ promo }) {
         </span>
       </p>
       <div className={styles.acciones}>
-        <button type="button" className={`btn btn-primary ${styles.usar}`} onClick={usar}>
-          Usar en mi compra
-        </button>
+        {!noUsable && (
+          <button type="button" className={`btn ${styles.usar}`} onClick={usar}>
+            Usar en mi compra
+          </button>
+        )}
         <button type="button" className={styles.copiar} onClick={copiar} aria-label={copiado ? 'Código copiado' : 'Copiar código'}>
           {copiado ? <IconoCheck /> : <IconoCopiar />}
           {copiado && <span>Copiado</span>}
@@ -141,13 +163,28 @@ function TarjetaPromocion({ promo }) {
   );
 
   return (
-    <TarjetaTicket vertical lateral={talon} className={styles.tarjeta}>
+    <TarjetaTicket vertical lateral={talon} className={`${styles.tarjeta} ${noUsable ? styles.atenuada : ''}`}>
+      {badges.length > 0 && (
+        <ul className={styles.badges} aria-label="Condiciones destacadas">
+          {badges.map((b) => (
+            <li key={b} className={styles.badge}>
+              {b}
+            </li>
+          ))}
+        </ul>
+      )}
       <p className={styles.beneficio}>
         <span className={styles.porcentaje}>{Number(promo.porcentajeDescuento)}%</span>
         <span className={styles.beneficioEtiqueta}>de descuento</span>
       </p>
       <h2 className={styles.tituloPromo}>{titulo}</h2>
+      <p className={styles.condiciones}>{condicionesDe(promo)}.</p>
       {promo.descripcion && <p className={styles.condiciones}>{promo.descripcion}</p>}
+      {noUsable && (
+        <p className={styles.motivoNoUsable} data-icono="error">
+          {promo.motivoNoUsable}
+        </p>
+      )}
     </TarjetaTicket>
   );
 }
