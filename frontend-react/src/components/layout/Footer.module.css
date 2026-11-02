@@ -51,6 +51,21 @@
     text-decoration: underline;
 }
 
+/* Boton secundario con borde: se distingue del resto de los enlaces del footer */
+.columna .arrepentimiento {
+    margin-top: 1rem;
+    min-height: 44px;
+    border-color: var(--text);
+    color: var(--text);
+    font-size: 0.88rem;
+    text-decoration: none;
+}
+
+.columna .arrepentimiento:hover {
+    color: var(--text);
+    text-decoration: none;
+}
+
 .legal {
     max-width: var(--ancho-max);
     margin: 0 auto;

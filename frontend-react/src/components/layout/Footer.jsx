@@ -26,7 +26,6 @@ export default function Footer() {
           <ul>
             <li><Link to="/terminos">Términos y condiciones</Link></li>
             <li><Link to="/privacidad">Política de privacidad</Link></li>
-            <li><Link to="/arrepentimiento">Botón de arrepentimiento</Link></li>
             <li>
               <a href={DEFENSA_CONSUMIDOR} target="_blank" rel="noopener noreferrer">
                 Defensa de las y los consumidores<span className="visually-hidden"> (se abre en otra pestaña)</span>
@@ -38,8 +37,13 @@ export default function Footer() {
         <nav className={styles.columna} aria-label="CineClick">
           <p className={styles.tituloColumna}>CineClick</p>
           <ul>
-            <li><Link to="/grupo">Quiénes somos</Link></li>
+            <li><Link to="/nosotros">Nosotros</Link></li>
+            <li><Link to="/soporte">Ayuda</Link></li>
           </ul>
+          {/* Destacado (Resolucion 424/2020): tiene que verse a simple vista en todas las paginas */}
+          <Link to="/arrepentimiento" className={`btn ${styles.arrepentimiento}`}>
+            Botón de arrepentimiento
+          </Link>
         </nav>
       </div>
 

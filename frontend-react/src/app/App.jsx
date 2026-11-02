@@ -12,7 +12,6 @@ import ConfirmacionPage from '../features/compra/ConfirmacionPage';
 import EstadoVacio from '../components/ui/EstadoVacio';
 import { EsqueletoFilas } from '../components/ui/Esqueletos';
 import { rutaLogin } from '../lib/volver';
-import GrupoPage from '../features/grupo/GrupoPage';
 import AdminPeliculasPage from '../features/admin/peliculas/AdminPeliculasPage';
 import AdminCinesPage from '../features/admin/cines/AdminCinesPage';
 import AdminSalasPage from '../features/admin/salas/AdminSalasPage';
@@ -24,7 +23,13 @@ import AdminPromocionesPage from '../features/admin/promociones/AdminPromociones
 import AdminComprasPage from '../features/admin/compras/AdminComprasPage';
 import PeliculaPage from '../features/pelicula/PeliculaPage';
 import NoEncontradaPage from '../features/error/NoEncontradaPage';
-import LegalesPage from '../features/legales/LegalesPage';
+import NosotrosPage from '../features/institucional/NosotrosPage';
+import TerminosPage from '../features/institucional/TerminosPage';
+import PrivacidadPage from '../features/institucional/PrivacidadPage';
+import ArrepentimientoPage from '../features/solicitudes/ArrepentimientoPage';
+import SoportePage from '../features/solicitudes/SoportePage';
+import AdminArrepentimientosPage from '../features/admin/arrepentimientos/AdminArrepentimientosPage';
+import AdminSoportePage from '../features/admin/soporte/AdminSoportePage';
 import CinesPage from '../features/cines/CinesPage';
 import CinePage from '../features/cines/CinePage';
 import PromocionesPage from '../features/promociones/PromocionesPage';
@@ -68,10 +73,13 @@ export default function App() {
         <Route path="/cines/:slug" element={<CinePage />} />
         <Route path="/peliculas/:slug" element={<PeliculaPage />} />
         <Route path="/promociones" element={<PromocionesPage />} />
-        <Route path="/grupo" element={<GrupoPage />} />
-        <Route path="/terminos" element={<LegalesPage key="terminos" tipo="terminos" />} />
-        <Route path="/privacidad" element={<LegalesPage key="privacidad" tipo="privacidad" />} />
-        <Route path="/arrepentimiento" element={<LegalesPage key="arrepentimiento" tipo="arrepentimiento" />} />
+        <Route path="/nosotros" element={<NosotrosPage />} />
+        <Route path="/grupo" element={<Navigate to="/nosotros" replace />} />
+        <Route path="/terminos" element={<TerminosPage />} />
+        <Route path="/privacidad" element={<PrivacidadPage />} />
+        {/* Publicas, sin login ni registro (la de arrepentimiento lo exige la Resolucion 424/2020) */}
+        <Route path="/arrepentimiento" element={<ArrepentimientoPage />} />
+        <Route path="/soporte" element={<SoportePage />} />
 
         {/* key distinta para que al pasar de una ruta a la otra se reinicie la pestaña elegida */}
         <Route path="/login" element={<LoginPage key="login" />} />
@@ -105,6 +113,8 @@ export default function App() {
         <Route path="funciones" element={<AdminFuncionesPage />} />
         <Route path="promociones" element={<AdminPromocionesPage />} />
         <Route path="validar" element={<ValidarEntradasPage />} />
+        <Route path="arrepentimientos" element={<AdminArrepentimientosPage />} />
+        <Route path="soporte" element={<AdminSoportePage />} />
         <Route path="clientes" element={<AdminClientesPage />} />
         <Route path="compras" element={<AdminComprasPage />} />
         <Route path="*" element={<NoEncontradaPage />} />

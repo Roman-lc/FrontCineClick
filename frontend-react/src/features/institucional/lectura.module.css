@@ -1,0 +1,202 @@
+.pagina {
+    max-width: 1080px;
+}
+
+/* <header>: se pisa el estilo global, que es el del sitio */
+.cabecera {
+    position: static;
+    max-width: 720px;
+    margin-bottom: 2rem;
+    border: none;
+    background: none;
+}
+
+.titulo {
+    margin: 0 0 0.5rem;
+    font-size: clamp(2.4rem, 6vw, 3.4rem);
+    text-transform: uppercase;
+    line-height: 1.05;
+}
+
+.bajada {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.actualizado {
+    margin: 0.75rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.cuerpo {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 720px);
+    gap: 3rem;
+    align-items: start;
+}
+
+/* ---------- Indice ---------- */
+
+.indice {
+    position: sticky;
+    top: calc(var(--alto-header) + var(--alto-barra-admin) + 1.25rem);
+    max-height: calc(100vh - var(--alto-header) - 2.5rem);
+    overflow-y: auto;
+}
+
+.indiceTitulo {
+    margin: 0 0 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.indiceLista {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.88rem;
+}
+
+.indiceLista a {
+    display: block;
+    padding: 0.35rem 0 0.35rem 0.75rem;
+    border-left: 2px solid var(--border);
+    color: var(--text-muted);
+    text-decoration: none;
+}
+
+.indiceLista a:hover {
+    border-left-color: var(--text);
+    color: var(--text);
+}
+
+.indiceMovil {
+    display: none;
+}
+
+/* ---------- Texto ---------- */
+
+.texto {
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+.texto p,
+.texto ul,
+.texto ol {
+    margin: 0 0 0.85rem;
+}
+
+.texto ul,
+.texto ol {
+    padding-left: 1.25rem;
+}
+
+.texto li + li {
+    margin-top: 0.3rem;
+}
+
+.texto strong {
+    color: var(--text);
+}
+
+.seccion {
+    scroll-margin-top: calc(var(--alto-header) + var(--alto-barra-admin) + 1rem);
+    padding-top: 0.5rem;
+    margin-bottom: 1.75rem;
+}
+
+.seccionTitulo {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin: 0 0 0.6rem;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+.ancla {
+    color: var(--text-muted);
+    font-weight: 400;
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.seccionTitulo:hover .ancla,
+.ancla:focus-visible {
+    opacity: 1;
+}
+
+.notaFinal {
+    margin-top: 2rem !important;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+}
+
+.volverArriba {
+    margin-top: 0.5rem;
+}
+
+/* Cita textual (leyenda de la Ley 25.326) */
+.cita {
+    margin: 0 0 0.85rem;
+    padding: 0.85rem 1rem;
+    border-left: 3px solid var(--border-input);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.92rem;
+}
+
+@media (max-width: 900px) {
+    .cuerpo {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.25rem;
+    }
+
+    .indice {
+        position: static;
+        max-height: none;
+    }
+
+    .indiceEscritorio {
+        display: none;
+    }
+
+    .indiceMovil {
+        display: block;
+        border: 1px solid var(--border-input);
+        border-radius: var(--radius-sm);
+        background: var(--surface);
+    }
+
+    .indiceMovil summary {
+        display: flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0 1rem;
+        color: var(--text);
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .indiceMovil .indiceLista {
+        padding: 0 1rem 0.75rem;
+    }
+
+    .ancla {
+        opacity: 1;
+    }
+}
