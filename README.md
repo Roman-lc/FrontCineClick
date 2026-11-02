@@ -25,4 +25,4 @@ npm install
 npm run dev                       # http://localhost:5173
 ```
 
-En la cartelera, el panel **Cuentas de prueba** permite entrar como administrador o como cada tipo de cliente.
+En **Ingresar**, el listado **Cuentas de prueba** permite entrar como administrador o como cada tipo de cliente.

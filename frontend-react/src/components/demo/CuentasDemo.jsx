@@ -15,7 +15,7 @@ const leerPlegado = () => {
   }
 };
 
-// Listado de las cuentas del seed con un boton que inicia sesion con cada una. En la cartelera va como panel
+// Listado de las cuentas del seed con un boton que inicia sesion con cada una. Con plegable va como panel
 // plegable (recuerda si se plego); en el login, como lista debajo del formulario. destino: ruta a la que ir despues
 // de ingresar (si no, la de cada cuenta).
 export default function CuentasDemo({ plegable = false, destino }) {

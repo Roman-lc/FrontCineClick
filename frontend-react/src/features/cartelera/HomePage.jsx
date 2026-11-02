@@ -17,8 +17,6 @@ import BarraFiltros from './BarraFiltros';
 import HorariosDelDia from './HorariosDelDia';
 import ProximosEstrenos from './ProximosEstrenos';
 import SliderDestacados from './SliderDestacados';
-import CuentasDemo from '../../components/demo/CuentasDemo';
-import { DEMO_ACTIVA } from '../../lib/cuentasDemo';
 import BarraFuncionElegida from '../compra/BarraFuncionElegida';
 import {
   armarCartelera,
@@ -99,8 +97,6 @@ export default function HomePage() {
 
       {estrenos.cargando ? <EsqueletoSlider /> : <SliderDestacados destacadas={estrenos.destacadas} />}
 
-      {DEMO_ACTIVA && <CuentasDemo plegable />}
-
       <div className={styles.encabezado}>
         <h1 className={styles.titulo}>Películas en cartelera</h1>
         <div className={styles.pastillas}>
@@ -129,7 +125,7 @@ export default function HomePage() {
         <Selector
           id="cine-elegido"
           variante="frase"
-          opciones={[{ valor: '', texto: 'todos los cines' }, ...cines.map((c) => ({ valor: String(c.id), texto: nombreCine(c.nombre) }))]}
+          opciones={[{ valor: '', texto: 'TODOS LOS CINES' }, ...cines.map((c) => ({ valor: String(c.id), texto: nombreCine(c.nombre) }))]}
           valor={filtros.cineId}
           onCambiar={(cineId) => cambiarFiltros({ cineId })}
         />

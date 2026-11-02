@@ -17,7 +17,7 @@ npm install
 npm run dev                 # http://localhost:5173
 ```
 
-Con el backend recién arrancado ya hay datos de demo: cartelera con horarios, compras, métricas y promociones. En la cartelera aparece el panel **Cuentas de prueba** para entrar con un clic.
+Con el backend recién arrancado ya hay datos de demo: cartelera con horarios, compras, métricas y promociones. En **Ingresar** está el listado **Cuentas de prueba** para entrar con un clic.
 
 ## Variables de entorno
 
@@ -26,13 +26,13 @@ Se leen de `.env` (copia de `.env.example`, que tiene los valores para desarroll
 | Variable | Valor por defecto | Qué hace |
 |---|---|---|
 | `VITE_API_URL` | `http://localhost:8080` | URL del backend. **Obligatoria**: si falta, la app escribe un error claro en la consola al iniciar y las pantallas muestran el estado de error (no hay datos de respaldo). Con `/` usa rutas relativas que el proxy de Vite manda a `localhost:8080` (sirve para abrir el sitio desde otro dispositivo, ver abajo). |
-| `VITE_DEMO_MODE` | `true` | Muestra el panel "Cuentas de prueba" en la cartelera y en el login. Con `false` no aparece. |
+| `VITE_DEMO_MODE` | `true` | Muestra el listado "Cuentas de prueba" debajo del formulario de login. Con `false` no aparece. |
 
 Si la API no responde, cada pantalla muestra su estado de error con **Reintentar**.
 
 ## Cuentas de prueba
 
-Las crea el seed del backend (perfil `demo`). Con `VITE_DEMO_MODE=true` están en la cartelera (panel plegable, recuerda si lo cerraste) y debajo del formulario de login, con un botón **Ingresar con esta cuenta**.
+Las crea el seed del backend (perfil `demo`). Con `VITE_DEMO_MODE=true` están debajo del formulario de login, con un botón **Ingresar con esta cuenta**.
 
 | Cuenta | Email | Contraseña | Qué muestra |
 |---|---|---|---|
@@ -48,7 +48,7 @@ Las cuentas de administrador no pueden comprar entradas.
 
 | Ruta | Pantalla |
 |---|---|
-| `/` | Cartelera: destacadas, cuentas de prueba (modo demo), películas del día con sus horarios y próximos estrenos |
+| `/` | Cartelera: destacadas, películas del día con sus horarios y próximos estrenos |
 | `/peliculas/:slug` | Detalle de la película y horarios por cine |
 | `/cines`, `/cines/:slug` | Cines con foto, contacto y mapa; cartelera de cada cine |
 | `/promociones` | Promociones vigentes con sus condiciones; con sesión, las que el cliente no puede usar aparecen atenuadas con el motivo |
