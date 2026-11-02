@@ -9,7 +9,7 @@ import EstadoVacio from '../../components/ui/EstadoVacio';
 import { EsqueletoGrillaPeliculas, EsqueletoSlider } from '../../components/ui/Esqueletos';
 import IconoEstrella from '../../components/ui/IconoEstrella';
 import Selector from '../../components/ui/Selector';
-import { diaRelativo } from '../../lib/fechas';
+import { diaRelativo, hoyISO } from '../../lib/fechas';
 import { escribirFiltros, leerFiltros } from '../../lib/filtrosUrl';
 import { nombreCine } from '../../lib/formato';
 import { rutaPelicula } from '../../lib/slug';
@@ -40,7 +40,7 @@ export default function HomePage() {
   // Se cargan una sola vez; los filtros se aplican en memoria
   useEffect(() => {
     let ignorar = false;
-    Promise.all([getPeliculas(), getCines(), getFunciones()])
+    Promise.all([getPeliculas(), getCines(), getFunciones({ desde: hoyISO() })])
       .then(([peliculas, cines, funciones]) => {
         if (!ignorar) setEstado({ cargando: false, error: false, datos: { peliculas, cines, funciones } });
       })

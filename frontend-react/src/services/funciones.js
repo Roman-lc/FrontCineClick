@@ -4,12 +4,14 @@ import { api } from './http';
 //   fechaHoraInicio, fechaHoraFin (sin zona horaria: hora local del cine), precioBase, formato,
 //   idioma, estado, butacasLibres, capacidadSala }
 
-// Filtros opcionales, igual que el backend: peliculaId, cineId y fecha ('yyyy-mm-dd').
-export async function getFunciones({ peliculaId, cineId, fecha } = {}) {
+// Filtros opcionales, igual que el backend: peliculaId, cineId, fecha ('yyyy-mm-dd': solo ese dia) y desde
+// ('yyyy-mm-dd': de ese dia en adelante). El sitio publico pide desde hoy: sin filtro llegan tambien las pasadas.
+export async function getFunciones({ peliculaId, cineId, fecha, desde } = {}) {
   const query = new URLSearchParams();
   if (peliculaId) query.set('peliculaId', peliculaId);
   if (cineId) query.set('cineId', cineId);
   if (fecha) query.set('fecha', fecha);
+  if (desde) query.set('desde', desde);
   const qs = query.toString();
   return api.get(`/api/funciones${qs ? `?${qs}` : ''}`);
 }

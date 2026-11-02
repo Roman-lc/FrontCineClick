@@ -42,7 +42,7 @@ function CarteleraDelCine({ slug }) {
       .then(async ([cines, peliculas]) => {
         const cine = cines.find((c) => c.activo !== false && aSlug(c.nombre) === slug);
         if (!cine) throw new ApiError(404, 'Cine no encontrado');
-        const funciones = await getFunciones({ cineId: cine.id });
+        const funciones = await getFunciones({ cineId: cine.id, desde: hoyISO() });
         if (!ignorar) setEstado({ cargando: false, error: null, datos: { cine, peliculas, funciones } });
       })
       .catch((error) => {

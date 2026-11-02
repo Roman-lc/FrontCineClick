@@ -5,6 +5,7 @@ import EstadoVacio from '../../components/ui/EstadoVacio';
 import { EsqueletoGrillaCines } from '../../components/ui/Esqueletos';
 import { getCines } from '../../services/cines';
 import { getFunciones } from '../../services/funciones';
+import { hoyISO } from '../../lib/fechas';
 import { ORDEN_FORMATOS, etiquetaFormato, nombreCine } from '../../lib/formato';
 import { rutaCine } from '../../lib/slug';
 import DatosCine from './DatosCine';
@@ -19,7 +20,7 @@ export default function CinesPage() {
 
   useEffect(() => {
     let ignorar = false;
-    Promise.all([getCines(), getFunciones()])
+    Promise.all([getCines(), getFunciones({ desde: hoyISO() })])
       .then(([cines, funciones]) => {
         if (!ignorar) setEstado({ cargando: false, error: false, datos: { cines, funciones } });
       })

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getCines } from '../../services/cines';
 import { getFunciones } from '../../services/funciones';
+import { hoyISO } from '../../lib/fechas';
 import { getPeliculaPorSlug } from '../../services/peliculas';
 import EstadoError from '../../components/ui/EstadoError';
 import EstadoVacio from '../../components/ui/EstadoVacio';
@@ -41,7 +42,7 @@ function DetallePelicula({ slug }) {
           navigate(rutaPelicula(pelicula.titulo), { replace: true, state: location.state });
           return;
         }
-        const [cines, funciones] = await Promise.all([getCines(), getFunciones({ peliculaId: pelicula.id })]);
+        const [cines, funciones] = await Promise.all([getCines(), getFunciones({ peliculaId: pelicula.id, desde: hoyISO() })]);
         if (!ignorar) setEstado({ cargando: false, error: null, datos: { pelicula, cines, funciones } });
       })
       .catch((error) => {
