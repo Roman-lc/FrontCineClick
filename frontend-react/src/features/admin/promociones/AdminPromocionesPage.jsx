@@ -335,7 +335,7 @@ export default function AdminPromocionesPage() {
                 {(a11y) => <input type="datetime-local" {...a11y} {...props('vigenciaDesde')} />}
               </Campo>
               <Campo id="campo-vigenciaHasta" etiqueta="Hasta" error={errores.vigenciaHasta}>
-                {(a11y) => <input type="datetime-local" min={valores.vigenciaDesde || undefined} {...a11y} {...props('vigenciaHasta')} />}
+                {(a11y) => <input type="datetime-local" {...a11y} {...props('vigenciaHasta')} />}
               </Campo>
             </div>
           </fieldset>
