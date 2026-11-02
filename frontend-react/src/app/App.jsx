@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
-import { useAuth } from './AuthContext';
+import { useAuth } from './useAuth';
 import HomePage from '../features/cartelera/HomePage';
 import LoginPage from '../features/auth/LoginPage';
 import CompraLayout from '../features/compra/CompraLayout';
@@ -12,15 +12,6 @@ import ConfirmacionPage from '../features/compra/ConfirmacionPage';
 import EstadoVacio from '../components/ui/EstadoVacio';
 import { EsqueletoFilas } from '../components/ui/Esqueletos';
 import { rutaLogin } from '../lib/volver';
-import AdminPeliculasPage from '../features/admin/peliculas/AdminPeliculasPage';
-import AdminCinesPage from '../features/admin/cines/AdminCinesPage';
-import AdminSalasPage from '../features/admin/salas/AdminSalasPage';
-import ValidarEntradasPage from '../features/admin/validar/ValidarEntradasPage';
-import AdminLayout from '../components/layout/AdminLayout';
-import AdminFuncionesPage from '../features/admin/funciones/AdminFuncionesPage';
-import AdminClientesPage from '../features/admin/clientes/AdminClientesPage';
-import AdminPromocionesPage from '../features/admin/promociones/AdminPromocionesPage';
-import AdminComprasPage from '../features/admin/compras/AdminComprasPage';
 import PeliculaPage from '../features/pelicula/PeliculaPage';
 import NoEncontradaPage from '../features/error/NoEncontradaPage';
 import NosotrosPage from '../features/institucional/NosotrosPage';
@@ -28,15 +19,24 @@ import TerminosPage from '../features/institucional/TerminosPage';
 import PrivacidadPage from '../features/institucional/PrivacidadPage';
 import ArrepentimientoPage from '../features/solicitudes/ArrepentimientoPage';
 import SoportePage from '../features/solicitudes/SoportePage';
-import AdminArrepentimientosPage from '../features/admin/arrepentimientos/AdminArrepentimientosPage';
-import AdminSoportePage from '../features/admin/soporte/AdminSoportePage';
 import CinesPage from '../features/cines/CinesPage';
 import CinePage from '../features/cines/CinePage';
 import PromocionesPage from '../features/promociones/PromocionesPage';
 import MisComprasPage from '../features/cuenta/MisComprasPage';
 
-// Las metricas (y Recharts) se cargan aparte: no entran en el bundle del sitio publico
+// El panel se carga aparte, recien cuando se entra a /admin: no entra en el bundle del sitio publico.
+// AdminLayout muestra un esqueleto mientras llega cada pantalla.
+const AdminLayout = lazy(() => import('../components/layout/AdminLayout'));
 const MetricasPage = lazy(() => import('../features/admin/metricas/MetricasPage'));
+const AdminCinesPage = lazy(() => import('../features/admin/cines/AdminCinesPage'));
+const AdminSalasPage = lazy(() => import('../features/admin/salas/AdminSalasPage'));
+const AdminPeliculasPage = lazy(() => import('../features/admin/peliculas/AdminPeliculasPage'));
+const AdminFuncionesPage = lazy(() => import('../features/admin/funciones/AdminFuncionesPage'));
+const AdminPromocionesPage = lazy(() => import('../features/admin/promociones/AdminPromocionesPage'));
+const AdminComprasPage = lazy(() => import('../features/admin/compras/AdminComprasPage'));
+const ValidarEntradasPage = lazy(() => import('../features/admin/validar/ValidarEntradasPage'));
+const AdminArrepentimientosPage = lazy(() => import('../features/admin/arrepentimientos/AdminArrepentimientosPage'));
+const AdminSoportePage = lazy(() => import('../features/admin/soporte/AdminSoportePage'));
 
 // Solo controla lo que muestra la interfaz: la API no tiene autenticacion (limitacion conocida).
 function RequireAdmin({ children }) {
@@ -98,15 +98,17 @@ export default function App() {
       </Route>
 
       {/* Panel: layout propio (tema claro, navegacion lateral), sin el header ni el footer del sitio */}
-      <Route path="/admin" element={<RequireAdmin><AdminLayout /></RequireAdmin>}>
-        <Route
-          index
-          element={
-            <Suspense fallback={<EsqueletoFilas cantidad={4} alto={118} etiqueta="Cargando métricas" />}>
-              <MetricasPage />
+      <Route
+        path="/admin"
+        element={
+          <RequireAdmin>
+            <Suspense fallback={<EsqueletoFilas cantidad={6} alto={52} etiqueta="Cargando el panel" />}>
+              <AdminLayout />
             </Suspense>
-          }
-        />
+          </RequireAdmin>
+        }
+      >
+        <Route index element={<MetricasPage />} />
         <Route path="cines" element={<AdminCinesPage />} />
         <Route path="salas" element={<AdminSalasPage />} />
         <Route path="peliculas" element={<AdminPeliculasPage />} />
@@ -115,7 +117,6 @@ export default function App() {
         <Route path="validar" element={<ValidarEntradasPage />} />
         <Route path="arrepentimientos" element={<AdminArrepentimientosPage />} />
         <Route path="soporte" element={<AdminSoportePage />} />
-        <Route path="clientes" element={<AdminClientesPage />} />
         <Route path="compras" element={<AdminComprasPage />} />
         <Route path="*" element={<NoEncontradaPage />} />
       </Route>

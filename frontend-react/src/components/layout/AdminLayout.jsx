@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../app/AuthContext';
+import { useAuth } from '../../app/useAuth';
+import { EsqueletoFilas } from '../ui/Esqueletos';
 import BarraAdmin from './BarraAdmin';
 import { useColorDeTema } from '../../lib/useColorDeTema';
 import styles from './AdminLayout.module.css';
@@ -12,6 +13,7 @@ const SECCIONES = [
   { to: '/admin/peliculas', texto: 'Películas' },
   { to: '/admin/funciones', texto: 'Funciones' },
   { to: '/admin/promociones', texto: 'Promociones' },
+  { to: '/admin/compras', texto: 'Compras' },
   { to: '/admin/validar', texto: 'Validar entradas' },
   { to: '/admin/arrepentimientos', texto: 'Arrepentimientos' },
   { to: '/admin/soporte', texto: 'Soporte' },
@@ -106,7 +108,10 @@ export default function AdminLayout() {
           </button>
         </nav>
         <main id="contenido-admin" ref={mainRef} tabIndex={-1} className={styles.contenido}>
-          <Outlet />
+          {/* Cada pantalla del panel se carga aparte (React.lazy en App.jsx): el menu queda visible mientras llega */}
+          <Suspense fallback={<EsqueletoFilas cantidad={6} alto={52} etiqueta="Cargando la pantalla" />}>
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </div>
