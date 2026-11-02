@@ -12,7 +12,7 @@ import { useEdicion } from '../../../components/admin/useEdicion';
 import { useEliminacion } from '../../../components/admin/useEliminacion';
 import { useListado } from '../../../components/admin/useListado';
 import styles from '../../../components/admin/admin.module.css';
-import { useToast } from '../../../components/ui/ToastProvider';
+import { useToast } from '../../../components/ui/useToast';
 import { BARRIOS_CABA, PROVINCIAS } from '../../../lib/catalogos';
 import { nombreCine } from '../../../lib/formato';
 import { clave, formatearTelefono, formatoTitulo, normalizarTelefono, texto } from '../../../lib/normalizar';

@@ -1,7 +1,7 @@
 import { useId, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../app/AuthContext';
-import { useToast } from '../../components/ui/ToastProvider';
+import { useAuth } from '../../app/useAuth';
+import { useToast } from '../../components/ui/useToast';
 import { diaRelativo, horaCorta } from '../../lib/fechas';
 import { etiquetaFormato, etiquetaIdioma, nombreCine } from '../../lib/formato';
 import { rutaLogin } from '../../lib/volver';

@@ -1,7 +1,6 @@
-import { useState, createContext, useContext } from 'react';
+import { useState } from 'react';
 import { guardarSesion, leerSesion } from '../lib/sesion';
-
-const AuthContext = createContext(null);
+import { AuthContext } from './useAuth';
 
 // La sesion es solo para la interfaz: la API no tiene autenticacion con tokens (limitacion conocida).
 // Se guarda en el momento del login, antes de que las pantallas siguientes pidan datos con X-Usuario-Id.
@@ -32,10 +31,4 @@ export function AuthProvider({ children }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used within AuthProvider');
-  return ctx;
 }

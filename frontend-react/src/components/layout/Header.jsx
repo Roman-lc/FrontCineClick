@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../app/AuthContext';
+import { useAuth } from '../../app/useAuth';
 import MenuCuenta from './MenuCuenta';
 import styles from './Header.module.css';
 

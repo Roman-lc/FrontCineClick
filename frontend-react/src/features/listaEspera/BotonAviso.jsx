@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../app/AuthContext';
-import { useToast } from '../../components/ui/ToastProvider';
+import { useAuth } from '../../app/useAuth';
+import { useToast } from '../../components/ui/useToast';
 import { anotarEnListaEspera, quitarDeListaEspera } from '../../services/listaEspera';
 import { rutaPelicula } from '../../lib/slug';
 import { rutaLogin } from '../../lib/volver';

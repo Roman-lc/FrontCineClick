@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../app/AuthContext';
+import { useAuth } from '../../app/useAuth';
 import Modal from '../../components/ui/Modal';
 import { aplicarPromocion, getCompra, pagarCompra } from '../../services/compras';
 import { formatearPrecio } from '../../lib/formato';

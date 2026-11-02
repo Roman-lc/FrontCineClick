@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useToast } from '../../components/ui/ToastProvider';
+import { useToast } from '../../components/ui/useToast';
 import { cancelarCompra } from '../../services/compras';
 import { rutaPelicula } from '../../lib/slug';
 import { useMediaQuery } from '../../lib/useMediaQuery';

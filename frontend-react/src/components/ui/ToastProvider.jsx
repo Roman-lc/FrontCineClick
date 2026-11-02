@@ -1,7 +1,6 @@
-import { useState, createContext, useContext } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-
-const ToastContext = createContext(null);
+import { ToastContext } from './useToast';
 
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
@@ -65,10 +64,4 @@ export function ToastProvider({ children }) {
       </div>
     </ToastContext.Provider>
   );
-}
-
-export function useToast() {
-  const ctx = useContext(ToastContext);
-  if (!ctx) throw new Error('useToast must be used within ToastProvider');
-  return ctx;
 }

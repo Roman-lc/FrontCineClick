@@ -1,5 +1,5 @@
 import { useEffect, useId, useState } from 'react';
-import { useAuth } from '../../app/AuthContext';
+import { useAuth } from '../../app/useAuth';
 import { fechaFuncionCorta } from '../../lib/fechas';
 import { texto } from '../../lib/normalizar';
 import { getComprasDelCliente } from '../../services/compras';

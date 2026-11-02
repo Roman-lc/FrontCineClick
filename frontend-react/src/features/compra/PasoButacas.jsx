@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../app/AuthContext';
+import { useAuth } from '../../app/useAuth';
 import EstadoError from '../../components/ui/EstadoError';
 import { EsqueletoFilas } from '../../components/ui/Esqueletos';
-import { useToast } from '../../components/ui/ToastProvider';
+import { useToast } from '../../components/ui/useToast';
 import { cancelarCompra, crearReserva } from '../../services/compras';
 import { getButacas } from '../../services/funciones';
 import { cantidadDeEntradas, entradasParaReservar, nuevaReserva } from './estadoCompra';

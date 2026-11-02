@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useAuth } from '../../app/AuthContext';
+import { useAuth } from '../../app/useAuth';
 import { iniciarSesion, registrarCliente } from '../../services/auth';
-import { useToast } from '../../components/ui/ToastProvider';
+import { useToast } from '../../components/ui/useToast';
 import { rutaVolverSegura } from '../../lib/volver';
 
 // modoInicial: 'login' o 'registro' (la ruta /registro abre directo la pestaña de crear cuenta).

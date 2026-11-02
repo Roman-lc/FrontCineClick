@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../../app/AuthContext';
+import { useAuth } from '../../app/useAuth';
 import styles from './BarraAdmin.module.css';
 
 // Franja fija de la sesion de administrador, arriba de todo en el sitio y en el panel.

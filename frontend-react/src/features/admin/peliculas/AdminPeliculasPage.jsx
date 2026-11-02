@@ -13,7 +13,7 @@ import { useEliminacion } from '../../../components/admin/useEliminacion';
 import { useListado } from '../../../components/admin/useListado';
 import styles from '../../../components/admin/admin.module.css';
 import Poster from '../../../components/ui/Poster';
-import { useToast } from '../../../components/ui/ToastProvider';
+import { useToast } from '../../../components/ui/useToast';
 import { CLASIFICACIONES, FORMATOS_FUNCION, GENEROS, IDIOMAS } from '../../../lib/catalogos';
 import { fechaCorta } from '../../../lib/fechas';
 import { etiquetaClasificacion, etiquetaFormato, etiquetaGenero, etiquetaIdioma, formatearDuracion } from '../../../lib/formato';

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../app/AuthContext';
+import { useAuth } from '../../app/useAuth';
 import EstadoError from '../../components/ui/EstadoError';
 import EstadoVacio from '../../components/ui/EstadoVacio';
 import { EsqueletoFilas } from '../../components/ui/Esqueletos';

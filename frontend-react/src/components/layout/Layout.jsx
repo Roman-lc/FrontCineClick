@@ -3,7 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Header from './Header';
 import AyudaFlotante from './AyudaFlotante';
 import BarraAdmin from './BarraAdmin';
-import { useAuth } from '../../app/AuthContext';
+import { useAuth } from '../../app/useAuth';
 import { useColorDeTema } from '../../lib/useColorDeTema';
 import Footer from './Footer';
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
-import { useAuth } from '../../app/AuthContext';
+import { useAuth } from '../../app/useAuth';
 import BadgeCalificacion from '../../components/ui/BadgeCalificacion';
 import EstadoError from '../../components/ui/EstadoError';
 import EstadoVacio from '../../components/ui/EstadoVacio';
