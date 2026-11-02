@@ -14,17 +14,22 @@ import { useListado } from '../../../components/admin/useListado';
 import styles from '../../../components/admin/admin.module.css';
 import { useToast } from '../../../components/ui/useToast';
 import { FORMATOS_FUNCION, IDIOMAS } from '../../../lib/catalogos';
-import { ahoraParaInput, fechaFuncionCorta, horaCorta } from '../../../lib/fechas';
+import { fechaFuncionCorta, horaCorta, hoyISO } from '../../../lib/fechas';
 import { etiquetaFormato, etiquetaIdioma, formatearPrecio, nombreCine } from '../../../lib/formato';
 import { clave } from '../../../lib/normalizar';
 import { adminCines, adminFunciones, adminPeliculas, adminSalas } from '../../../services/admin';
+import { HORAS, MINUTOS, combinar, diaDeLaGrilla, separar, siguienteLibre, tramo } from './horario';
+import propias from './funciones.module.css';
 
 const ID_FORM = 'form-funcion';
 // Igual que cineclick.funciones.minutos-limpieza en el backend (que es quien decide)
 const MINUTOS_LIMPIEZA = 20;
-const PRECIO = /^\d{1,8}([.,]\d{1,2})?$/;
+// fecha, hora y minuto son los controles; fechaHoraInicio es la combinacion que se valida y se envia
+const VACIO = { peliculaId: '', cineId: '', salaId: '', fecha: '', hora: '', minuto: '', fechaHoraInicio: '', formato: '', idioma: '', precioBase: '' };
 
-const VACIO = { peliculaId: '', cineId: '', salaId: '', fechaHoraInicio: '', formato: '', idioma: '', precioBase: '' };
+// Precio en pesos enteros: el campo guarda solo los digitos y los muestra con separador de miles
+const soloDigitos = (texto) => String(texto).replace(/\D/g, '').slice(0, 8);
+const precioVisible = (digitos) => (digitos ? `$ ${Number(digitos).toLocaleString('es-AR')}` : '');
 
 const ESTADOS = [
   { valor: 'proximas', texto: 'Próximas' },
@@ -76,35 +81,48 @@ export default function AdminFuncionesPage() {
     return new Date(new Date(v.fechaHoraInicio).getTime() + (pelicula.duracionMinutos + MINUTOS_LIMPIEZA) * 60000);
   };
 
+  const duracionDe = (f) => peliculaDe(f.peliculaId)?.duracionMinutos ?? 0;
+
+  // Funciones de la sala en el dia de la grilla elegido (las de trasnoche cuentan para ese dia), sin la que se edita
+  const funcionesDeLaSala = (v) =>
+    funciones
+      .filter((f) => String(f.salaId) === v.salaId && f.id !== edicion.item?.id && f.estado !== 'CANCELADA' && diaDeLaGrilla(f.fechaHoraInicio) === v.fecha)
+      .sort((a, b) => a.fechaHoraInicio.localeCompare(b.fechaHoraInicio));
+
+  // Misma regla que el backend: la funcion ocupa la sala desde el inicio hasta el fin con limpieza
+  const superposicion = (v) => {
+    const fin = finDe(v);
+    if (!v.fechaHoraInicio || !v.salaId || !fin) return null;
+    const inicio = new Date(v.fechaHoraInicio);
+    return funciones.find(
+      (f) =>
+        String(f.salaId) === v.salaId &&
+        f.id !== edicion.item?.id &&
+        f.estado !== 'CANCELADA' &&
+        inicio < new Date(f.fechaHoraFin) &&
+        fin > new Date(f.fechaHoraInicio)
+    );
+  };
+
   const validar = (v) => {
     const errores = {};
     const pelicula = peliculaDe(v.peliculaId);
     if (!v.peliculaId) errores.peliculaId = 'Elegí la película';
     if (!v.cineId) errores.cineId = 'Elegí el cine';
     if (!v.salaId) errores.salaId = 'Elegí la sala';
-    if (!v.fechaHoraInicio) errores.fechaHoraInicio = 'Completá la fecha y la hora';
+    if (!v.fecha) errores.fechaHoraInicio = 'Elegí la fecha';
+    else if (v.hora === '') errores.fechaHoraInicio = 'Elegí la hora';
+    else if (v.minuto === '') errores.fechaHoraInicio = 'Elegí los minutos';
     else if (new Date(v.fechaHoraInicio) <= new Date()) errores.fechaHoraInicio = 'La función tiene que ser en el futuro';
-    else if (pelicula && v.salaId) {
-      const inicio = new Date(v.fechaHoraInicio);
-      const fin = finDe(v);
-      const choque = funciones.find(
-        (f) =>
-          String(f.salaId) === v.salaId &&
-          f.id !== edicion.item?.id &&
-          f.estado !== 'CANCELADA' &&
-          inicio < new Date(f.fechaHoraFin) &&
-          fin > new Date(f.fechaHoraInicio)
-      );
-      if (choque) {
-        errores.fechaHoraInicio = `Se superpone con ${choque.peliculaTitulo} (${horaCorta(choque.fechaHoraInicio)} a ${horaCorta(choque.fechaHoraFin)}, con limpieza) en esta sala`;
-      }
+    else {
+      const choque = superposicion(v);
+      if (choque) errores.fechaHoraInicio = `Se superpone con ${choque.peliculaTitulo} (${tramo(choque.fechaHoraInicio, duracionDe(choque))})`;
     }
     if (!v.formato) errores.formato = 'Elegí el formato';
     else if (pelicula && !pelicula.formatosDisponibles.includes(v.formato)) errores.formato = 'La película no está disponible en ese formato';
     if (!v.idioma) errores.idioma = 'Elegí el idioma';
-    const precio = String(v.precioBase).trim();
-    if (!precio) errores.precioBase = 'Completá el precio';
-    else if (!PRECIO.test(precio) || Number(precio.replace(',', '.')) <= 0) errores.precioBase = 'Tiene que ser mayor a 0, con hasta 2 decimales';
+    if (!v.precioBase) errores.precioBase = 'Completá el precio';
+    else if (Number(v.precioBase) <= 0) errores.precioBase = 'Tiene que ser mayor a 0';
     return errores;
   };
 
@@ -114,10 +132,11 @@ export default function AdminFuncionesPage() {
       peliculaId: String(f.peliculaId),
       cineId: String(f.cineId),
       salaId: String(f.salaId),
+      ...separar(f.fechaHoraInicio),
       fechaHoraInicio: f.fechaHoraInicio.slice(0, 16),
       formato: f.formato,
       idioma: f.idioma,
-      precioBase: String(f.precioBase),
+      precioBase: soloDigitos(Math.round(Number(f.precioBase))),
     }),
     validar: (v) => validar(v),
     confirmar,
@@ -128,7 +147,7 @@ export default function AdminFuncionesPage() {
         fechaHoraInicio: `${v.fechaHoraInicio}:00`,
         formato: v.formato,
         idioma: v.idioma,
-        precioBase: Number(String(v.precioBase).replace(',', '.')),
+        precioBase: Number(v.precioBase),
       };
       return item ? adminFunciones.modificar(item.id, datos) : adminFunciones.crear(datos);
     },
@@ -206,6 +225,14 @@ export default function AdminFuncionesPage() {
   const salasDelCine = salas.filter((s) => String(s.cineId) === valores.cineId && (s.activa || String(s.id) === valores.salaId));
   const formatos = FORMATOS_FUNCION.filter((f) => !pelicula || pelicula.formatosDisponibles.includes(f.valor));
   const fin = finDe(valores);
+  const cambiarHorario = (parcial) => {
+    const v = { ...valores, ...parcial };
+    edicion.cambiar({ ...parcial, fechaHoraInicio: combinar(v.fecha, v.hora, v.minuto) });
+  };
+  const salaElegida = salas.find((s) => String(s.id) === valores.salaId);
+  const delDia = valores.salaId && valores.fecha ? funcionesDeLaSala(valores) : [];
+  const libre = valores.fecha ? siguienteLibre(delDia, duracionDe, valores.fecha) : null;
+  const choqueAhora = superposicion(valores);
 
   return (
     <>
@@ -380,14 +407,76 @@ export default function AdminFuncionesPage() {
             </Campo>
           </div>
 
-          <Campo
-            id="campo-fechaHoraInicio"
-            etiqueta="Fecha y hora"
-            ayuda={fin ? `Termina a las ${horaCorta(fin.toISOString())} (incluye ${MINUTOS_LIMPIEZA} min de limpieza de la sala).` : undefined}
-            error={errores.fechaHoraInicio}
-          >
-            {(a11y) => <input type="datetime-local" min={ahoraParaInput()} step={300} {...a11y} {...props('fechaHoraInicio')} />}
-          </Campo>
+          {/* Fecha, hora y minutos por separado: con selects no se puede elegir un horario que no termine en 0 o 5.
+              El error aparece al salir del grupo o al guardar, no mientras se completa */}
+          <div className={styles.campo} onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && edicion.tocar('fechaHoraInicio')}>
+            <span id="etiqueta-horario" className={styles.etiqueta}>
+              Fecha y hora
+            </span>
+            <div className={propias.horario} role="group" aria-labelledby="etiqueta-horario" aria-describedby="horario-ayuda">
+              <label className={propias.parte}>
+                <span>Fecha</span>
+                <input
+                  id="campo-fechaHoraInicio"
+                  type="date"
+                  className={styles.control}
+                  min={hoyISO()}
+                  value={valores.fecha}
+                  aria-invalid={errores.fechaHoraInicio ? true : undefined}
+                  onChange={(e) => cambiarHorario({ fecha: e.target.value })}
+                />
+              </label>
+              <label className={propias.parte}>
+                <span>Hora</span>
+                <select className={styles.control} value={valores.hora} onChange={(e) => cambiarHorario({ hora: e.target.value })}>
+                  <option value="">--</option>
+                  {HORAS.map((h) => (
+                    <option key={h} value={h}>
+                      {Number(h) < 10 ? `${h} (trasnoche)` : h}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className={propias.parte}>
+                <span>Minutos</span>
+                <select className={styles.control} value={valores.minuto} onChange={(e) => cambiarHorario({ minuto: e.target.value })}>
+                  <option value="">--</option>
+                  {MINUTOS.map((m) => (
+                    <option key={m} value={m}>
+                      {m}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <p id="horario-ayuda" className={errores.fechaHoraInicio ? styles.error : styles.ayuda} data-icono={errores.fechaHoraInicio ? 'error' : undefined}>
+              {errores.fechaHoraInicio ||
+                (fin
+                  ? `Termina a las ${horaCorta(fin.toISOString())} (incluye ${MINUTOS_LIMPIEZA} min de limpieza de la sala).`
+                  : 'Las 00 y 01 son la trasnoche: la función queda en el día siguiente.')}
+            </p>
+            {choqueAhora && !errores.fechaHoraInicio && (
+              <p className={styles.error} role="alert" data-icono="error">
+                Se superpone con {choqueAhora.peliculaTitulo} ({tramo(choqueAhora.fechaHoraInicio, duracionDe(choqueAhora))})
+              </p>
+            )}
+            {valores.peliculaId && salaElegida && valores.fecha && (
+              <div className={propias.grilla} aria-live="polite">
+                <p>
+                  {delDia.length
+                    ? `${salaElegida.nombre} ese día: ${delDia.map((f) => tramo(f.fechaHoraInicio, duracionDe(f))).join(' · ')}`
+                    : `${salaElegida.nombre} no tiene funciones ese día.`}
+                </p>
+                {libre ? (
+                  <button type="button" className="btn btn-sm" onClick={() => cambiarHorario(libre)}>
+                    Usar {libre.hora}:{libre.minuto}
+                  </button>
+                ) : (
+                  <p className={propias.sinLugar}>Ya no queda un horario libre ese día en esta sala.</p>
+                )}
+              </div>
+            )}
+          </div>
 
           <div className={styles.fila}>
             <Campo id="campo-formato" etiqueta="Formato" error={errores.formato}>
@@ -417,7 +506,18 @@ export default function AdminFuncionesPage() {
           </div>
 
           <Campo id="campo-precioBase" etiqueta="Precio de la entrada general" ayuda="En pesos. Menores y jubilados pagan con descuento sobre este precio." error={errores.precioBase}>
-            {(a11y) => <input type="text" inputMode="decimal" autoComplete="off" placeholder="4200" {...a11y} {...props('precioBase')} />}
+            {(a11y) => (
+              <input
+                type="text"
+                inputMode="numeric"
+                autoComplete="off"
+                placeholder="$ 4.200"
+                {...a11y}
+                value={precioVisible(valores.precioBase)}
+                onChange={(e) => edicion.cambiar('precioBase', soloDigitos(e.target.value))}
+                onBlur={() => edicion.tocar('precioBase')}
+              />
+            )}
           </Campo>
         </form>
       </Drawer>
