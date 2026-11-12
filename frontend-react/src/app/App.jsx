@@ -4,6 +4,7 @@ import Layout from '../components/layout/Layout';
 import { useAuth } from './useAuth';
 import HomePage from '../features/cartelera/HomePage';
 import LoginPage from '../features/auth/LoginPage';
+import RestablecerPasswordPage from '../features/auth/RestablecerPasswordPage';
 import CompraLayout from '../features/compra/CompraLayout';
 import PasoEntradas from '../features/compra/PasoEntradas';
 import PasoButacas from '../features/compra/PasoButacas';
@@ -84,6 +85,7 @@ export default function App() {
         {/* key distinta para que al pasar de una ruta a la otra se reinicie la pestaña elegida */}
         <Route path="/login" element={<LoginPage key="login" />} />
         <Route path="/registro" element={<LoginPage key="registro" modoInicial="registro" />} />
+        <Route path="/restablecer-contrasena" element={<RestablecerPasswordPage />} />
         <Route path="/mis-compras" element={<RequireCliente><MisComprasPage /></RequireCliente>} />
 
         <Route path="/compra/confirmacion/:compraId" element={<RequireCliente><ConfirmacionPage /></RequireCliente>} />

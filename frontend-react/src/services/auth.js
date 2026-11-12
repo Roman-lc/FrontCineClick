@@ -10,3 +10,12 @@ export async function iniciarSesion(email, password) {
 export async function registrarCliente(datos) {
   return api.post('/api/clientes', datos);
 }
+
+
+export async function solicitarRecuperacion(email) {
+  return api.post('/api/auth/recuperar-password', { email });
+}
+
+export async function restablecerPassword(token, nuevaPassword) {
+  return api.post('/api/auth/restablecer-password', { token, nuevaPassword });
+}

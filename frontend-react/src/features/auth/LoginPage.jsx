@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../app/useAuth';
-import { iniciarSesion, registrarCliente } from '../../services/auth';
+import { iniciarSesion, registrarCliente, solicitarRecuperacion } from '../../services/auth';
 import { useToast } from '../../components/ui/useToast';
 import { rutaVolverSegura } from '../../lib/volver';
 import CuentasDemo from '../../components/demo/CuentasDemo';
@@ -20,6 +20,9 @@ export default function LoginPage({ modoInicial = 'login' }) {
   const [regPasswordConfirm, setRegPasswordConfirm] = useState('');
   const [regTelefono, setRegTelefono] = useState('');
   const [enviando, setEnviando] = useState(false);
+  const [recuperar, setRecuperar] = useState(false);
+  const [emailRecuperar, setEmailRecuperar] = useState('');
+  const [mensajeRecuperar, setMensajeRecuperar] = useState('');
   const { login } = useAuth();
   const { mostrarAviso } = useToast();
   const navigate = useNavigate();
@@ -31,6 +34,17 @@ export default function LoginPage({ modoInicial = 'login' }) {
     login(data);
     mostrarAviso(mensaje, 'exito');
     navigate(volver || '/', { replace: true });
+  };
+
+  const handleRecuperar = async (e) => {
+    e.preventDefault();
+    if (!emailRecuperar.trim()) { mostrarAviso('Ingresá tu email', 'error'); return; }
+    setEnviando(true);
+    try {
+      const respuesta = await solicitarRecuperacion(emailRecuperar.trim());
+      setMensajeRecuperar(respuesta.mensaje);
+    } catch (err) { mostrarAviso(err.message, 'error'); }
+    finally { setEnviando(false); }
   };
 
   const handleLogin = async (e) => {
@@ -90,6 +104,19 @@ export default function LoginPage({ modoInicial = 'login' }) {
 
       {tab === 'login' && (
         <div className="tab-panel" style={{ display: 'flex' }}>
+          {recuperar ? (
+            <form className="form" onSubmit={handleRecuperar}>
+              <h3>Recuperar contraseña</h3>
+              <p className="form-hint">Te enviaremos un enlace al correo asociado a tu cuenta.</p>
+              <div className="form-group">
+                <label htmlFor="recuperar-email">Email</label>
+                <input id="recuperar-email" type="email" autoComplete="email" className="form-input" value={emailRecuperar} onChange={(e) => setEmailRecuperar(e.target.value)} required />
+              </div>
+              <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={enviando}>Enviar enlace</button>
+              {mensajeRecuperar && <p className="form-hint" role="status">{mensajeRecuperar}</p>}
+              <p className="form-hint"><a href="#" onClick={(e) => { e.preventDefault(); setRecuperar(false); setMensajeRecuperar(''); }}>Volver al inicio de sesión</a></p>
+            </form>
+          ) : (
           <form className="form" onSubmit={handleLogin}>
             <div className="form-group">
               <label htmlFor="login-email">Email</label>
@@ -100,8 +127,10 @@ export default function LoginPage({ modoInicial = 'login' }) {
               <input id="login-password" type="password" autoComplete="current-password" className="form-input" value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
             <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={enviando}>Iniciar Sesión</button>
+            <p className="form-hint"><a href="#" onClick={(e) => { e.preventDefault(); setEmailRecuperar(email); setRecuperar(true); }}>¿Olvidaste tu contraseña?</a></p>
             <p className="form-hint">¿No tenés cuenta? <a href="#" onClick={(e) => { e.preventDefault(); setTab('registro'); }}>Registrate aquí</a></p>
           </form>
+          )}
         </div>
       )}
 
