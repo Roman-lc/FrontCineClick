@@ -20,7 +20,7 @@ Frontend en React (Vite + React Router, JavaScript) del TPO CineClick. Consume l
 git clone https://github.com/Roman-lc/FrontCineClick.git
 cd FrontCineClick/frontend-react
 cp .env.example .env        # en Windows (CMD): copy .env.example .env
-npm install
+npm ci
 npm run dev                 # http://localhost:5173
 ```
 
