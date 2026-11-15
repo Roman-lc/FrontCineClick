@@ -15,8 +15,6 @@
     line-height: 1.6;
 }
 
-/* ---------- Formulario ---------- */
-
 .formulario {
     display: flex;
     flex-direction: column;
@@ -69,6 +67,13 @@ textarea.control {
 
 .control[aria-invalid='true'] {
     border-color: var(--danger);
+}
+
+.control[readonly] {
+    background: var(--surface);
+    border-style: dashed;
+    color: var(--text-muted);
+    cursor: default;
 }
 
 .controlCodigo {
@@ -140,8 +145,6 @@ textarea.control {
     text-align: center;
 }
 
-/* ---------- Compra encontrada ---------- */
-
 .buscando {
     margin: 0.5rem 0 0;
     color: var(--text-muted);
@@ -207,8 +210,6 @@ textarea.control {
     margin-top: 0.35rem;
 }
 
-/* ---------- Envio ---------- */
-
 .enviar {
     align-self: flex-start;
     min-height: 48px;
@@ -229,8 +230,6 @@ textarea.control {
         transform: rotate(360deg);
     }
 }
-
-/* ---------- Exito ---------- */
 
 .exito {
     display: flex;

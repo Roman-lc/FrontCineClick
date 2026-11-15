@@ -7,16 +7,7 @@ import { buscarCompra } from '../../services/solicitudes';
 import TarjetaCompra from './TarjetaCompra';
 import styles from './solicitud.module.css';
 
-// Formulario de solicitud reutilizable (arrepentimiento y soporte).
-//   campos: [{ nombre, tipo: 'texto' | 'email' | 'codigo' | 'select' | 'textarea' | 'casilla', etiqueta, opcional,
-//     opciones: [{ valor, texto }], ayuda, minimo, maximo, autoComplete, vacio (mensaje si falta) }]
-//   El campo 'codigo' (numero de compra o codigo de entrada) busca la compra con el 'email' y muestra la tarjeta
-//   de confirmacion. requiereCompra: no se puede enviar sin una compra encontrada.
-//   detalleCompra(compra): lo que se muestra debajo de la tarjeta (por ejemplo, si es elegible).
-//   enviar(valores, compra): promesa con el resultado. exito(resultado): { titulo, numero, mensaje, acciones }.
-
 const FORMATO_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-// Numero de compra o codigo de 8 caracteres de una entrada (mismo alfabeto, sin la O)
 const FORMATO_CODIGO = /^(\d{1,12}|[0-9A-NP-Z]{8})$/;
 
 const normalizarCodigo = (valor) => String(valor ?? '').replace(/[\s-]/g, '').toUpperCase();
@@ -41,12 +32,14 @@ function errorDe(campo, valor) {
 
 export default function FormularioSolicitud({ campos, valoresIniciales = {}, requiereCompra = false, detalleCompra, enviar, textoEnviar, exito }) {
   const { user } = useAuth();
+  const emailDeSesion = user?.clienteId ? user.email : null;
   const id = useId();
   const idCampo = (nombre) => `${id}-${nombre}`;
   const [valores, setValores] = useState(() => ({
     ...Object.fromEntries(campos.map((c) => [c.nombre, c.tipo === 'casilla' ? false : ''])),
     email: user?.email ?? '',
     ...valoresIniciales,
+    ...(emailDeSesion ? { email: emailDeSesion } : {}),
   }));
   const [tocados, setTocados] = useState(() => new Set());
   const [enviando, setEnviando] = useState(false);
@@ -56,7 +49,6 @@ export default function FormularioSolicitud({ campos, valoresIniciales = {}, req
   const [misCompras, setMisCompras] = useState([]);
   const conCodigo = campos.some((c) => c.tipo === 'codigo');
 
-  // Con sesion de cliente: sus compras, para elegir una en vez de tipear el codigo
   useEffect(() => {
     if (!conCodigo || !user?.clienteId) return;
     getComprasDelCliente(user.clienteId)
@@ -64,7 +56,6 @@ export default function FormularioSolicitud({ campos, valoresIniciales = {}, req
       .catch(() => setMisCompras([]));
   }, [conCodigo, user?.clienteId]);
 
-  // Busqueda de la compra cuando el email y el codigo tienen formato valido (con una pequeña espera)
   const email = String(valores.email ?? '').trim().toLowerCase();
   const codigo = normalizarCodigo(valores.codigo);
   const claveBusqueda = conCodigo && FORMATO_EMAIL.test(email) && FORMATO_CODIGO.test(codigo) ? `${email}|${codigo}` : null;
@@ -113,7 +104,6 @@ export default function FormularioSolicitud({ campos, valoresIniciales = {}, req
     setErroresServidor((e) => ({ ...e, [campo.nombre]: '' }));
   };
 
-  // Al salir del campo: normalizacion (email en minusculas, espacios de mas) y se muestra su error
   const salir = (campo) => {
     setValores((v) => {
       const valor = v[campo.nombre];
@@ -183,7 +173,9 @@ export default function FormularioSolicitud({ campos, valoresIniciales = {}, req
         const error = visible(campo.nombre);
         const idAyuda = `${idc}-ayuda`;
         const idContador = `${idc}-contador`;
-        const describe = [error || campo.ayuda ? idAyuda : null, campo.tipo === 'textarea' && campo.maximo ? idContador : null].filter(Boolean).join(' ') || undefined;
+        const fijo = campo.tipo === 'email' && Boolean(emailDeSesion);
+        const ayuda = fijo ? 'Es el email de tu cuenta. Para usar otro, cerrá sesión.' : campo.ayuda;
+        const describe = [error || ayuda ? idAyuda : null, campo.tipo === 'textarea' && campo.maximo ? idContador : null].filter(Boolean).join(' ') || undefined;
         const comunes = {
           id: idc,
           name: campo.nombre,
@@ -259,7 +251,8 @@ export default function FormularioSolicitud({ campos, valoresIniciales = {}, req
                 autoCapitalize={campo.tipo === 'codigo' ? 'characters' : undefined}
                 spellCheck={campo.tipo === 'codigo' || campo.tipo === 'email' ? false : undefined}
                 value={valores[campo.nombre]}
-                onChange={(e) => cambiar(campo, e.target.value)}
+                onChange={(e) => !fijo && cambiar(campo, e.target.value)}
+                readOnly={fijo}
                 {...comunes}
               />
             )}
@@ -268,9 +261,9 @@ export default function FormularioSolicitud({ campos, valoresIniciales = {}, req
                 {(texto(valores[campo.nombre])?.length ?? 0)} / {campo.maximo}
               </p>
             )}
-            {(error || campo.ayuda) && (
+            {(error || ayuda) && (
               <p id={idAyuda} className={error ? styles.error : styles.ayuda} data-icono={error ? 'error' : undefined}>
-                {error || campo.ayuda}
+                {error || ayuda}
               </p>
             )}
             {campo.tipo === 'codigo' && (
