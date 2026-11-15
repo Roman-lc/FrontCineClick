@@ -1,13 +1,10 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { guardarSesion, leerSesion } from '../lib/sesion';
 import { AuthContext } from './useAuth';
 
-// La sesion es solo para la interfaz: la API no tiene autenticacion con tokens (limitacion conocida).
-// Se guarda en el momento del login, antes de que las pantallas siguientes pidan datos con X-Usuario-Id.
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(leerSesion);
 
-  // data: LoginResponseDTO
   const login = (data) => {
     const usuario = {
       usuarioId: data.usuarioId ?? null,
@@ -26,8 +23,17 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+  const actualizarSesion = useCallback((cuenta) => {
+    setUser((actual) => {
+      if (!actual) return actual;
+      const usuario = { ...actual, nombre: cuenta.nombre, apellido: cuenta.apellido, email: cuenta.email };
+      guardarSesion(usuario);
+      return usuario;
+    });
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAdmin: user?.rol === 'ADMIN', isLoggedIn: !!user }}>
+    <AuthContext.Provider value={{ user, login, logout, actualizarSesion, isAdmin: user?.rol === 'ADMIN', isLoggedIn: !!user }}>
       {children}
     </AuthContext.Provider>
   );

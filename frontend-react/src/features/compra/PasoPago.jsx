@@ -24,7 +24,6 @@ import { useCompra } from './useCompra';
 import styles from './compra.module.css';
 
 const IDS = { ...IDS_CAMPOS, terminos: 'acepta-terminos', menores: 'acepta-menores' };
-// Orden en que se busca el primer error al tocar "Pagar". Sin cargo (total en $ 0) no se pide tarjeta.
 const CAMPOS = ['numero', 'vencimiento', 'codigo', 'titular', 'dni', 'terminos', 'menores'];
 const CAMPOS_SIN_CARGO = ['terminos', 'menores'];
 
@@ -58,7 +57,6 @@ function FormularioPago() {
   const [reservaPerdida, setReservaPerdida] = useState(false);
   const idCompra = useRef(compra.id);
 
-  // Al entrar (o recargar) se pide la reserva al backend para tener el tiempo restante real
   useEffect(() => {
     let ignorar = false;
     getCompra(idCompra.current)
@@ -95,7 +93,6 @@ function FormularioPago() {
     terminos: valores.terminos ? '' : 'Tenés que aceptar los términos y condiciones para continuar.',
     menores: !pideDeclaracion || valores.menores ? '' : 'Tenés que confirmar esta declaración para continuar.',
   };
-  // Un error se muestra recien al salir del campo (o al tocar Pagar), no mientras se escribe
   const erroresVisibles = Object.fromEntries(CAMPOS.map((c) => [c, visibles.has(c) ? errores[c] : '']));
 
   const cambiar = (campo, valor) => {
@@ -123,12 +120,13 @@ function FormularioPago() {
       const pago = await pagarCompra(
         compra.id,
         sinCargo
-          ? { metodoPago: null, marca: null, ultimos4: null, aceptaTerminos: valores.terminos }
+          ? { metodoPago: null, marca: null, ultimos4: null, aceptaTerminos: valores.terminos, recibirNovedades: valores.novedades }
           : {
               metodoPago: metodo.metodoPago,
               marca: marca.nombre,
               ultimos4: valores.numero.slice(-4),
               aceptaTerminos: valores.terminos,
+              recibirNovedades: valores.novedades,
             },
       );
       if (pago.estado === 'APROBADO') {
@@ -139,15 +137,12 @@ function FormularioPago() {
       setErrorPago('El pago fue rechazado. Revisá los datos de la tarjeta o probá con otra. Tu reserva sigue activa.');
     } catch (err) {
       if (err.status === 400 && compra.codigoPromocion) {
-        // La promocion dejo de valer entre el resumen y el pago: el backend la quito y recalculo el total, y la
-        // reserva sigue activa. Se muestra el total nuevo para que el cliente decida si paga sin descuento.
         const actual = await getCompra(compra.id).catch(() => null);
         if (actual) actualizar({ reserva: nuevaReserva(actual) });
         setErrorPago(
           `${err.message}. Quitamos el código ${compra.codigoPromocion}${actual ? ` y el total ahora es ${formatearPrecio(actual.total)}` : ''}. Si estás de acuerdo, podés pagar sin descuento.`,
         );
       } else if (err.status === 409) {
-        // Puede ser que la reserva haya vencido o que un intento anterior ya se haya aprobado
         const actual = await getCompra(compra.id).catch(() => null);
         if (actual?.estado === 'CONFIRMADA') {
           borrarCompra();
@@ -338,7 +333,6 @@ function Casilla({ id, marcada, error, onCambiar, children }) {
   );
 }
 
-// Va en el resumen: codigo promocional arriba del total y el desglose que devolvio el backend
 function DetallePago({ compra, deshabilitado, onAplicar }) {
   const [codigo, setCodigo] = useState('');
   const [aplicando, setAplicando] = useState(false);
@@ -359,7 +353,6 @@ function DetallePago({ compra, deshabilitado, onAplicar }) {
         if (desdePromociones) borrarPromoGuardada();
       } catch (err) {
         setError(motivoRechazo(err));
-        // Si el codigo elegido en Promociones no sirve, se descarta para que no vuelva a intentarse
         if (desdePromociones) borrarPromoGuardada();
       }
       setAplicando(false);
@@ -367,7 +360,6 @@ function DetallePago({ compra, deshabilitado, onAplicar }) {
     [onAplicar],
   );
 
-  // Codigo elegido con "Usar en mi compra": se precarga y se aplica solo al llegar al pago
   const promoIntentada = useRef(false);
   useEffect(() => {
     const guardada = leerPromoGuardada();
@@ -447,8 +439,6 @@ function DetallePago({ compra, deshabilitado, onAplicar }) {
   );
 }
 
-// Motivo en lenguaje claro. Las reglas de las promociones ya vuelven del backend con su mensaje para el
-// usuario ("Esta promoción vale los lunes...", "Ya usaste esta promoción"...).
 function motivoRechazo(err) {
   if (err.status === 404) return 'Ese código no existe.';
   if (err.status === 400) return err.message.endsWith('.') ? err.message : `${err.message}.`;

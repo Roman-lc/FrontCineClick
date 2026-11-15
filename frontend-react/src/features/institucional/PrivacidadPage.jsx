@@ -21,7 +21,9 @@ const SECCIONES = [
       <>
         <ul>
           <li>
-            <strong>Tu cuenta:</strong> nombre, apellido, email, contraseña, teléfono (si lo cargás) y la fecha de registro.
+            <strong>Tu cuenta:</strong> nombre, apellido, email, contraseña, teléfono, fecha de nacimiento, género, complejo de
+            preferencia, la fecha de registro, cuándo aceptaste estos términos y cuándo cambiaste la contraseña por última vez, y si
+            querés recibir novedades.
           </li>
           <li>
             <strong>Tus compras:</strong> la función, las butacas, los tipos de entrada, el código promocional si usaste uno, los totales
@@ -71,8 +73,8 @@ const SECCIONES = [
     contenido: (
       <p>
         Al crear tu cuenta y al comprar nos das tu consentimiento libre, expreso e informado para usar tus datos con los fines de la
-        sección anterior. Recibir novedades es opcional: se elige con una casilla aparte y podés revocarlo cuando quieras. (En esta
-        versión del proyecto esa preferencia todavía no se guarda.)
+        sección anterior. Recibir novedades es opcional: se elige con una casilla aparte al pagar o con el interruptor de{' '}
+        <Link to="/cuenta#comunicaciones">Mi cuenta</Link>, donde también podés revocarlo cuando quieras.
       </p>
     ),
   },
@@ -116,9 +118,25 @@ const SECCIONES = [
     contenido: (
       <>
         <p>
-          Podés pedir el acceso, la rectificación, la actualización o la supresión de tus datos escribiendo a datos@cineclick.example.
-          Respondemos los pedidos de acceso dentro de los 10 días corridos y los de rectificación, actualización o supresión dentro de
-          los 5 días hábiles, como establece la ley.
+          Podés ejercer tus derechos de acceso, rectificación y supresión directamente desde <Link to="/cuenta">Mi cuenta</Link>, con
+          la sesión iniciada:
+        </p>
+        <ul>
+          <li>
+            <strong>Acceso:</strong> en Privacidad, &quot;Descargar mis datos&quot; te da un archivo con los datos de tu cuenta, tus
+            compras y tus solicitudes.
+          </li>
+          <li>
+            <strong>Rectificación:</strong> en Datos personales, Email y Contraseña podés corregir o actualizar tus datos.
+          </li>
+          <li>
+            <strong>Supresión:</strong> en Privacidad, &quot;Eliminar mi cuenta&quot; borra tus datos personales. Las compras se
+            conservan sin tus datos, por el plazo que exigen las normas contables y fiscales.
+          </li>
+        </ul>
+        <p>
+          También podés pedirlo escribiendo a datos@cineclick.example. Respondemos los pedidos de acceso dentro de los 10 días corridos
+          y los de rectificación, actualización o supresión dentro de los 5 días hábiles, como establece la ley.
         </p>
         <p className={styles.cita}>
           El titular de los datos personales tiene la facultad de ejercer el derecho de acceso a los mismos en forma gratuita a

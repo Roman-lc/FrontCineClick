@@ -2,13 +2,8 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styles from './Header.module.css';
 
-// Boton con el nombre del usuario que abre el menu de la cuenta (patron "menu button").
-// Teclado: Flecha abajo / Enter / Espacio abren y enfocan la primera opcion; Flechas, Inicio y Fin
-// se mueven; Escape cierra y vuelve al boton; Tab cierra. Tambien se cierra al hacer clic afuera
-// y al navegar.
 export default function MenuCuenta({ user, isAdmin, onSalir }) {
   const location = useLocation();
-  // Se guarda en que navegacion se abrio: al cambiar de pagina el menu queda cerrado solo
   const [abiertoEn, setAbiertoEn] = useState(null);
   const abierto = abiertoEn === location.key;
   const contenedor = useRef(null);
@@ -82,6 +77,11 @@ export default function MenuCuenta({ user, isAdmin, onSalir }) {
       </button>
       {abierto && (
         <ul id={`${id}-menu`} ref={menu} className={styles.menuCuenta} role="menu" aria-labelledby={idBoton} onKeyDown={teclaEnMenu}>
+          <li role="none">
+            <Link role="menuitem" tabIndex={-1} to="/cuenta" className={styles.opcionMenu}>
+              Mi cuenta
+            </Link>
+          </li>
           {!isAdmin && (
             <li role="none">
               <Link role="menuitem" tabIndex={-1} to="/mis-compras" className={styles.opcionMenu}>

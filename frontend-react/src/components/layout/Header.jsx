@@ -101,6 +101,11 @@ export default function Header() {
           {user ? (
             <ul className={styles.listaMovil} aria-label="Cuenta">
               <li className={styles.usuarioMovil}>{user.nombre || user.email}</li>
+              <li>
+                <NavLink to="/cuenta" end className={claseEnlace}>
+                  Mi cuenta
+                </NavLink>
+              </li>
               {!isAdmin && (
                 <li>
                   <NavLink to="/mis-compras" className={claseEnlace}>

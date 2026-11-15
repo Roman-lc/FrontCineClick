@@ -24,6 +24,8 @@ import CinesPage from '../features/cines/CinesPage';
 import CinePage from '../features/cines/CinePage';
 import PromocionesPage from '../features/promociones/PromocionesPage';
 import MisComprasPage from '../features/cuenta/MisComprasPage';
+import CuentaPage from '../features/cuenta/CuentaPage';
+import ConfirmarEmailPage from '../features/cuenta/ConfirmarEmailPage';
 
 const AdminLayout = lazy(() => import('../components/layout/AdminLayout'));
 const MetricasPage = lazy(() => import('../features/admin/metricas/MetricasPage'));
@@ -60,6 +62,12 @@ function RequireCliente({ children }) {
   return children;
 }
 
+function RequireSesion({ children }) {
+  const { user } = useAuth();
+  if (!user?.usuarioId) return <Navigate to="/login" replace />;
+  return children;
+}
+
 export default function App() {
   return (
     <Routes>
@@ -81,6 +89,8 @@ export default function App() {
         <Route path="/login/recuperar" element={<RecuperarPage />} />
         <Route path="/restablecer" element={<RestablecerPasswordPage />} />
         <Route path="/mis-compras" element={<RequireCliente><MisComprasPage /></RequireCliente>} />
+        <Route path="/cuenta" element={<RequireSesion><CuentaPage /></RequireSesion>} />
+        <Route path="/cuenta/confirmar-email" element={<RequireSesion><ConfirmarEmailPage /></RequireSesion>} />
 
         <Route path="/compra/confirmacion/:compraId" element={<RequireCliente><ConfirmacionPage /></RequireCliente>} />
         <Route path="/compra/:funcionId" element={<RequireCliente><CompraLayout /></RequireCliente>}>
