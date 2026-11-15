@@ -1,9 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 
-// Llama a alCumplirse cada "duracion" ms mientras "activo" sea true. Al pausar guarda el tiempo que
-// faltaba y al reanudar sigue desde ahi; cambiar "reinicio" (por ejemplo, el slide actual) vuelve a
-// contar desde cero. Ademas se pausa solo mientras la pestaña no esta visible.
-// Devuelve si esta corriendo, para sincronizar la barra de progreso.
 export function useAutoplay({ activo, duracion, alCumplirse, reinicio }) {
   const [pestanaVisible, setPestanaVisible] = useState(() => document.visibilityState === 'visible');
   const restante = useRef(duracion);
@@ -19,7 +15,6 @@ export function useAutoplay({ activo, duracion, alCumplirse, reinicio }) {
     return () => document.removeEventListener('visibilitychange', cambio);
   }, []);
 
-  // Corre despues de la limpieza del temporizador, asi un reinicio siempre arranca con el tiempo completo
   useEffect(() => {
     restante.current = duracion;
   }, [reinicio, duracion]);

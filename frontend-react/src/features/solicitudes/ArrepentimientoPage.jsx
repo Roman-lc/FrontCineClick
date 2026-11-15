@@ -33,7 +33,6 @@ const CAMPOS = [
   },
 ];
 
-// Antes de enviar: si corresponde el arrepentimiento y, si no, por que (igual se puede enviar)
 function Elegibilidad(compra) {
   if (compra.codigoArrepentimiento) {
     return (
@@ -109,7 +108,6 @@ function exito(solicitud) {
   };
 }
 
-// /arrepentimiento: publico, sin login ni registro (Resolucion 424/2020)
 export default function ArrepentimientoPage() {
   const { state } = useLocation();
   const iniciales = {};

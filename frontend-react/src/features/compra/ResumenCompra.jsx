@@ -13,7 +13,6 @@ export default function ResumenCompra({ paso, accion, esMovil, extra }) {
   const [abierto, setAbierto] = useState(false);
 
   const renglones = renglonesDeEntradas(estado, precios);
-  // Hasta que el backend crea la reserva, el total es una cuenta del navegador
   const aproximado = !estado.reserva;
   const total = estado.reserva ? Number(estado.reserva.compra.total) : renglones.reduce((suma, r) => suma + r.subtotal, 0);
   const butacas = estado.reserva

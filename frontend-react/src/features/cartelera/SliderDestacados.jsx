@@ -10,13 +10,11 @@ import { useMediaQuery } from '../../lib/useMediaQuery';
 import styles from './slider.module.css';
 
 const DURACION_MS = 6000;
-// Distancia minima (px) para que un arrastre cuente como swipe
 const UMBRAL_SWIPE = 50;
 
 const ETIQUETAS = { PREVENTA: 'Preventa', NOVEDAD: 'Nuevo', PROXIMAMENTE: 'Próximamente' };
 const BOTONES = { PREVENTA: 'Comprar entradas', NOVEDAD: 'Ver horarios', PROXIMAMENTE: 'Ver detalle' };
 
-// destacadas: [{ pelicula, categoria }] de GET /api/peliculas/destacadas
 export default function SliderDestacados({ destacadas }) {
   const total = destacadas.length;
   const [actual, setActual] = useState(0);
@@ -148,7 +146,6 @@ function Diapositiva({ destacada, indice, total, activa }) {
       aria-hidden={!activa}
       inert={!activa}
     >
-      {/* Sin imagen horizontal: el mismo poster, ampliado y desenfocado, hace de fondo */}
       {poster && <div className={styles.fondo} style={{ backgroundImage: `url("${poster}")` }} />}
       <div className={styles.capa} />
       <div className={styles.posterCaja}>

@@ -7,7 +7,6 @@
     color: var(--text);
 }
 
-/* <header>: el estilo global ya lo deja sticky debajo de la franja de administrador */
 .cabecera {
     display: flex;
     align-items: center;
@@ -106,7 +105,6 @@
     color: var(--text);
 }
 
-/* Seccion actual: barra de acento a la izquierda y texto en el tono oscuro del acento */
 .activo {
     background: var(--surface-2);
     color: var(--accent-text);

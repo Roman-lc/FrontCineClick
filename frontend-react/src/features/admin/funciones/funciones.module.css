@@ -1,4 +1,3 @@
-/* Fecha, hora y minutos en una fila */
 .horario {
     display: grid;
     grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr);
@@ -14,7 +13,6 @@
     font-weight: 600;
 }
 
-/* Funciones de la sala ese dia y el primer horario libre */
 .grilla {
     display: flex;
     flex-wrap: wrap;

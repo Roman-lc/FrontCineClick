@@ -32,7 +32,6 @@ function MapaDelPaso({ cantidad }) {
   const reservaAlEntrar = useRef(estado.reserva);
   const cancelacion = useRef(Promise.resolve());
 
-  // Al volver al mapa con una reserva activa se cancela primero, para que sus butacas se vean libres
   useEffect(() => {
     let ignorar = false;
     const reserva = reservaAlEntrar.current;
@@ -54,8 +53,6 @@ function MapaDelPaso({ cantidad }) {
     };
   }, [funcion.id, intento, actualizar]);
 
-  // Si se bajo la cantidad en el paso 1 se conservan las primeras elegidas. Las que alguien ocupo
-  // mientras tanto se descartan.
   const libres = new Set((butacas ?? []).filter((b) => b.disponible).map((b) => b.id));
   const elegidas = estado.butacas.filter((b) => !butacas || libres.has(b.id)).slice(0, cantidad);
   const palabra = cantidad === 1 ? 'butaca' : 'butacas';
@@ -87,7 +84,6 @@ function MapaDelPaso({ cantidad }) {
       if (err.status !== 409) {
         setAviso('No pudimos reservar las butacas. Probá de nuevo en unos segundos.');
       } else {
-        // Alguien tomo una de las butacas: se refresca el mapa y se quitan solo las que ya no estan libres
         const lista = await getButacas(funcion.id).catch(() => null);
         if (lista) {
           setButacas(lista);

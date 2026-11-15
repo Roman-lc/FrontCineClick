@@ -3,13 +3,8 @@ import { erroresDeApi } from './erroresApi';
 
 const iguales = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
-// Estado del formulario del drawer: valores, errores por campo (del front y del backend), cambios sin
-// guardar y envio. Los ids de los controles siguen la convencion "campo-<nombre>" para poder llevar
-// el foco al primer campo con error.
-//   vacio: valores de un alta. aFormulario(item): valores para editar. validar(valores): { campo: error }.
-//   guardar(valores, item): promesa del alta o la modificacion.
 export function useEdicion({ vacio, aFormulario, validar, guardar, confirmar, onGuardado }) {
-  const [edicion, setEdicion] = useState(null); // { item, inicial }
+  const [edicion, setEdicion] = useState(null);
   const [valores, setValores] = useState(vacio);
   const [errores, setErrores] = useState({});
   const [errorGeneral, setErrorGeneral] = useState('');
@@ -41,7 +36,6 @@ export function useEdicion({ vacio, aFormulario, validar, guardar, confirmar, on
     setEdicion(null);
   };
 
-  // Al corregir un campo con error se vuelve a validar solo ese campo (asi el error se va al arreglarlo)
   const cambiar = (campo, valor) => {
     const nuevos = typeof campo === 'object' ? { ...valores, ...campo } : { ...valores, [campo]: valor };
     setValores(nuevos);
@@ -59,7 +53,6 @@ export function useEdicion({ vacio, aFormulario, validar, guardar, confirmar, on
     }
   };
 
-  // Al salir de un campo se muestra su error, antes de enviar
   const tocar = (campo) => {
     const error = validar(valores)[campo];
     setErrores((prev) => {

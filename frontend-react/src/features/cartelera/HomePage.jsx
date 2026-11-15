@@ -35,7 +35,6 @@ export default function HomePage() {
   const [elegida, setElegida] = useState(null);
   const [estrenos, setEstrenos] = useState({ cargando: true, destacadas: [], proximos: [] });
 
-  // Se cargan una sola vez; los filtros se aplican en memoria
   useEffect(() => {
     let ignorar = false;
     Promise.all([getPeliculas(), getCines(), getFunciones({ desde: hoyISO() })])
@@ -50,7 +49,6 @@ export default function HomePage() {
     };
   }, [intento]);
 
-  // Slider y proximos estrenos van aparte: si fallan, la cartelera se sigue viendo (y ellos no se muestran)
   useEffect(() => {
     let ignorar = false;
     Promise.all([getDestacadas(), getProximosEstrenos()])
@@ -83,7 +81,6 @@ export default function HomePage() {
   const dia = diaElegido(dias, filtros.dia);
   const opciones = opcionesDeFiltro(funcionesDelCine, datos?.peliculas ?? []);
   const cartelera = armarCartelera(datos?.peliculas ?? [], funcionesDelCine, filtros, dia);
-  // Para el estado vacio: el proximo dia en el que si hay peliculas con estos filtros
   const otroDia = dias.find((d) => d.fecha > dia && armarCartelera(datos?.peliculas ?? [], funcionesDelCine, filtros, d.fecha).length);
 
   const hayFiltrosExtra =
@@ -170,7 +167,6 @@ export default function HomePage() {
       {cartelera.length > 0 && (
         <ul className={styles.grilla}>
           {cartelera.map(({ pelicula, funciones }) => {
-            // El cine y el dia viajan en el estado de la navegacion, asi la URL queda limpia
             const detalle = { to: rutaPelicula(pelicula.titulo), state: { cineId: filtros.cineId, dia } };
             return (
               <li key={pelicula.id}>

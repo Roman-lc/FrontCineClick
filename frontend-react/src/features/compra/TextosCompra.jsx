@@ -1,7 +1,5 @@
 import { Link } from 'react-router-dom';
 
-// Informacion fija del paso de pago. Los terminos y condiciones estan en features/institucional (una sola
-// fuente para el modal y la pagina /terminos).
 export function InformacionCompra() {
   return (
     <ul>

@@ -42,7 +42,6 @@
     border-color: var(--text);
 }
 
-/* Dia elegido: el acento indica seleccion */
 .chip[aria-pressed='true'] {
     border-color: var(--accent);
     background: var(--accent);

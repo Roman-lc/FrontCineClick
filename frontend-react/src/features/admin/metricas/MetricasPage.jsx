@@ -19,7 +19,6 @@ const PERIODOS = [
   { valor: 'personalizado', texto: 'Personalizado' },
 ];
 
-// Filtros en la URL: ?periodo=7d&desde=2026-10-01&hasta=2026-10-31&cine=3
 function leerFiltros(params) {
   const periodo = PERIODOS.some((p) => p.valor === params.get('periodo')) ? params.get('periodo') : '7d';
   const hoy = hoyISO();
@@ -47,7 +46,6 @@ export default function MetricasPage() {
   const rangoInvalido = filtros.desde > filtros.hasta;
   const [cines, setCines] = useState([]);
   const [version, setVersion] = useState(0);
-  // estado.consulta dice a que filtros corresponden los datos: si no coincide con la actual, esta cargando
   const [estado, setEstado] = useState({ consulta: null, error: false, datos: null, actualizado: null });
   const [ahora, setAhora] = useState(() => Date.now());
 
@@ -71,7 +69,6 @@ export default function MetricasPage() {
     };
   }, [consulta, rangoInvalido]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Solo se refresca el texto "Actualizado hace N min"; los datos no se recargan solos
   useEffect(() => {
     const intervalo = setInterval(() => setAhora(Date.now()), 30000);
     return () => clearInterval(intervalo);
@@ -178,7 +175,6 @@ export default function MetricasPage() {
         </div>
       )}
 
-      {/* Fila 1: indicadores */}
       <div className={styles.indicadores}>
         <Indicador etiqueta="Ingresos" indicador={datos?.resumen.ingresos} formato={pesos} carga={carga} />
         <Indicador
@@ -191,7 +187,6 @@ export default function MetricasPage() {
         <Indicador etiqueta="Ticket promedio" indicador={datos?.resumen.ticketPromedio} formato={pesos} carga={carga} />
       </div>
 
-      {/* Fila 2 */}
       <div className={styles.dosColumnas}>
         <Bloque
           titulo="Próximas funciones"
@@ -223,7 +218,6 @@ export default function MetricasPage() {
         </Bloque>
       </div>
 
-      {/* Fila 3 */}
       <div className={styles.dosColumnas}>
         <Bloque
           titulo="Ranking de películas"
@@ -243,7 +237,6 @@ export default function MetricasPage() {
         </Bloque>
       </div>
 
-      {/* Fila 4 */}
       <Bloque
         titulo="Ventas por franja"
         carga={carga}
@@ -259,7 +252,6 @@ export default function MetricasPage() {
         {datos && <MapaDeCalor franjas={datos.franjas} />}
       </Bloque>
 
-      {/* Fila 5 */}
       <div className={filtros.cine ? '' : styles.dosColumnas}>
         {!filtros.cine && (
           <Bloque
@@ -281,7 +273,6 @@ export default function MetricasPage() {
         </Bloque>
       </div>
 
-      {/* Fila 6 */}
       <div className={styles.dosColumnas}>
         <Bloque
           titulo="Asistencia"
@@ -302,7 +293,6 @@ export default function MetricasPage() {
   );
 }
 
-// Contenedor de cada bloque: titulo y, segun el estado, esqueleto, error, vacio o el contenido
 function Bloque({ titulo, carga, esqueleto, vacio, children }) {
   const id = useId();
   let contenido = children;
@@ -380,7 +370,6 @@ function BarraOcupacion({ fraccion }) {
   );
 }
 
-// Solo las proximas en empezar (el backend manda las de hoy y mañana); el resto, en "Ver todas las funciones"
 const MAXIMO_PROXIMAS = 5;
 
 function ProximasFunciones({ funciones }) {
@@ -472,8 +461,6 @@ function Conversion({ conversion }) {
   );
 }
 
-// Mapa de calor con CSS grid: dias en las filas, horas de inicio en las columnas. La intensidad es
-// proporcional a la celda con mas entradas; el valor exacto va en el tooltip (title) y en la tabla oculta.
 function MapaDeCalor({ franjas }) {
   const horasConDatos = franjas.map((f) => f.hora);
   const desde = Math.min(12, ...horasConDatos);

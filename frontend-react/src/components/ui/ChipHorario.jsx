@@ -4,19 +4,6 @@ import { etiquetaFormato, etiquetaIdioma, etiquetaIdiomaCorta, nombreCine } from
 import IconoButaca from './IconoButaca';
 import styles from './ChipHorario.module.css';
 
-/**
- * Horario de una funcion. Tocarlo la elige; la pagina muestra la barra para comprar.
- *
- * Props:
- * - funcion: FuncionResponseDTO (usa fechaHoraInicio, formato, idioma, butacasLibres, capacidadSala)
- * - elegida: si es la funcion elegida (se pinta con el acento)
- * - onElegir(funcion | null): al tocarla; recibe null si ya estaba elegida (la deselecciona)
- * - conDetalle: muestra "2D · Cast." debajo de la hora (en la cartelera, donde no hay grupos por formato)
- *
- * Estados: normal, elegida y agotada (sin butacas libres: queda deshabilitada y dice "Agotada").
- * El icono de butaca indica la disponibilidad (alta, media, baja), igual que la leyenda del detalle.
- * El ancho sale de la variable CSS --ancho-chip si el contenedor la define.
- */
 export default function ChipHorario({ funcion, elegida = false, onElegir, conDetalle = false }) {
   const hora = horaCorta(funcion.fechaHoraInicio);
   const nivel = nivelDisponibilidad(funcion);

@@ -31,8 +31,6 @@
     }
 }
 
-/* ---------- Tarjeta (TarjetaTicket vertical) ---------- */
-
 .tarjeta {
     display: flex;
     flex-direction: column;
@@ -82,7 +80,6 @@
     margin: 0;
 }
 
-/* Monoespaciada con el cero cruzado para no confundirlo con la O */
 .codigo {
     display: inline-block;
     padding: 0.35rem 0.8rem;
@@ -148,7 +145,6 @@
     letter-spacing: 0.04em;
 }
 
-/* No la puede usar este cliente: se atenua y se explica por que (sin el boton "Usar en mi compra") */
 .atenuada .beneficio,
 .atenuada .tituloPromo,
 .atenuada .condiciones,
@@ -180,8 +176,6 @@
     font-size: 0.8rem;
     font-weight: 700;
 }
-
-/* ---------- Todos los dias ---------- */
 
 .siempre {
     max-width: 640px;

@@ -1,8 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import styles from './AyudaFlotante.module.css';
 
-// Boton fijo abajo a la derecha que lleva a /soporte. No aparece en la compra (/compra/*) ni en la
-// misma pagina de ayuda; el panel (/admin/*) tiene su propio layout y no lo incluye.
 export default function AyudaFlotante() {
   const { pathname } = useLocation();
   if (pathname.startsWith('/compra/') || pathname === '/soporte') return null;

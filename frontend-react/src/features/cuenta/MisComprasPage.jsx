@@ -24,7 +24,6 @@ export default function MisComprasPage() {
     let ignorar = false;
     Promise.all([getComprasDelCliente(user.clienteId), getListaEspera(user.clienteId).catch(() => [])])
       .then(async ([compras, avisos]) => {
-        // Un backend sin el resumen de la funcion en la compra: se piden las funciones (sin repetir)
         const faltantes = [...new Set(compras.filter((c) => !c.funcion).map((c) => c.funcionId))];
         const funciones = await Promise.all(faltantes.map((id) => getFuncion(id).catch(() => null)));
         const porId = new Map(funciones.filter(Boolean).map((f) => [f.id, f]));
@@ -39,7 +38,6 @@ export default function MisComprasPage() {
     };
   }, [user.clienteId, intento]);
 
-  // Cada compra con su estado (las reservas en curso no se listan)
   const conEstado = estado.compras
     .filter((c) => c.funcion)
     .map((compra) => ({ compra, estado: estadoDeCompra(compra) }))
@@ -141,8 +139,6 @@ function ListaCompras({ items }) {
   );
 }
 
-// Fila compacta. Toda la fila lleva al detalle: el enlace es el titulo y su area se estira a la fila
-// (asi el lector de pantalla anuncia un solo enlace con un nombre corto).
 function FilaCompra({ compra, estado }) {
   const { funcion } = compra;
   const cancelada = estado.clave === 'cancelada';

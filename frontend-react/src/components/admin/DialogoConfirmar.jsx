@@ -1,7 +1,6 @@
 import { useEffect, useId, useRef } from 'react';
 import styles from './admin.module.css';
 
-// Dialogo modal de confirmacion (role="alertdialog"). Se usa a traves de useConfirmacion.
 export default function DialogoConfirmar({ pedido, onResponder }) {
   const ref = useRef(null);
   const id = useId();
@@ -34,7 +33,6 @@ export default function DialogoConfirmar({ pedido, onResponder }) {
           </p>
           <div className={styles.dialogoAcciones}>
             {!pedido.soloAceptar && (
-              // El foco arranca en Cancelar: Enter por reflejo no ejecuta la accion destructiva
               <button type="button" className="btn" onClick={() => onResponder(false)} autoFocus>
                 {pedido.textoCancelar ?? 'Cancelar'}
               </button>

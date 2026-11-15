@@ -2,11 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import wasmUrl from 'zxing-wasm/reader/zxing_reader.wasm?url';
 import styles from './validar.module.css';
 
-// Lector de QR con la camara trasera. Usa la API nativa BarcodeDetector cuando el navegador la tiene (Chrome y
-// Edge en Android, ChromeOS, macOS) y, si no, la misma API de la libreria barcode-detector, que se descarga recien
-// aca (con su .wasm servido desde el sitio, no desde un CDN). La camara queda abierta: cada QR nuevo se valida
-// solo. La camara solo funciona en HTTPS o en localhost.
-
 async function crearDetector() {
   if ('BarcodeDetector' in window) {
     const formatos = await window.BarcodeDetector.getSupportedFormats().catch(() => []);
@@ -21,7 +16,6 @@ export default function EscanerQr({ onCodigo }) {
   const video = useRef(null);
   const [error, setError] = useState('');
   const ultimo = useRef({ codigo: '', momento: 0 });
-  // onCodigo cambia en cada render de la pantalla: se lee de una ref para no reiniciar la camara
   const avisar = useRef(onCodigo);
   useEffect(() => {
     avisar.current = onCodigo;
@@ -33,7 +27,6 @@ export default function EscanerQr({ onCodigo }) {
     let activo = true;
 
     if (!navigator.mediaDevices?.getUserMedia) {
-      // Sin HTTPS (o en un navegador viejo) no existe getUserMedia
       Promise.resolve().then(() => setError('La cámara no está disponible en este navegador o sin HTTPS. Ingresá el código a mano.'));
       return undefined;
     }
@@ -55,7 +48,6 @@ export default function EscanerQr({ onCodigo }) {
           leyendo = false;
           const codigo = encontrados[0]?.rawValue?.trim();
           if (!codigo) return;
-          // El mismo QR frente a la camara no se valida dos veces seguidas
           const ahora = Date.now();
           if (codigo === ultimo.current.codigo && ahora - ultimo.current.momento < 4000) return;
           ultimo.current = { codigo, momento: ahora };

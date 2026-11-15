@@ -1,5 +1,3 @@
-// Cuentas que crea el seed del backend (perfil demo). El panel "Cuentas de prueba" solo se muestra con
-// VITE_DEMO_MODE=true (ver .env.example). destino: a donde lleva "Ingresar con esta cuenta".
 export const DEMO_ACTIVA = import.meta.env.VITE_DEMO_MODE === 'true';
 
 export const CUENTAS_DEMO = [

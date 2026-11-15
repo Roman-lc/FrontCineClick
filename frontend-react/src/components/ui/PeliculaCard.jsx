@@ -6,10 +6,6 @@ import IconoEstrella from './IconoEstrella';
 import Poster from './Poster';
 import styles from './PeliculaCard.module.css';
 
-// children: contenido debajo de los formatos (los horarios del dia en la cartelera).
-// No va adentro de un enlace para que cada horario tenga su propio clic.
-// Todas las tarjetas miden lo mismo: el titulo reserva 2 lineas, los formatos 1 y los horarios
-// tienen su propia altura fija (ver HorariosDelDia).
 export default function PeliculaCard({ pelicula, to, estadoEnlace, estreno = false, children }) {
   const duracion = formatearDuracionCorta(pelicula.duracionMinutos);
   const formatos = [...(pelicula.formatosDisponibles ?? [])].sort((a, b) => ORDEN_FORMATOS.indexOf(a) - ORDEN_FORMATOS.indexOf(b));
@@ -19,7 +15,6 @@ export default function PeliculaCard({ pelicula, to, estadoEnlace, estreno = fal
     <article className={styles.card}>
       <div className={styles.posterCaja}>
         {to ? (
-          // Duplica el enlace del titulo solo para el mouse: se saltea con teclado y lector de pantalla
           <Link to={to} state={estadoEnlace} className={styles.enlacePoster} tabIndex={-1} aria-hidden="true">
             {poster}
           </Link>

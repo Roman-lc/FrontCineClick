@@ -38,7 +38,6 @@ const CAMPOS = [
 ];
 
 export default function SoportePage() {
-  // Clave de idempotencia de este formulario: dos envios iguales no crean dos consultas
   const clave = useRef(crypto.randomUUID());
 
   return (

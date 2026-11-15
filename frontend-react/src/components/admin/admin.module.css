@@ -1,8 +1,3 @@
-/* Estilos compartidos de las pantallas de gestion del panel. Todo sale de los tokens, asi funciona
-   con el tema claro de /admin (y con el oscuro, si algun dia se reutiliza afuera). */
-
-/* ---------- Encabezado y filtros ---------- */
-
 .encabezado {
     display: flex;
     flex-wrap: wrap;
@@ -92,8 +87,6 @@
     color: var(--text-muted);
     font-size: 0.85rem;
 }
-
-/* ---------- Tabla ---------- */
 
 .tablaCaja {
     overflow-x: auto;
@@ -187,8 +180,6 @@
     letter-spacing: 0.06em;
 }
 
-/* ---------- Acciones de fila ---------- */
-
 .acciones {
     display: flex;
     justify-content: flex-end;
@@ -220,7 +211,6 @@
     color: var(--danger);
 }
 
-/* Tooltip con el mismo texto del aria-label: aparece con hover y con el foco del teclado */
 .botonIcono::after {
     content: attr(data-tooltip);
     position: absolute;
@@ -240,7 +230,6 @@
     pointer-events: none;
 }
 
-/* El ultimo boton de la fila alinea el tooltip a la derecha, para que no se corte contra el borde */
 .botonIcono:last-child::after {
     left: auto;
     right: 0;
@@ -251,8 +240,6 @@
 .botonIcono:focus-visible::after {
     opacity: 1;
 }
-
-/* ---------- Badges de estado ---------- */
 
 .badge {
     display: inline-flex;
@@ -282,8 +269,6 @@
     background: var(--surface-2);
     color: var(--text-muted);
 }
-
-/* ---------- Drawer ---------- */
 
 .drawer {
     position: fixed;
@@ -382,9 +367,6 @@
     min-height: 44px;
 }
 
-/* ---------- Formulario ---------- */
-
-/* ~20px entre campos: el label nunca queda pegado al campo anterior */
 .formulario {
     display: flex;
     flex-direction: column;
@@ -526,7 +508,6 @@ textarea.control {
     font-size: 0.6rem;
 }
 
-/* Indicador de carga dentro del boton Guardar */
 .girando {
     width: 16px;
     height: 16px;
@@ -547,8 +528,6 @@ textarea.control {
         animation-duration: 2s;
     }
 }
-
-/* ---------- Dialogo de confirmacion ---------- */
 
 .dialogo {
     width: min(440px, calc(100vw - 32px));
@@ -588,8 +567,6 @@ textarea.control {
 .dialogoAcciones :global(.btn) {
     min-height: 44px;
 }
-
-/* ---------- Inicio del panel ---------- */
 
 .bajada {
     margin: 0 0 1.5rem;
@@ -642,7 +619,6 @@ textarea.control {
         max-width: none;
     }
 
-    /* Los filtros de estado se acomodan en varias lineas en lugar de cortarse */
     .segmentos {
         display: flex;
         flex-wrap: wrap;
@@ -667,14 +643,11 @@ textarea.control {
     }
 }
 
-/* Eliminar: siempre con borde y texto carmesi (destructivo) */
 .botonIconoPeligro {
     border-color: var(--danger);
     color: var(--danger);
 }
 
-/* ---------- Tablas de gestion en el celular: una tarjeta por fila ----------
-   PaginaGestion copia el titulo de cada columna en data-label; aca se muestra a la izquierda de cada dato. */
 @media (max-width: 640px) {
     .tablaCaja[data-tarjetas] {
         overflow: visible;
@@ -731,7 +704,6 @@ textarea.control {
         text-transform: uppercase;
     }
 
-    /* La celda de acciones no lleva titulo: los botones van solos, alineados a la izquierda */
     .tablaCaja[data-tarjetas] .tabla td[data-label=''] {
         padding-left: 0;
     }
@@ -745,7 +717,6 @@ textarea.control {
     }
 }
 
-/* "Mostrar mas" debajo de una tabla larga */
 .verMas {
     display: flex;
     flex-wrap: wrap;

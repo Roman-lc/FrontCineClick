@@ -1,8 +1,6 @@
 import { IconoOcupada, IconoSillaDeRuedas } from './iconos';
 import styles from './mapa.module.css';
 
-// Dibuja la sala con la grilla del plano: "columna" es la posicion de cada butaca, asi que los
-// numeros de columna que no aparecen quedan como pasillos o huecos.
 export default function MapaButacas({ butacas, elegidas, onAlternar }) {
   const columnas = Math.max(...butacas.map((b) => b.columna ?? b.numero));
   const idsElegidos = new Set(elegidas.map((b) => b.id));

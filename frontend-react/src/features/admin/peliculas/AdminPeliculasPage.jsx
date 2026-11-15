@@ -49,7 +49,6 @@ const aFormulario = (p) => ({
   destacada: Boolean(p.destacada),
 });
 
-// El titulo no cambia de mayusculas: solo se limpian los espacios
 const aDatos = (v) => ({
   titulo: texto(v.titulo),
   sinopsis: texto(v.sinopsis),

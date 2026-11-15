@@ -21,8 +21,6 @@ const FILTROS_ESTADO = [
   { valor: 'ARREPENTIDA', texto: 'Arrepentidas' },
 ];
 
-// Compras de todos los clientes, con filtros y paginacion del lado del backend. Tocar una fila abre el detalle
-// (solo lectura). ?compra=N abre el detalle directo: lo usan los enlaces de Soporte y Arrepentimientos.
 export default function AdminComprasPage() {
   const [params, setParams] = useSearchParams();
   const compraAbierta = params.get('compra');
@@ -39,7 +37,6 @@ export default function AdminComprasPage() {
   const [intento, setIntento] = useState(0);
   const [resultado, setResultado] = useState({ cargando: true, error: false, datos: null });
 
-  // Lo que se escribe se busca cuando se deja de tipear
   useEffect(() => {
     const espera = setTimeout(() => {
       setTexto({ codigo: codigo.trim(), email: email.trim() });
@@ -59,7 +56,6 @@ export default function AdminComprasPage() {
     };
   }, [texto, cine, estado, desde, hasta, pagina, intento]);
 
-  // Cambiar un filtro vuelve a la primera pagina
   const filtrar = (cambiar) => (valor) => {
     cambiar(valor);
     setPagina(0);

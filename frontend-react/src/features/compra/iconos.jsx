@@ -1,4 +1,3 @@
-// Iconos del flujo de compra. Son decorativos: el texto accesible lo pone el boton o el renglon que los usa.
 const base = {
   viewBox: '0 0 24 24',
   fill: 'none',

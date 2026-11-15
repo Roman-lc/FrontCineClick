@@ -1,5 +1,3 @@
-// Reglas de las promociones en texto. Lo usan la vista previa del panel y la tarjeta publica, asi lo que se
-// muestra sale de los mismos campos que valida el backend (nunca se contradicen).
 import { formatearPrecio } from './formato';
 
 export const DIAS_SEMANA = [
@@ -16,12 +14,10 @@ const ordenados = (dias = []) => DIAS_SEMANA.filter((d) => dias.includes(d.valor
 const todos = (dias = []) => dias.length === 0 || dias.length === 7;
 const enLista = (partes) => (partes.length <= 1 ? partes.join('') : `${partes.slice(0, -1).join(', ')} y ${partes[partes.length - 1]}`);
 
-// "Lun · Mié · Vie" o "Todos"
 export function diasCortos(dias) {
   return todos(dias) ? 'Todos' : ordenados(dias).map((d) => d.corto).join(' · ');
 }
 
-// "Válida lunes, miércoles y viernes · 1 uso por usuario · hasta 100 usos · 1 entrada con descuento por compra"
 export function condicionesDe(promo) {
   const partes = [todos(promo.diasSemana) ? 'Válida todos los días' : `Válida ${enLista(ordenados(promo.diasSemana).map((d) => d.plural))}`];
   if (promo.soloPrimeraCompra) partes.push('Solo para tu primera compra');
@@ -34,7 +30,6 @@ export function condicionesDe(promo) {
   return partes.join(' · ');
 }
 
-// Activa, Programada (todavia no empezo), Vencida, Agotada o Inactiva
 export function estadoPromocion(promo, ahora = new Date()) {
   if (!promo.activa) return 'Inactiva';
   if (promo.usosMaximosTotales && promo.usosActuales >= promo.usosMaximosTotales) return 'Agotada';
@@ -43,7 +38,6 @@ export function estadoPromocion(promo, ahora = new Date()) {
   return 'Activa';
 }
 
-// Usos que quedan, si tiene tope
 export function usosRestantes(promo) {
   return promo.usosMaximosTotales ? Math.max(0, promo.usosMaximosTotales - promo.usosActuales) : null;
 }

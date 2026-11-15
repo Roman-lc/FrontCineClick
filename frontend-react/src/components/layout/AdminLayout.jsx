@@ -22,8 +22,6 @@ const SECCIONES = [
 
 const claseEnlace = ({ isActive }) => `${styles.enlace} ${isActive ? styles.activo : ''}`;
 
-// Layout de /admin/*: tema claro (data-theme="admin"), header propio y navegacion lateral en desktop
-// o desplegable en el celular. El sitio publico no se ve afectado.
 export default function AdminLayout() {
   const { logout } = useAuth();
   const navigate = useNavigate();
@@ -31,7 +29,6 @@ export default function AdminLayout() {
   const { pathname } = location;
   const mainRef = useRef(null);
   const rutaAnterior = useRef(pathname);
-  // El menu del celular se cierra solo al navegar (se guarda en que navegacion se abrio)
   const [abiertoEn, setAbiertoEn] = useState(null);
   const menuAbierto = abiertoEn === location.key;
   const actual = SECCIONES.find((s) => (s.end ? pathname === s.to : pathname.startsWith(s.to)));
@@ -110,7 +107,6 @@ export default function AdminLayout() {
           </button>
         </nav>
         <main id="contenido-admin" ref={mainRef} tabIndex={-1} className={styles.contenido}>
-          {/* Cada pantalla del panel se carga aparte (React.lazy en App.jsx): el menu queda visible mientras llega */}
           <Suspense fallback={<EsqueletoFilas cantidad={6} alto={52} etiqueta="Cargando la pantalla" />}>
             <Outlet />
           </Suspense>

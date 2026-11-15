@@ -5,9 +5,6 @@ import { useThemeColors } from './useThemeColors';
 import admin from '../../../components/admin/admin.module.css';
 import styles from './metricas.module.css';
 
-// Graficos hechos con Recharts. Para los lectores de pantalla cada uno tiene una tabla visualmente
-// oculta con los mismos datos (el SVG queda aria-hidden).
-
 const estiloTooltip = (c) => ({
   contentStyle: { background: c.superficie, border: `1px solid ${c.borde}`, borderRadius: 6, color: c.texto, fontSize: 13 },
   labelStyle: { color: c.texto, fontWeight: 700 },

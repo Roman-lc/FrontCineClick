@@ -1,5 +1,3 @@
-/* Fija arriba (sticky) pero ocupando su lugar en el flujo: no tapa el header, que se corre
-   --alto-barra-admin hacia abajo cuando esta franja existe */
 .barra {
     position: sticky;
     top: 0;
@@ -38,7 +36,6 @@
     font-weight: 400;
 }
 
-/* El area tactil llega a 36px de alto, toda la franja */
 .enlace {
     display: inline-flex;
     flex-shrink: 0;

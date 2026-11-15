@@ -6,8 +6,6 @@ import BotonAviso from '../listaEspera/BotonAviso';
 import { useListaEspera } from '../listaEspera/useListaEspera';
 import styles from './cartelera.module.css';
 
-// Debajo de la cartelera: preventas (con entradas a la venta) y proximos estrenos (lista de espera).
-// proximos: [{ pelicula, categoria }] de GET /api/peliculas/proximos-estrenos
 export default function ProximosEstrenos({ proximos }) {
   const { anotadas, marcar } = useListaEspera();
   if (proximos.length === 0) return null;

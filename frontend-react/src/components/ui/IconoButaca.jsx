@@ -1,4 +1,3 @@
-// Decorativo; toma el color del texto (currentColor) para mostrar la disponibilidad.
 export default function IconoButaca({ tamano = 16 }) {
   return (
     <svg width={tamano} height={tamano} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">

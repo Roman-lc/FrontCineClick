@@ -1,7 +1,6 @@
 import { useId, useState } from 'react';
 import styles from './Ayuda.module.css';
 
-// Boton "?" con una burbuja de ayuda. Se abre con el mouse encima, con el foco o tocandolo (mobile).
 export default function Ayuda({ etiqueta, children }) {
   const [abierta, setAbierta] = useState(false);
   const id = useId();

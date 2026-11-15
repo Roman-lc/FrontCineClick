@@ -13,7 +13,6 @@
     padding: 1rem 1.25rem;
 }
 
-/* El borde punteado con dos muescas separa el talon, como un ticket troquelado */
 .lateral {
     position: relative;
     display: flex;
@@ -72,7 +71,6 @@
     }
 }
 
-/* Talon siempre abajo, con el perforado horizontal */
 .vertical {
     flex-direction: column;
 }

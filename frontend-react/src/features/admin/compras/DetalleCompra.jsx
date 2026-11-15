@@ -12,8 +12,6 @@ import { adminCompras } from '../../../services/admin';
 import { ESTADOS_ARREPENTIMIENTO, ESTADOS_COMPRA, ESTADOS_ENTRADA, ESTADOS_PAGO, METODOS_PAGO, MOTIVOS_SOPORTE } from './estados';
 import styles from './compras.module.css';
 
-// Detalle de una compra para el panel: funcion, entradas, pago, promocion y, si existen, el arrepentimiento y las
-// consultas de soporte. Solo lectura. Se monta con key={id}, asi cada compra arranca cargando.
 export default function DetalleCompra({ id }) {
   const [intento, setIntento] = useState(0);
   const [estado, setEstado] = useState({ cargando: true, error: false, detalle: null });

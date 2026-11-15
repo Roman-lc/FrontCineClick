@@ -18,13 +18,9 @@ import styles from './detalle.module.css';
 
 const ESTADO_ENTRADA = { USADA: 'Usada', CANCELADA: 'Cancelada' };
 
-// Excepcion a los tokens: el QR va siempre oscuro sobre claro, aunque la pagina sea oscura, porque
-// muchos lectores no leen los QR invertidos. Son la tinta y el papel de la paleta "Afiche".
 const QR_TINTA = '#14110d';
 const QR_PAPEL = '#f3ede2';
 
-// Confirmacion despues del pago y detalle de la compra desde Mis compras: es la misma pantalla.
-// Viniendo del pago (state.desdePago) muestra "¡Compra confirmada!"; si no, el numero y el estado.
 export default function ConfirmacionPage() {
   const { compraId } = useParams();
   const { state } = useLocation();
@@ -38,7 +34,6 @@ export default function ConfirmacionPage() {
     let ignorar = false;
     getCompra(compraId)
       .then(async (compra) => {
-        // Un backend sin el resumen de la funcion en la compra: se completa con la funcion
         const funcion = compra.funcion ?? (await getFuncion(compra.funcionId));
         if (!ignorar) setEstado({ cargando: false, error: null, compra: { ...compra, funcion } });
       })
@@ -59,7 +54,6 @@ export default function ConfirmacionPage() {
   }
 
   const { compra } = estado;
-  // La API no controla de quien es cada compra (limitacion conocida); al menos la interfaz no muestra las ajenas
   const ajena = compra && compra.clienteId !== user.clienteId;
   const situacion = compra && estadoDeCompra(compra);
   if (estado.error?.status === 404 || ajena || (compra && !situacion)) {
@@ -152,7 +146,6 @@ export default function ConfirmacionPage() {
         </div>
       </div>
 
-      {/* Lo que se imprime: solo las entradas, con los datos de la funcion en cada hoja */}
       <section className={styles.entradasBloque} aria-labelledby="titulo-entradas">
         <h2 id="titulo-entradas" className={styles.subtitulo}>
           Tus entradas
@@ -172,7 +165,6 @@ export default function ConfirmacionPage() {
             return (
               <li key={entrada.id} className={`${styles.entrada} ${estadoEntrada ? styles.entradaApagada : ''}`}>
                 <div className={styles.qr}>
-                  {/* Recuadro claro con ~12px de zona de silencio alrededor del QR */}
                   <span className={styles.qrFondo} style={{ background: QR_PAPEL }}>
                     <QRCodeSVG value={entrada.codigoQr} size={104} level="M" marginSize={0} fgColor={QR_TINTA} bgColor={QR_PAPEL} title={`Código QR de la butaca ${entrada.codigoButaca}`} />
                   </span>

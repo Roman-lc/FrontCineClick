@@ -1,4 +1,3 @@
-// Filtros de cartelera y detalle guardados en la URL (sobreviven a recargar y a volver atras).
 const CLAVES = {
   cineId: 'cine',
   dia: 'dia',
@@ -22,7 +21,6 @@ export function leerFiltros(searchParams) {
   };
 }
 
-// Aplica un cambio parcial sin dejar parametros vacios
 export function escribirFiltros(searchParams, cambios) {
   const nuevos = new URLSearchParams(searchParams);
   for (const [campo, valor] of Object.entries(cambios)) {

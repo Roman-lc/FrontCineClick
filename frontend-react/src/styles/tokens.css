@@ -1,37 +1,30 @@
-/* Tokens de CineClick: todos los colores de la app salen de aca. El rojo sale del logo.
-   Sitio publico: "Afiche noche" (oscuro). Panel /admin/*: "Afiche claro".
-   Contrastes verificados (WCAG AA): texto normal >= 4,5:1, bordes de campos >= 3:1. */
-
 :root {
-    /* ---------- Afiche noche (sitio publico) ---------- */
     color-scheme: dark;
-    --bg: #14110d; /* fondo general (tinta) */
-    --surface: #1e1a15; /* tarjetas, header, paneles */
-    --surface-2: #2a241d; /* hover, inputs, esqueletos, placeholders */
-    --border: #3a3229; /* divisores y bordes decorativos */
-    --border-input: #7a6d5c; /* borde de inputs, selects, checkboxes, butacas libres */
-    --text: #f3ede2; /* texto principal (papel) */
-    --text-muted: #a99e8d; /* texto secundario */
-    --accent: #f0323a; /* rojo del logo: accion principal, seleccion */
+    --bg: #14110d;
+    --surface: #1e1a15;
+    --surface-2: #2a241d;
+    --border: #3a3229;
+    --border-input: #7a6d5c;
+    --text: #f3ede2;
+    --text-muted: #a99e8d;
+    --accent: #f0323a;
     --accent-hover: #ff4d55;
-    --on-accent: #160b06; /* texto sobre --accent (oscuro: el blanco no llega a 4,5:1) */
-    --accent-text: #ff5a61; /* rojo usado como texto chico sobre superficies */
-    --tag-bg: #f3ede2; /* etiquetas tipo "Estreno" */
+    --on-accent: #160b06;
+    --accent-text: #ff5a61;
+    --tag-bg: #f3ede2;
     --tag-text: #14110d;
-    --danger: #ff7eb3; /* errores: rosa, separado del rojo de marca; siempre con icono */
+    --danger: #ff7eb3;
     --success: #34d399;
-    --focus: #f3ede2; /* anillo de foco */
+    --focus: #f3ede2;
     --avail-alta: #34d399;
     --avail-media: #f2b33d;
     --avail-baja: #ff7eb3;
     --avail-completa: #6b5f50;
-    --admin-bar: #2456d6; /* barra de sesion de administrador */
+    --admin-bar: #2456d6;
     --admin-bar-text: #ffffff;
 
-    /* Sombras y velos: un color oscuro en los dos temas (en el claro, el fondo es claro y no sirve) */
     --sombra: var(--bg);
 
-    /* ---------- Tipografia y medidas ---------- */
     --font-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
     --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
@@ -42,15 +35,10 @@
     --alto-barra-admin: 0px;
 }
 
-/* Con la barra de sesion de administrador visible, lo que queda fijo arriba (header, avisos) se corre */
 :root:has([data-barra-admin]) {
     --alto-barra-admin: 36px;
 }
 
-/* ---------- Afiche claro (solo /admin/*) ----------
-   El layout del panel pone data-theme="admin" en su contenedor. Tambien se aplica a toda la pagina
-   mientras ese contenedor existe, asi el fondo del body, los avisos flotantes y los dialogos (que se
-   dibujan afuera del contenedor) usan los mismos colores. */
 [data-theme='admin'],
 :root:has([data-theme='admin']) {
     color-scheme: light;
@@ -61,13 +49,13 @@
     --border-input: #8a7f70;
     --text: #16130f;
     --text-muted: #6b6358;
-    --accent: #c8102e; /* rojo del logo, oscurecido para fondo claro */
+    --accent: #c8102e;
     --accent-hover: #a50d26;
     --on-accent: #ffffff;
     --accent-text: #c8102e;
     --tag-bg: #16130f;
     --tag-text: #f3ede2;
-    --danger: #b0186e; /* magenta, separado del rojo de marca; siempre con icono */
+    --danger: #b0186e;
     --success: #0d6e4a;
     --focus: #16130f;
     --avail-alta: #0d6e4a;

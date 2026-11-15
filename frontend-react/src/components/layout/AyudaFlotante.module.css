@@ -23,7 +23,6 @@
     color: var(--text);
 }
 
-/* Con la barra de la funcion elegida abajo, el boton sube para no taparla */
 :global(body):has([data-barra-funcion]) .ayuda {
     bottom: calc(var(--alto-barra-funcion, 5.5rem) + 1rem);
 }

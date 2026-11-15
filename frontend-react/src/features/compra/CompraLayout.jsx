@@ -11,7 +11,6 @@ import { rutaPelicula } from '../../lib/slug';
 import { estadoInicial, guardarCompra, leerCompraGuardada } from './estadoCompra';
 import { CompraContext, useCuentaRegresiva } from './useCompra';
 
-// Ruta padre de /compra/:funcionId/entradas, /butacas y /pago. La key reinicia todo al cambiar de funcion.
 export default function CompraLayout() {
   const { funcionId } = useParams();
   return <FlujoCompra key={funcionId} funcionId={funcionId} />;
@@ -23,7 +22,6 @@ function FlujoCompra({ funcionId }) {
   const [estado, setEstado] = useState(() => estadoInicial(funcionId));
   const segundosRestantes = useCuentaRegresiva(estado.reserva?.fin);
 
-  // Si quedo la reserva de otra funcion (una compra abandonada a mitad), se libera
   useEffect(() => {
     const anterior = leerCompraGuardada();
     if (anterior?.reserva && String(anterior.funcionId) !== String(funcionId)) {

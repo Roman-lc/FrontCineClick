@@ -69,7 +69,6 @@ export default function HorariosPelicula({ pelicula, cines, funciones, filtros, 
   const cumpleFiltros = (f) =>
     (!filtros.formatos.length || filtros.formatos.includes(f.formato)) && (!filtros.idioma || f.idioma === filtros.idioma);
   const delDia = delCine.filter((f) => fechaDeFuncion(f) === dia && cumpleFiltros(f));
-  // Para el estado vacio: el proximo dia de la tira con funciones que cumplan los filtros
   const otroDia = dias.find((d) => d > dia && delCine.some((f) => fechaDeFuncion(f) === d && cumpleFiltros(f)));
   const grupos = agruparPorFormatoEIdioma(delDia);
   const hayFiltros = filtros.formatos.length > 0 || Boolean(filtros.idioma);

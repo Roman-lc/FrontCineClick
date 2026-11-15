@@ -1,10 +1,7 @@
-/* ---------- Estructura comun de los pasos ---------- */
-
 .compra {
     max-width: var(--ancho-max);
 }
 
-/* position y background pisan el estilo global de <header>, que es el del sitio */
 .cabecera {
     position: static;
     z-index: auto;
@@ -75,8 +72,6 @@
     background: color-mix(in srgb, var(--danger) 10%, transparent);
     color: var(--text);
 }
-
-/* ---------- Resumen ---------- */
 
 .resumen {
     position: sticky;
@@ -248,8 +243,6 @@
     color: var(--text);
 }
 
-/* ---------- Paso 1: tipos de entrada ---------- */
-
 .grupoEntradas + .grupoEntradas {
     margin-top: 1.75rem;
 }
@@ -331,8 +324,6 @@
     font-weight: 600;
 }
 
-/* ---------- Paso 2: butacas ---------- */
-
 .indicacion {
     display: flex;
     flex-wrap: wrap;
@@ -350,8 +341,6 @@
     font-size: 0.85rem;
     font-weight: 600;
 }
-
-/* ---------- Paso 3: pago ---------- */
 
 .bloque {
     margin: 0 0 1.75rem;
@@ -583,8 +572,6 @@
     font-weight: 700;
 }
 
-/* ---------- Barra de funcion elegida (cartelera y detalle) ---------- */
-
 .espacioBarra {
     height: 5.5rem;
 }
@@ -628,7 +615,6 @@
     gap: 0.75rem;
 }
 
-/* Enlace de doble funcion dentro de la barra (texto subrayado, como los enlaces) */
 .verCombinables {
     align-self: flex-start;
     min-height: 32px;
@@ -649,7 +635,6 @@
     color: var(--accent-text);
 }
 
-/* Panel de doble funcion: se despliega arriba de la barra */
 .panelCombinables {
     position: absolute;
     right: 0;
@@ -662,8 +647,6 @@
     background: var(--surface);
     box-shadow: 0 -12px 24px color-mix(in srgb, var(--sombra) 40%, transparent);
 }
-
-/* ---------- Mobile ---------- */
 
 @media (max-width: 860px) {
     .columnas {
@@ -733,7 +716,6 @@
     }
 }
 
-/* Con una barra fija abajo, el pie de pagina deja lugar para que no quede tapado */
 :global(body):has(.barraFuncion) :global(footer) {
     padding-bottom: 6rem;
 }

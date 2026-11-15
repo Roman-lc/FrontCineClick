@@ -64,7 +64,6 @@ button.chip:hover {
     text-decoration: line-through;
 }
 
-/* Disponibilidad (mismos colores que la leyenda del detalle) */
 .alta {
     color: var(--avail-alta);
 }

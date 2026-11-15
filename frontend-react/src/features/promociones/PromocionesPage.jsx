@@ -16,8 +16,6 @@ const DIAS_PARA_AVISAR = 3;
 
 export default function PromocionesPage() {
   const { user } = useAuth();
-  // Con sesion de cliente, el backend dice si cada promocion la puede usar y, si no, por que (X-Usuario-Id lo
-  // agrega http.js). Se vuelve a pedir cuando cambia la sesion.
   const usuarioId = user?.clienteId ? user.usuarioId : undefined;
   const [intento, setIntento] = useState(0);
   const [estado, setEstado] = useState({ cargando: true, error: false, promociones: [] });
@@ -26,7 +24,6 @@ export default function PromocionesPage() {
     let ignorar = false;
     getPromocionesVigentes()
       .then((promociones) => {
-        // El backend ya deja afuera las agotadas, vencidas y programadas
         if (!ignorar) setEstado({ cargando: false, error: false, promociones });
       })
       .catch(() => {
@@ -116,7 +113,6 @@ function TarjetaPromocion({ promo }) {
     restantes !== null && restantes < promo.usosMaximosTotales * 0.2 && `Quedan ${restantes}`,
   ].filter(Boolean);
 
-  // Sin titulo propio (promociones viejas) se usa el codigo, asi la descripcion no repite el beneficio
   const titulo = promo.titulo || `Código ${promo.codigo}`;
 
   const usar = () => {
@@ -130,7 +126,6 @@ function TarjetaPromocion({ promo }) {
       setCopiado(true);
       setTimeout(() => setCopiado(false), 2000);
     } catch {
-      // Sin portapapeles: se selecciona el codigo para copiarlo a mano
       const seleccion = window.getSelection();
       const rango = document.createRange();
       rango.selectNodeContents(codigo.current);

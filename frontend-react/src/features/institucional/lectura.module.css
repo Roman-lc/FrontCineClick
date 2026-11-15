@@ -2,7 +2,6 @@
     max-width: 1080px;
 }
 
-/* <header>: se pisa el estilo global, que es el del sitio */
 .cabecera {
     position: static;
     max-width: 720px;
@@ -37,8 +36,6 @@
     gap: 3rem;
     align-items: start;
 }
-
-/* ---------- Indice ---------- */
 
 .indice {
     position: sticky;
@@ -81,8 +78,6 @@
 .indiceMovil {
     display: none;
 }
-
-/* ---------- Texto ---------- */
 
 .texto {
     color: var(--text-muted);
@@ -150,7 +145,6 @@
     margin-top: 0.5rem;
 }
 
-/* Cita textual (leyenda de la Ley 25.326) */
 .cita {
     margin: 0 0 0.85rem;
     padding: 0.85rem 1rem;

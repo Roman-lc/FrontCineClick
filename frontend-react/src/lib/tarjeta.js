@@ -1,6 +1,3 @@
-// Validaciones de los datos de la tarjeta. Nada de esto sale del navegador: al backend solo
-// llegan la marca y los ultimos 4 digitos (el pago es simulado).
-
 export const MARCAS = [
   { id: 'amex', nombre: 'American Express', patron: /^3[47]/, largo: 15, largoCodigo: 4 },
   { id: 'visa', nombre: 'Visa', patron: /^4/, largo: 16, largoCodigo: 3 },
@@ -13,7 +10,6 @@ export function detectarMarca(digitos) {
   return MARCAS.find((marca) => marca.patron.test(digitos)) ?? null;
 }
 
-// "4111111111111111" -> "4111 1111 1111 1111"
 export function formatearNumeroTarjeta(digitos) {
   return digitos.replace(/(\d{4})(?=\d)/g, '$1 ');
 }
@@ -22,7 +18,6 @@ export function largoMaximoNumero(marca) {
   return marca?.largo ?? 16;
 }
 
-// Algoritmo de Luhn: detecta numeros mal tipeados (un digito cambiado o dos invertidos)
 export function pasaLuhn(digitos) {
   let suma = 0;
   for (let i = 0; i < digitos.length; i++) {
@@ -36,8 +31,6 @@ export function pasaLuhn(digitos) {
   return digitos.length > 0 && suma % 10 === 0;
 }
 
-// Se guardan solo los digitos ("0528") y la barra se agrega al mostrar ("05/28").
-// Si el primer digito no puede ser decena de mes (2 a 9), se completa con 0: "4" -> "04".
 export function normalizarVencimiento(texto) {
   let digitos = soloDigitos(texto).slice(0, 4);
   if (digitos.length === 1 && digitos > '1') digitos = `0${digitos}`;
@@ -61,7 +54,6 @@ export function validarVencimiento(digitos, hoy = new Date()) {
   const mes = Number(digitos.slice(0, 2));
   if (digitos.length !== 4 || mes < 1 || mes > 12) return 'El vencimiento no es válido. Usá el formato MM/AA.';
   const anio = 2000 + Number(digitos.slice(2));
-  // La tarjeta sirve hasta el ultimo dia del mes que figura
   if (anio < hoy.getFullYear() || (anio === hoy.getFullYear() && mes < hoy.getMonth() + 1)) {
     return 'La tarjeta está vencida.';
   }

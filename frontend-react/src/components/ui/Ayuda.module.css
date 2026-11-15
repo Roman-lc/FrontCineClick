@@ -20,7 +20,6 @@
     cursor: help;
 }
 
-/* El circulo es chico, pero el area tactil mide 44x44 */
 .boton::after {
     content: '';
     position: absolute;

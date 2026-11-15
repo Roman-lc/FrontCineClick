@@ -6,9 +6,6 @@ import { etiquetaFormato, etiquetaIdioma } from '../../lib/formato';
 import { getCombinables } from '../../services/funciones';
 import styles from './combinables.module.css';
 
-// Doble funcion: que mas se puede ver el mismo dia en el mismo cine, antes o despues de la funcion elegida.
-// Los horarios de fin son estimados (duracion + publicidad), por eso llevan "aprox.".
-//   onElegir(sugerencia): al tocar una tarjeta (la barra la selecciona; la confirmacion lleva a comprarla).
 export default function PanelCombinables({ funcionId, onElegir, idTitulo }) {
   const [estado, setEstado] = useState({ cargando: true, error: false, datos: null, funcionId });
 

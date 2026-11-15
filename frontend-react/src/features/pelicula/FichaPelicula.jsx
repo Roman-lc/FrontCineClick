@@ -13,7 +13,6 @@ import {
 import styles from './pelicula.module.css';
 
 export default function FichaPelicula({ pelicula }) {
-  // Las filas sin dato no se muestran (por ejemplo, el distribuidor no existe en el modelo)
   const formatos = [...(pelicula.formatosDisponibles ?? [])].sort((a, b) => ORDEN_FORMATOS.indexOf(a) - ORDEN_FORMATOS.indexOf(b));
   const datos = [
     [

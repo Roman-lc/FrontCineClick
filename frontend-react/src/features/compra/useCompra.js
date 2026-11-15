@@ -1,7 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
-// Datos compartidos por los tres pasos (los carga CompraLayout):
-// { funcion, pelicula, precios, estado, actualizar, segundosRestantes }
 export const CompraContext = createContext(null);
 
 export function useCompra() {
@@ -12,7 +10,6 @@ export function useCompra() {
 
 const restantes = (fin) => (fin ? Math.max(0, Math.ceil((fin - Date.now()) / 1000)) : null);
 
-// Segundos que faltan hasta "fin" (ms), o null si no hay reserva
 export function useCuentaRegresiva(fin) {
   const [segundos, setSegundos] = useState(() => restantes(fin));
   useEffect(() => {

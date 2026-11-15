@@ -6,7 +6,6 @@ import { IconoBuscar, IconoMas } from './Iconos';
 import { FILTRO_ESTADO } from './filtros';
 import styles from './admin.module.css';
 
-// Dato vacio en la tabla: un guion en color secundario, que el lector de pantalla lee como "sin dato"
 export function SinDato() {
   return (
     <span className={styles.sinDato}>
@@ -16,9 +15,6 @@ export function SinDato() {
   );
 }
 
-// Estructura comun de las pantallas de gestion: titulo y boton principal, buscador, filtro de estado
-// (y filtros extra), y la tabla o el estado que corresponda (cargando, error, vacio).
-//   total: cantidad sin filtrar. cantidad: filas que quedan con los filtros.
 export default function PaginaGestion({
   titulo,
   textoAgregar,
@@ -37,8 +33,6 @@ export default function PaginaGestion({
   vacio,
   children,
 }) {
-  // En el celular la tabla se ve como tarjetas (ver .tablaCaja[data-tarjetas] en admin.module.css): cada celda
-  // lleva el titulo de su columna en data-label. Se recalcula en cada render porque las filas cambian con los filtros.
   const caja = useRef(null);
   useEffect(() => {
     const tabla = caja.current?.querySelector('table');

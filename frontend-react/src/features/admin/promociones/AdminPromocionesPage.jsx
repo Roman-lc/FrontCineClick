@@ -60,7 +60,6 @@ const aFormulario = (p) => ({
 
 const numero = (valor) => (String(valor).trim() ? Number(String(valor).replace(',', '.')) : null);
 
-// Lo que viaja al backend. Ningun dia elegido = todos los dias (lista vacia).
 const aDatos = (v) => ({
   codigo: v.codigo.trim().toUpperCase(),
   titulo: texto(v.titulo),
@@ -77,7 +76,6 @@ const aDatos = (v) => ({
   activa: v.activa,
 });
 
-// "01/11 00:00"
 const fechaHora = (iso) => `${fechaCorta(iso.slice(0, 10))} ${horaCorta(iso)}`;
 
 const ATAJOS = [
@@ -180,7 +178,6 @@ export default function AdminPromocionesPage() {
     edicion.cambiar('diasSemana', DIAS_SEMANA.map((d) => d.valor).filter((d) => elegidos.has(d)));
   };
 
-  // Vista previa con los mismos textos que la tarjeta publica
   const previa = {
     ...aDatos({ ...valores, vigenciaDesde: valores.vigenciaDesde || '2000-01-01T00:00', vigenciaHasta: valores.vigenciaHasta || '2000-01-01T00:00' }),
     usosActuales: edicion.item?.usosActuales ?? 0,

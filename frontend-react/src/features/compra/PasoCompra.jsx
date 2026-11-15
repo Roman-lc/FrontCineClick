@@ -9,9 +9,6 @@ import ResumenCompra from './ResumenCompra';
 import { useCompra } from './useCompra';
 import styles from './compra.module.css';
 
-// Estructura comun de los tres pasos: cabecera (atras, titulo con el reloj, cerrar), contenido a la
-// izquierda y resumen a la derecha. accion: { texto, onClick, deshabilitado, cargando }.
-// extraResumen va al final del resumen en desktop y al final del contenido en mobile.
 export default function PasoCompra({ titulo, paso, onAtras, accion, extraResumen, children }) {
   const { funcion, estado, segundosRestantes } = useCompra();
   const navigate = useNavigate();
@@ -65,7 +62,6 @@ export default function PasoCompra({ titulo, paso, onAtras, accion, extraResumen
   );
 }
 
-// Para lectores de pantalla: el reloj del titulo cambia cada segundo y no se anuncia
 function AvisoTiempo({ segundos }) {
   let texto = `Tu reserva vence en ${Math.ceil(segundos / 60)} minutos.`;
   if (segundos <= 60) texto = 'Queda menos de un minuto para completar la compra.';

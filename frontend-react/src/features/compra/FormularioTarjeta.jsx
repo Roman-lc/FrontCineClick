@@ -11,8 +11,6 @@ import { IDS_CAMPOS } from './estadoCompra';
 import LogoMarca from './LogoMarca';
 import styles from './compra.module.css';
 
-// Campos controlados: el componente solo limpia lo que se escribe (sin letras donde van numeros,
-// espacios y barra automaticos). Los errores llegan ya filtrados: solo los de campos que se dejaron.
 export default function FormularioTarjeta({ valores, errores, marca, onCambiar, onSalir }) {
   const cambiarNumero = (texto) => {
     const digitos = soloDigitos(texto);

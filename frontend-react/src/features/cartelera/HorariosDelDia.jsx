@@ -4,12 +4,6 @@ import ChipHorario from '../../components/ui/ChipHorario';
 import { nombreCine } from '../../lib/formato';
 import styles from './cartelera.module.css';
 
-// Horarios de una pelicula para el dia elegido, en una zona de alto fijo para que todas las
-// tarjetas midan lo mismo:
-// - con un cine elegido: hasta 2 filas de chips; si no entran, el ultimo lugar es "+N" (va al detalle);
-// - con "todos los cines": solo el cine con la funcion mas proxima (1 fila) y "y N cines más".
-// Tocar un horario lo elige (onElegir) y la pagina muestra la barra para comprar.
-// enlaceDetalle: { to, state } del detalle de la pelicula (para "+N" y "y N cines más").
 export default function HorariosDelDia({ funciones, agruparPorCine, elegidaId, onElegir, enlaceDetalle }) {
   const [zona, porFila] = useChipsPorFila();
   const chip = { elegidaId, onElegir, enlaceDetalle };
@@ -30,7 +24,6 @@ export default function HorariosDelDia({ funciones, agruparPorCine, elegidaId, o
     );
   }
 
-  // Las funciones llegan ordenadas por hora: el primer cine es el de la funcion mas proxima
   const [[cine, delCine], ...otros] = agruparPorNombreDeCine(funciones);
   return (
     <div ref={zona} className={styles.horarios}>
@@ -72,8 +65,6 @@ function ListaChips({ funciones, maximo, elegidaId, onElegir, enlaceDetalle }) {
   );
 }
 
-// Cuantos chips entran por fila segun el ancho real de la zona. El ancho del chip y la separacion
-// salen del CSS (--ancho-chip y gap), asi este calculo y el dibujo no se desfasan.
 function useChipsPorFila() {
   const zona = useRef(null);
   const [porFila, setPorFila] = useState(3);

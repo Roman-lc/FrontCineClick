@@ -16,7 +16,6 @@ export default function PasoEntradas() {
   const total = cantidadDeEntradas(estado.entradas);
   const reservaAlEntrar = useRef(estado.reserva);
 
-  // Volver a este paso con una reserva activa (por ejemplo con el boton atras del navegador) la cancela
   useEffect(() => {
     const reserva = reservaAlEntrar.current;
     if (!reserva) return;
@@ -66,7 +65,6 @@ export default function PasoEntradas() {
   );
 }
 
-// Cada tipo de entrada es un "ticket": datos a la izquierda y contador a la derecha
 function TicketEntrada({ tipo, cantidad, puedeSumar, onCambiar }) {
   const contador = (
     <div className={styles.contador} role="group" aria-label={`Cantidad de entradas ${tipo.nombre}`}>

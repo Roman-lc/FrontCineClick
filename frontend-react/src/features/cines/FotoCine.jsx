@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { nombreCine } from '../../lib/formato';
 import styles from './cines.module.css';
 
-// Foto del cine. Si no tiene o no carga, un recuadro con el nombre en la tipografia de los titulos.
-// className define la proporcion (16:9 en la tarjeta, banner en la pagina del cine).
 export default function FotoCine({ cine, className = '', cargaDiferida = true }) {
   const [fallo, setFallo] = useState(false);
   if (!cine.urlImagen || fallo) {

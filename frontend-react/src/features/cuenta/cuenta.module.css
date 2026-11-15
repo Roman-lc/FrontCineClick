@@ -14,14 +14,11 @@
     line-height: 1.05;
 }
 
-/* Titulo de seccion, igual que en cines y promociones */
 .subtitulo {
     margin: 0 0 1rem;
     font-size: 1.6rem;
     text-transform: uppercase;
 }
-
-/* ---------- Interruptor "Mostrar canceladas" ---------- */
 
 .interruptor {
     display: inline-flex;
@@ -69,8 +66,6 @@
     transform: translateX(18px);
 }
 
-/* ---------- Grupos y filas ---------- */
-
 .grupo {
     margin-bottom: 2.25rem;
 }
@@ -89,7 +84,6 @@
     list-style: none;
 }
 
-/* De izquierda a derecha: poster, pelicula, funcion, cine y sala, entradas, total y estado */
 .fila {
     position: relative;
     display: grid;
@@ -112,7 +106,6 @@
     margin: 0;
 }
 
-/* Canceladas: color apagado, sin tachar */
 .filaApagada {
     background: transparent;
 }
@@ -153,7 +146,6 @@
     text-decoration: none;
 }
 
-/* El area del enlace cubre toda la fila */
 .enlaceFila::after {
     content: '';
     position: absolute;
@@ -232,8 +224,6 @@
     color: var(--text-muted);
 }
 
-/* ---------- Lista de espera ---------- */
-
 .avisos {
     margin-top: 2.5rem;
     padding-top: 2rem;
@@ -253,7 +243,6 @@
     color: var(--text);
 }
 
-/* Tablet: la fila pasa a dos lineas (datos arriba, cine/entradas/total abajo) */
 @media (max-width: 1024px) {
     .fila {
         grid-template-columns: 48px minmax(0, 1fr) auto;
@@ -299,7 +288,6 @@
     }
 }
 
-/* Celular: tres lineas apiladas al lado del poster */
 @media (max-width: 560px) {
     .fila {
         grid-template-columns: 44px minmax(0, 1fr) auto;

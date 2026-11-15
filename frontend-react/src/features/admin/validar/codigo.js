@@ -1,8 +1,6 @@
 import { fechaCorta, horaCorta, hoyISO } from '../../../lib/fechas';
 import { nombreCine } from '../../../lib/formato';
 
-// Lo que llega del campo (tipeado, de un lector de mano o de la camara) -> codigo de 8 caracteres.
-// Acepta "abcd-1234", "ABCD 1234" o una URL que lo contenga (https://.../entradas/ABCD1234).
 export function extraerCodigo(texto) {
   const crudo = String(texto ?? '').trim().toUpperCase();
   if (/[/?=#&]/.test(crudo)) {
@@ -17,13 +15,11 @@ export function extraerCodigo(texto) {
 
 const DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
 
-// "hoy a las 13:52" o "el 31/10 a las 13:52"
 function cuando(iso) {
   const fecha = iso.slice(0, 10);
   return fecha === hoyISO() ? `hoy a las ${horaCorta(iso)}` : `el ${fechaCorta(fecha)} a las ${horaCorta(iso)}`;
 }
 
-// "el sábado 31/10 a las 18:15"
 function diaYHora(iso) {
   const fecha = iso.slice(0, 10);
   return `el ${DIAS[new Date(`${fecha}T00:00:00`).getDay()]} ${fechaCorta(fecha)} a las ${horaCorta(iso)}`;
@@ -31,7 +27,6 @@ function diaYHora(iso) {
 
 export const AVISO_TIPO = { MENOR: 'Pedir DNI del menor', JUBILADO: 'Pedir credencial de jubilado' };
 
-// Titulo del resultado y si se acepta. r: ValidacionEntradaResponseDTO, o { resultado: 'NO_EXISTE' | 'ERROR' }.
 export function textoResultado(r) {
   switch (r.resultado) {
     case 'VALIDA':
@@ -55,7 +50,6 @@ export function textoResultado(r) {
   }
 }
 
-// Texto corto para el historial
 export const RESUMEN = {
   VALIDA: 'Válida',
   YA_USADA: 'Ya usada',

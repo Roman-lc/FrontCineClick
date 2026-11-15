@@ -1,25 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import styles from './Selector.module.css';
 
-/**
- * Desplegable unico de la app (cine, dia, formato, idioma, genero).
- *
- * Props:
- * - opciones: [{ valor, texto, deshabilitada?, nota? }]
- * - valor: el valor elegido (string) o, con `multiple`, la lista de valores elegidos
- * - onCambiar(nuevoValor): recibe un string o, con `multiple`, la lista nueva
- * - multiple: permite elegir varias opciones (el panel queda abierto al elegir)
- * - etiqueta: texto del boton. Si no se pasa, se muestra el texto de la opcion elegida
- * - etiquetaAccesible: nombre para lectores de pantalla cuando el texto del boton no alcanza
- *   (ej. "Idioma" si el boton dice "Castellano"). Si hay un <label htmlFor={id}>, no hace falta
- * - id: id del boton, para asociarlo a un <label>
- * - variante: 'segmento' (dentro de BarraSegmentos) o 'frase' (resaltado con el acento,
- *   dentro de una oracion: "Horarios en [Abasto]")
- * - activo: resalta el boton (hay un filtro aplicado)
- *
- * Teclado: con el boton enfocado, Flecha abajo / Enter / Espacio abren la lista. En la lista,
- * Flechas y Inicio/Fin mueven, Enter/Espacio eligen, Escape cierra y vuelve al boton, Tab cierra.
- */
 export default function Selector({
   opciones,
   valor,
@@ -65,7 +46,6 @@ export default function Selector({
     }
   };
 
-  // Al abrir, el foco pasa a la lista para poder moverse con el teclado
   useEffect(() => {
     if (abierto) lista.current?.focus();
   }, [abierto]);

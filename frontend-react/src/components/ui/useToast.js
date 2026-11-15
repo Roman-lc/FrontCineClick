@@ -1,6 +1,5 @@
 import { createContext, useContext } from 'react';
 
-// Contexto de los avisos (lo provee ToastProvider)
 export const ToastContext = createContext(null);
 
 export function useToast() {

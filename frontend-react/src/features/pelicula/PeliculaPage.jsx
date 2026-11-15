@@ -13,8 +13,6 @@ import HorariosPelicula from './HorariosPelicula';
 import BarraFuncionElegida from '../compra/BarraFuncionElegida';
 import styles from './pelicula.module.css';
 
-// La URL es /peliculas/<slug del titulo>. El cine y el dia elegidos en la cartelera llegan en el
-// estado de la navegacion (no en la URL). La key reinicia todo al pasar de una pelicula a otra.
 export default function PeliculaPage() {
   const { slug } = useParams();
   return <DetallePelicula key={slug} slug={slug} />;
@@ -37,7 +35,6 @@ function DetallePelicula({ slug }) {
     let ignorar = false;
     getPeliculaPorSlug(slug)
       .then(async (pelicula) => {
-        // Un link viejo con el id (/peliculas/45) se reemplaza por el del titulo
         if (aSlug(pelicula.titulo) !== slug) {
           navigate(rutaPelicula(pelicula.titulo), { replace: true, state: location.state });
           return;

@@ -1,7 +1,6 @@
 import { useEffect, useId, useRef } from 'react';
 import styles from './Modal.module.css';
 
-// Usa <dialog> nativo: showModal() ya atrapa el foco, cierra con Escape y lo devuelve al boton que lo abrio.
 export default function Modal({ abierto, titulo, onCerrar, children }) {
   const ref = useRef(null);
   const idTitulo = useId();

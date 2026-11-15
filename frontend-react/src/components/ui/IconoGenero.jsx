@@ -1,4 +1,3 @@
-// Claqueta, decorativa.
 export default function IconoGenero({ tamano = 16 }) {
   return (
     <svg width={tamano} height={tamano} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" focusable="false">

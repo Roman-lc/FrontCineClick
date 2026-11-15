@@ -1,4 +1,3 @@
-// Iconos de linea para las acciones del panel (24x24, heredan el color del texto)
 function Icono({ children, tamano = 18 }) {
   return (
     <svg width={tamano} height={tamano} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">

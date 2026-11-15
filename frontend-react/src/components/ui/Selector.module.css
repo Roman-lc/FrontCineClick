@@ -27,8 +27,6 @@
     transform: rotate(180deg);
 }
 
-/* ---------- Variante segmento (dentro de BarraSegmentos) ---------- */
-
 .segmento .boton {
     height: 100%;
     padding: 0.7rem 1.1rem;
@@ -47,12 +45,9 @@
     color: var(--text-muted);
 }
 
-/* Hay un filtro aplicado en este segmento */
 .segmento .activo {
     color: var(--accent-text);
 }
-
-/* ---------- Variante frase ("Horarios en [Abasto]") ---------- */
 
 .frase {
     display: inline-block;
@@ -72,8 +67,6 @@
 .frase .boton:hover {
     background: var(--surface);
 }
-
-/* ---------- Lista ---------- */
 
 .panel {
     position: absolute;
@@ -131,7 +124,6 @@
     font-weight: 400;
 }
 
-/* Indicadores: casilla para multiple, punto para simple */
 .casilla,
 .marca {
     flex-shrink: 0;
@@ -152,7 +144,6 @@
     background: var(--accent);
 }
 
-/* Check dibujado con bordes en el color sobre el acento */
 .opcion[aria-selected='true'] .casilla::after {
     content: '';
     width: 4px;
@@ -169,8 +160,6 @@
     background: var(--accent);
 }
 
-/* En el celular la lista toma el ancho de la barra de filtros, asi un segmento cercano al borde
-   no la saca de la pantalla */
 @media (max-width: 640px) {
     .segmento {
         position: static;

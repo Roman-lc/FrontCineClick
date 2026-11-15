@@ -66,8 +66,6 @@
     min-height: 44px;
 }
 
-/* ---------- Menu de la cuenta ---------- */
-
 .cuenta {
     position: relative;
 }
@@ -150,8 +148,6 @@
     margin: 0.35rem 0;
     background: var(--border);
 }
-
-/* ---------- Celular ---------- */
 
 .hamburguesa {
     display: none;

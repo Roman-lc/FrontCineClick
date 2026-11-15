@@ -22,12 +22,9 @@ import { HORAS, MINUTOS, combinar, diaDeLaGrilla, separar, siguienteLibre, tramo
 import propias from './funciones.module.css';
 
 const ID_FORM = 'form-funcion';
-// Igual que cineclick.funciones.minutos-limpieza en el backend (que es quien decide)
 const MINUTOS_LIMPIEZA = 20;
-// fecha, hora y minuto son los controles; fechaHoraInicio es la combinacion que se valida y se envia
 const VACIO = { peliculaId: '', cineId: '', salaId: '', fecha: '', hora: '', minuto: '', fechaHoraInicio: '', formato: '', idioma: '', precioBase: '' };
 
-// Precio en pesos enteros: el campo guarda solo los digitos y los muestra con separador de miles
 const soloDigitos = (texto) => String(texto).replace(/\D/g, '').slice(0, 8);
 const precioVisible = (digitos) => (digitos ? `$ ${Number(digitos).toLocaleString('es-AR')}` : '');
 
@@ -69,12 +66,10 @@ export default function AdminFuncionesPage() {
   const [busqueda, setBusqueda] = useState('');
   const [estado, setEstado] = useState('proximas');
   const [cineFiltro, setCineFiltro] = useState('');
-  // Con miles de funciones (las pasadas incluidas) la tabla se dibuja de a POR_PAGINA filas; con otro filtro vuelve a empezar
   const [mostradas, setMostradas] = useState({ filtro: '', cantidad: POR_PAGINA });
 
   const peliculaDe = (id) => peliculas.find((p) => String(p.id) === String(id));
 
-  // Fin estimado: duracion de la pelicula mas el margen de limpieza
   const finDe = (v) => {
     const pelicula = peliculaDe(v.peliculaId);
     if (!pelicula || !v.fechaHoraInicio) return null;
@@ -83,13 +78,11 @@ export default function AdminFuncionesPage() {
 
   const duracionDe = (f) => peliculaDe(f.peliculaId)?.duracionMinutos ?? 0;
 
-  // Funciones de la sala en el dia de la grilla elegido (las de trasnoche cuentan para ese dia), sin la que se edita
   const funcionesDeLaSala = (v) =>
     funciones
       .filter((f) => String(f.salaId) === v.salaId && f.id !== edicion.item?.id && f.estado !== 'CANCELADA' && diaDeLaGrilla(f.fechaHoraInicio) === v.fecha)
       .sort((a, b) => a.fechaHoraInicio.localeCompare(b.fechaHoraInicio));
 
-  // Misma regla que el backend: la funcion ocupa la sala desde el inicio hasta el fin con limpieza
   const superposicion = (v) => {
     const fin = finDe(v);
     if (!v.fechaHoraInicio || !v.salaId || !fin) return null;
@@ -158,14 +151,12 @@ export default function AdminFuncionesPage() {
   });
   const { valores, errores } = edicion;
 
-  // Llegando con ?funcion=ID (desde las metricas) se abre el detalle de esa funcion una sola vez
   const funcionPedida = params.get('funcion');
   useEffect(() => {
     if (!funcionPedida || !listado.datos) return;
     const funcion = listado.datos.funciones.find((f) => String(f.id) === funcionPedida);
     setParams({}, { replace: true });
     if (funcion) edicion.abrir(funcion);
-    // edicion.abrir cambia en cada render: solo interesa reaccionar al pedido y a la carga
   }, [funcionPedida, listado.datos]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const nombreFuncion = (f) => `la función de ${f.peliculaTitulo} del ${fechaFuncionCorta(f.fechaHoraInicio)}`;
@@ -357,7 +348,6 @@ export default function AdminFuncionesPage() {
                 onBlur={() => edicion.tocar('peliculaId')}
                 onChange={(e) => {
                   const elegida = peliculaDe(e.target.value);
-                  // Formato e idioma se proponen segun la pelicula (se pueden cambiar)
                   edicion.cambiar({
                     peliculaId: e.target.value,
                     formato: elegida?.formatosDisponibles.includes(valores.formato) ? valores.formato : (elegida?.formatosDisponibles[0] ?? ''),
@@ -407,8 +397,6 @@ export default function AdminFuncionesPage() {
             </Campo>
           </div>
 
-          {/* Fecha, hora y minutos por separado: con selects no se puede elegir un horario que no termine en 0 o 5.
-              El error aparece al salir del grupo o al guardar, no mientras se completa */}
           <div className={styles.campo} onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && edicion.tocar('fechaHoraInicio')}>
             <span id="etiqueta-horario" className={styles.etiqueta}>
               Fecha y hora

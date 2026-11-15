@@ -5,14 +5,12 @@
     margin-top: 1.5rem;
 }
 
-/* Las salas anchas (IMAX) no entran en un celular: se desplaza el mapa, no la pagina */
 .desplazable {
     container-type: inline-size;
     overflow-x: auto;
     padding: 0.25rem 0 0.75rem;
 }
 
-/* El tamaño de la butaca se ajusta para que entre la sala; con menos de 22px se desplaza */
 .sala {
     --separacion: 6px;
     --tam: clamp(22px, calc((100cqw - 1.5rem) / var(--columnas) - var(--separacion)), 32px);
@@ -98,7 +96,6 @@
     color: var(--on-accent);
 }
 
-/* Ocupada: fondo --border con la X en --text-muted y opacidad 0,5 */
 .ocupada,
 .ocupada.silla {
     border-color: var(--border);

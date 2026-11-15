@@ -1,6 +1,3 @@
-// El backend responde los errores de validacion (400) con detalles "campo: mensaje".
-// Se separan por campo para mostrarlos debajo de cada control; lo que no es de un campo queda
-// como error general del formulario.
 export function erroresDeApi(err) {
   const porCampo = {};
   if (err?.status === 400) {
@@ -20,7 +17,6 @@ export function erroresDeApi(err) {
   return { porCampo, general };
 }
 
-// ["salas", "funciones", "compras"] -> "salas, funciones y compras"
 export function listarAsociados(detalles = []) {
   if (detalles.length <= 1) return detalles[0] ?? 'datos';
   return `${detalles.slice(0, -1).join(', ')} y ${detalles[detalles.length - 1]}`;

@@ -1,6 +1,3 @@
-// Distintivos simples para mostrar la marca detectada dentro del campo del numero.
-// Van en los colores de las etiquetas (no en los de cada marca), asi siguen la paleta en los dos temas.
-// Los colores van en style: los atributos fill de SVG no aceptan var().
 const fondo = { fill: 'var(--tag-bg)' };
 const marcaColor = { fill: 'var(--tag-text)' };
 

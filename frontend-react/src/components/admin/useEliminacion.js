@@ -1,10 +1,5 @@
 import { listarAsociados } from './erroresApi';
 
-// Flujo de "Eliminar" del patron de gestion:
-// 1. Confirmacion "¿Eliminar X? Esta accion no se puede deshacer".
-// 2. Si el backend responde 409 (tiene datos asociados), se ofrece la alternativa: desactivar
-//    (o cancelar, en las funciones) para que deje de aparecer en el sitio.
-//   alternativa(item, asociados): { titulo, mensaje, textoConfirmar, accion } o null si no hay.
 export function useEliminacion({ confirmar, mostrarAviso, nombreDe, eliminar, textoEliminado, alternativa, onCambio }) {
   return async function iniciar(item) {
     const nombre = nombreDe(item);

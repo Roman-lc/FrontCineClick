@@ -38,7 +38,6 @@ export default function CinesPage() {
       const funciones = estado.datos.funciones.filter((f) => f.cineId === cine.id);
       return { cine, formatos: formatosDelCine(cine, funciones), horario: horarioDelCine(funciones) };
     });
-  // Chips de filtro: solo los formatos que tiene algun cine. El elegido va en la URL (?formato=IMAX)
   const formatosExistentes = [...new Set(cines.flatMap((c) => c.formatos))].sort(
     (a, b) => ORDEN_FORMATOS.indexOf(a) - ORDEN_FORMATOS.indexOf(b)
   );

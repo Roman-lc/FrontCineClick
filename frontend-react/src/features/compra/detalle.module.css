@@ -67,8 +67,6 @@
     color: var(--success);
 }
 
-/* ---------- Tarjeta de la funcion ---------- */
-
 .funcion {
     display: grid;
     grid-template-columns: 96px minmax(0, 1fr);
@@ -137,9 +135,6 @@
     color: var(--accent-text);
 }
 
-/* ---------- Entradas ---------- */
-
-/* Titulo de seccion, igual que en el resto de la app */
 .subtitulo {
     margin: 0 0 0.5rem;
     font-size: 1.6rem;
@@ -182,8 +177,6 @@
     gap: 0.4rem;
 }
 
-/* Recuadro claro alrededor del QR (zona de silencio para que los lectores lo tomen). El color del
-   papel llega por style desde la constante QR_PAPEL del componente. */
 .qrFondo {
     display: block;
     padding: 12px;
@@ -245,8 +238,6 @@
 .soloImpresion {
     display: none;
 }
-
-/* ---------- Desglose ---------- */
 
 .desglose {
     display: flex;
@@ -321,10 +312,7 @@
     }
 }
 
-/* ---------- Impresion: solo las entradas, en blanco y negro ---------- */
-
 @media print {
-    /* Excepcion a los tokens: la impresion va siempre en blanco y negro, sin importar el tema */
     :global(html) {
         --impresion-papel: #fff;
         --impresion-tinta: #000;

@@ -4,8 +4,6 @@
     height: 100%;
 }
 
-/* ---------- Poster ---------- */
-
 .posterCaja {
     position: relative;
     border-radius: var(--radius) var(--radius) 0 0;
@@ -18,7 +16,6 @@
     text-decoration: none;
 }
 
-/* Poster 2:3 en todas las tarjetas (ver Poster): los de una fila quedan de igual alto */
 .poster {
     transition: transform 0.3s;
 }
@@ -54,7 +51,6 @@
     backdrop-filter: blur(4px);
 }
 
-/* Mismo estilo que la duracion, abajo a la izquierda */
 .badgeEstreno {
     top: auto;
     right: auto;
@@ -63,8 +59,6 @@
     letter-spacing: 0.06em;
     text-transform: uppercase;
 }
-
-/* ---------- Informacion ---------- */
 
 .info {
     flex: 1;
@@ -89,10 +83,8 @@
     font-weight: 400;
     font-size: 1.35rem;
     letter-spacing: 0.03em;
-    /* No menos de 1.15: con menos, el recorte a 2 lineas corta las tildes de las mayusculas (É, Á) */
     line-height: 1.15;
     text-transform: uppercase;
-    /* Hasta 2 lineas, y siempre reserva el alto de 2 aunque el titulo ocupe 1 */
     min-height: calc(2 * 1.15em);
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -109,7 +101,6 @@
     color: var(--accent-text);
 }
 
-/* Una sola fila de badges con alto fijo: si no entran, se cortan (todas las tarjetas miden igual) */
 .formatos {
     display: flex;
     gap: 0.3rem;
@@ -118,7 +109,6 @@
     overflow: hidden;
 }
 
-/* "Estreno": etiqueta clara sobre el poster */
 .badgeEstreno {
     background: var(--tag-bg);
     color: var(--tag-text);

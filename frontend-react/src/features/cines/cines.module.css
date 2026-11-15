@@ -10,8 +10,6 @@
     color: var(--text-muted);
 }
 
-/* ---------- Filtro por formato ---------- */
-
 .filtro {
     display: flex;
     flex-wrap: wrap;
@@ -42,8 +40,6 @@
     color: var(--on-accent);
 }
 
-/* ---------- Tarjetas ---------- */
-
 .grillaCines {
     list-style: none;
     display: grid;
@@ -65,8 +61,6 @@
     }
 }
 
-/* Flex en columna con el boton al fondo: todos los botones quedan alineados aunque falte el
-   telefono o haya mas formatos, y las tarjetas de una fila miden lo mismo (la grilla las estira) */
 .tarjetaCine {
     display: flex;
     flex-direction: column;
@@ -177,7 +171,6 @@
     color: var(--accent-text);
 }
 
-/* Padding con margen negativo: el area tactil llega a 44px sin cambiar la fila */
 .telefono {
     display: inline-block;
     margin: -0.7rem 0;
@@ -204,8 +197,6 @@
     text-decoration: none;
 }
 
-/* ---------- Pagina del cine ---------- */
-
 .volver {
     display: inline-flex;
     align-items: center;
@@ -220,7 +211,6 @@
     color: var(--accent-text);
 }
 
-/* <header>: se pisa el estilo global, que es el del sitio */
 .cabeceraCine {
     position: static;
     display: flex;

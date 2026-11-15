@@ -1,8 +1,5 @@
 import { api } from './http';
 
-// Lista de espera de proximos estrenos: el cliente pide que le avisen cuando salgan las entradas.
-// ListaEsperaResponseDTO: { peliculaId, peliculaTitulo, fechaEstreno, clienteId, fechaAlta }
-
 export async function getListaEspera(clienteId) {
   return api.get(`/api/clientes/${clienteId}/lista-espera`);
 }

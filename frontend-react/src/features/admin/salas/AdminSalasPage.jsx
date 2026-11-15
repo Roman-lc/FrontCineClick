@@ -55,7 +55,6 @@ export default function AdminSalasPage() {
     else if (!(numero >= 1)) errores.numero = 'Tiene que ser un número entero mayor a 0';
     else if (delCine.some((s) => s.numero === numero)) errores.numero = 'Ya existe una sala con ese número en este cine';
     if (!v.tipo) errores.tipo = 'Elegí el tipo de sala';
-    // El plano solo se arma en el alta
     if (!edicion.item) {
       const filas = entero(v.cantidadFilas);
       const butacas = entero(v.butacasPorFila);

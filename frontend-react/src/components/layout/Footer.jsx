@@ -41,7 +41,6 @@ export default function Footer() {
             <li><Link to="/nosotros">Nosotros</Link></li>
             <li><Link to="/soporte">Ayuda</Link></li>
           </ul>
-          {/* Destacado (Resolucion 424/2020): tiene que verse a simple vista en todas las paginas */}
           <Link to="/arrepentimiento" className={`btn ${styles.arrepentimiento}`}>
             Botón de arrepentimiento
           </Link>

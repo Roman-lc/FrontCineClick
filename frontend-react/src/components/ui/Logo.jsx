@@ -1,9 +1,3 @@
-/**
- * Logo de CineClick. Toma los colores de los tokens del tema activo:
- * "Cine" y el triángulo usan --text, "Click" y el ticket usan --accent,
- * así funciona igual en el sitio (Afiche noche) y en el admin (Afiche claro).
- * Props: height (px, default 32), showText (default true), className.
- */
 export default function Logo({ height = 32, showText = true, className = '' }) {
   const viewBox = showText ? '0 0 744 123' : '0 0 145 123';
   const ratio = showText ? 6.0423 : 1.1774;

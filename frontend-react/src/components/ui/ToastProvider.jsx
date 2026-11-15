@@ -5,7 +5,6 @@ import { ToastContext } from './useToast';
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
 
-  // opciones.enlace: { texto, to } muestra un enlace dentro del aviso (ej. "Ir a la cartelera")
   const mostrarAviso = (mensaje, tipo = 'info', opciones = {}) => {
     const id = Date.now() + Math.random();
     setToasts((t) => [...t, { id, mensaje, tipo, enlace: opciones.enlace }]);

@@ -1,6 +1,3 @@
-// Conjuntos cerrados: replican los enums del backend (que es la fuente de verdad) para armar los
-// selects de los formularios y mostrar cada valor con su texto.
-
 export const PROVINCIAS = [
   { valor: 'CABA', texto: 'Ciudad Autónoma de Buenos Aires', corto: 'CABA' },
   { valor: 'BUENOS_AIRES', texto: 'Buenos Aires' },
@@ -75,8 +72,6 @@ export const TIPOS_SALA = [
   { valor: 'CUATRO_D', texto: '4D' },
 ];
 
-// Busca el elemento de un catalogo por su valor; si no esta (un valor nuevo del backend) devuelve
-// uno armado con el valor tal cual, para no ocultar el dato.
 export function itemDe(catalogo, valor) {
   return catalogo.find((item) => item.valor === valor) ?? { valor, texto: valor ?? '' };
 }

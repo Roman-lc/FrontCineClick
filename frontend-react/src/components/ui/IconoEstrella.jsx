@@ -1,4 +1,3 @@
-// Decorativo: el texto que lo acompaña (o un .visually-hidden) es el que se lee.
 export default function IconoEstrella({ tamano = 14 }) {
   return (
     <svg width={tamano} height={tamano} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">

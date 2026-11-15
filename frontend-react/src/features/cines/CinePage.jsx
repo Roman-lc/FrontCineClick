@@ -24,7 +24,6 @@ import styles from './cines.module.css';
 
 const DIAS = 7;
 
-// /cines/<slug del nombre>: datos del cine, mapa y cartelera dia por dia. La key reinicia al cambiar de cine.
 export default function CinePage() {
   const { slug } = useParams();
   return <CarteleraDelCine key={slug} slug={slug} />;
@@ -106,7 +105,6 @@ function CarteleraDelCine({ slug }) {
         <DatosCine cine={cine} horario={horarioDelCine(funciones)} formatos={formatosDelCine(cine, funciones)} />
       </header>
 
-      {/* Si el mapa no carga, el enlace "Cómo llegar" sigue a la vista debajo */}
       <div className={styles.mapa}>
         <iframe
           src={urlMapaEmbebido(cine)}
@@ -185,7 +183,6 @@ function CarteleraDelCine({ slug }) {
   );
 }
 
-// Peliculas con funciones ese dia (destacadas primero, despues por titulo), cada una con sus funciones
 function carteleraDelDia(funciones, peliculas, dia) {
   const porPelicula = new Map();
   for (const f of funciones) {

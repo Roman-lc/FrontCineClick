@@ -16,8 +16,6 @@ const icono = {
   focusable: false,
 };
 
-// Contacto (direccion con "Cómo llegar", telefono y horario) y badges de formatos.
-// La usan la tarjeta del listado y el encabezado de la pagina del cine.
 export default function DatosCine({ cine, horario, formatos }) {
   return (
     <>

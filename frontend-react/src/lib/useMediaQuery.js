@@ -1,6 +1,5 @@
 import { useSyncExternalStore } from 'react';
 
-// true mientras la media query se cumpla, ej. useMediaQuery('(max-width: 860px)')
 export function useMediaQuery(consulta) {
   return useSyncExternalStore(
     (avisar) => {

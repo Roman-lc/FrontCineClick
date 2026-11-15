@@ -12,7 +12,6 @@
     outline-offset: 2px;
 }
 
-/* pan-y: el swipe horizontal lo maneja el slider, el vertical sigue scrolleando la pagina */
 .ventana {
     height: 100%;
     overflow: hidden;
@@ -40,7 +39,6 @@
     filter: blur(26px) brightness(0.65) saturate(1.2);
 }
 
-/* Degradado de izquierda a derecha (y un poco desde abajo) para que el texto se lea sobre cualquier poster */
 .capa {
     position: absolute;
     inset: 0;
@@ -110,7 +108,6 @@
     font-size: clamp(2.2rem, 4.5vw, 3.6rem);
     font-weight: 400;
     letter-spacing: 0.02em;
-    /* No menos de 1.15: con menos, el recorte a 2 lineas corta las tildes de las mayusculas */
     line-height: 1.15;
     text-transform: uppercase;
     display: -webkit-box;
@@ -141,8 +138,6 @@
     margin-top: 0.4rem;
     text-decoration: none;
 }
-
-/* ---------- Controles ---------- */
 
 .flecha {
     position: absolute;
@@ -193,7 +188,6 @@
     transform: translateX(-50%);
 }
 
-/* El boton es mas grande que la barra para que sea facil de tocar */
 .punto {
     display: grid;
     place-items: center;
@@ -253,8 +247,6 @@
         transform: none;
     }
 }
-
-/* ---------- Mobile ---------- */
 
 @media (max-width: 640px) {
     .slider {

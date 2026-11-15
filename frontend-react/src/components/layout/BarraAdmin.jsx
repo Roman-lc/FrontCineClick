@@ -2,8 +2,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../app/useAuth';
 import styles from './BarraAdmin.module.css';
 
-// Franja fija de la sesion de administrador, arriba de todo en el sitio y en el panel.
-// No se puede cerrar: deja claro en todo momento con que cuenta se esta navegando.
 export default function BarraAdmin() {
   const { user } = useAuth();
   const { pathname } = useLocation();

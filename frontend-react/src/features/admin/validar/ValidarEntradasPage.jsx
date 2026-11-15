@@ -10,7 +10,6 @@ import EscanerQr from './EscanerQr';
 import { AVISO_TIPO, RESUMEN, extraerCodigo, textoResultado } from './codigo';
 import styles from './validar.module.css';
 
-// El cine del puesto queda guardado en este dispositivo: el controlador lo elige una sola vez
 const CLAVE_CINE = 'cineclick_puesto_cine';
 const leerCine = () => {
   try {
@@ -23,17 +22,11 @@ const guardarCine = (id) => {
   try {
     if (id) localStorage.setItem(CLAVE_CINE, id);
     else localStorage.removeItem(CLAVE_CINE);
-  } catch {
-    // Sin storage, el cine dura hasta recargar
-  }
+  } catch {}
 };
 
-// Vibracion corta si el celular la tiene: una para la valida y tres para la rechazada
 const vibrar = (ok) => navigator.vibrate?.(ok ? 120 : [70, 60, 70, 60, 70]);
 
-// Control de ingreso: alcanza con el codigo (el backend deduce pelicula, sala, butaca y horario) y el cine del
-// puesto. Pensada para usar de pie y rapido: campo con autofocus (sirve un lector de mano que escribe como teclado
-// y manda Enter), camara opcional y el resultado grande hasta la proxima lectura o hasta tocar "Siguiente".
 export default function ValidarEntradasPage() {
   const cines = useListado(adminCines.listar);
   const [cineId, setCineId] = useState(leerCine);
@@ -91,7 +84,6 @@ export default function ValidarEntradasPage() {
   if (cines.cargando) return <EsqueletoFilas cantidad={3} alto={60} etiqueta="Cargando cines" />;
   if (cines.error) return <EstadoError titulo="No pudimos cargar los cines" onReintentar={cines.reintentar} />;
 
-  // Primera vez en este dispositivo (o el cine guardado ya no esta activo): se elige el cine del puesto
   if (!cine) {
     return (
       <section>

@@ -1,4 +1,3 @@
-// Textos de los estados que llegan del backend, para el listado y el detalle de compras del panel
 export const ESTADOS_COMPRA = {
   CONFIRMADA: { texto: 'Confirmada', activo: true },
   PENDIENTE_PAGO: { texto: 'Pendiente de pago', activo: false },
