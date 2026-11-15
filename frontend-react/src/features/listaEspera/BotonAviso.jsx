@@ -3,12 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../app/useAuth';
 import { useToast } from '../../components/ui/useToast';
 import { anotarEnListaEspera, quitarDeListaEspera } from '../../services/listaEspera';
-import { rutaPelicula } from '../../lib/slug';
-import { rutaLogin } from '../../lib/volver';
 import styles from './BotonAviso.module.css';
 
-// "Avisarme" para un proximo estreno sin entradas a la venta. Sin sesion lleva al login y vuelve al
-// detalle de la pelicula. Las cuentas de administrador no lo ven.
 export default function BotonAviso({ pelicula, anotada, onCambio, className = '' }) {
   const { user, isAdmin } = useAuth();
   const { mostrarAviso } = useToast();
@@ -19,7 +15,7 @@ export default function BotonAviso({ pelicula, anotada, onCambio, className = ''
 
   const alternar = async () => {
     if (!user?.clienteId) {
-      navigate(rutaLogin(rutaPelicula(pelicula.titulo)));
+      navigate('/login');
       return;
     }
     setEnviando(true);

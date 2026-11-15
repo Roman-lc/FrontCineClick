@@ -13,13 +13,16 @@ const SECCIONES = [
 
 const claseEnlace = ({ isActive }) => `${styles.seccion} ${isActive ? styles.activa : ''}`;
 
+const esPantallaDeAcceso = (ruta) =>
+  ruta === '/login' || ruta.startsWith('/login/') || ruta === '/registro' || ruta === '/restablecer';
+
 export default function Header() {
   const { user, logout, isAdmin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  // Panel del celular: se guarda en que navegacion se abrio, asi al navegar queda cerrado solo
   const [abiertoEn, setAbiertoEn] = useState(null);
   const panelAbierto = abiertoEn === location.key;
+  const enAcceso = esPantallaDeAcceso(location.pathname);
 
   const salir = () => {
     setAbiertoEn(null);
@@ -27,7 +30,6 @@ export default function Header() {
     navigate('/');
   };
 
-  // Con el panel abierto el fondo no se desplaza, y Escape lo cierra
   useEffect(() => {
     if (!panelAbierto) return undefined;
     const anterior = document.body.style.overflow;
@@ -43,7 +45,6 @@ export default function Header() {
   return (
     <header>
       <nav className={styles.barra} aria-label="Principal">
-        {/* Completo en desktop; en el celular solo el icono (el CSS muestra uno u otro) */}
         <Link to="/" className={styles.logo}>
           <Logo height={32} className={styles.logoCompleto} />
           <Logo height={28} showText={false} className={styles.logoIcono} />
@@ -63,9 +64,11 @@ export default function Header() {
           {user ? (
             <MenuCuenta user={user} isAdmin={isAdmin} onSalir={salir} />
           ) : (
-            <Link to="/login" className={`btn btn-primary ${styles.ingresar}`}>
-              Ingresar
-            </Link>
+            !enAcceso && (
+              <Link to="/login" className={`btn btn-primary ${styles.ingresar}`}>
+                Ingresar
+              </Link>
+            )
           )}
         </div>
 
@@ -124,9 +127,11 @@ export default function Header() {
               </li>
             </ul>
           ) : (
-            <Link to="/login" className={`btn btn-primary ${styles.ingresarMovil}`}>
-              Ingresar
-            </Link>
+            !enAcceso && (
+              <Link to="/login" className={`btn btn-primary ${styles.ingresarMovil}`}>
+                Ingresar
+              </Link>
+            )
           )}
         </div>
       )}

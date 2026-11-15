@@ -15,13 +15,12 @@ import styles from '../../../components/admin/admin.module.css';
 import { useToast } from '../../../components/ui/useToast';
 import { BARRIOS_CABA, PROVINCIAS } from '../../../lib/catalogos';
 import { nombreCine } from '../../../lib/formato';
-import { clave, formatearTelefono, formatoTitulo, normalizarTelefono, texto } from '../../../lib/normalizar';
+import { clave, formatearTelefono, formatoTitulo, limitarTelefono, normalizarTelefono, texto } from '../../../lib/normalizar';
 import { adminCines } from '../../../services/admin';
 import FotoCine from '../../cines/FotoCine';
 import { direccionCine, ubicacionCine } from '../../cines/cines';
 
 const ID_FORM = 'form-cine';
-// Opcional: una URL completa (https://...) o una ruta del sitio (/img/cines/abasto.jpg)
 const FORMATO_IMAGEN = /^(https?:\/\/\S+|\/\S*)$/;
 
 const VACIO = { nombre: '', provincia: 'CABA', localidad: '', calle: '', altura: '', telefono: '', urlImagen: '' };
@@ -36,7 +35,6 @@ const aFormulario = (c) => ({
   urlImagen: c.urlImagen ?? '',
 });
 
-// Lo que viaja al backend, con las mismas normalizaciones que aplica el servicio
 const aDatos = (v) => ({
   nombre: formatoTitulo(v.nombre),
   provincia: v.provincia,
@@ -115,7 +113,6 @@ export default function AdminCinesPage() {
 
   const filtrados = cines.filter((c) => cumpleEstado(c.activo, estado) && clave(c.nombre).includes(clave(busqueda)));
 
-  // Las props comunes de cada control: valor, cambio y validacion al salir del campo
   const props = (campo) => ({
     value: valores[campo],
     onChange: (e) => edicion.cambiar(campo, e.target.value),
@@ -218,7 +215,6 @@ export default function AdminCinesPage() {
                 onBlur={() => edicion.tocar('provincia')}
                 onChange={(e) => {
                   const provincia = e.target.value;
-                  // Al pasar de CABA a otra provincia (o al reves) la localidad elegida deja de servir
                   const sigueValida = provincia === 'CABA' ? BARRIOS_CABA.includes(valores.localidad) : valores.provincia !== 'CABA';
                   edicion.cambiar({ provincia, localidad: sigueValida ? valores.localidad : '' });
                 }}
@@ -269,9 +265,8 @@ export default function AdminCinesPage() {
                 autoComplete="off"
                 {...a11y}
                 value={valores.telefono}
-                onChange={(e) => edicion.cambiar('telefono', e.target.value)}
+                onChange={(e) => edicion.cambiar('telefono', limitarTelefono(e.target.value))}
                 onBlur={() => {
-                  // Si es valido se muestra ya normalizado, como va a quedar guardado
                   const digitos = normalizarTelefono(valores.telefono);
                   if (digitos) edicion.cambiar('telefono', formatearTelefono(digitos));
                   edicion.tocar('telefono');
@@ -290,7 +285,6 @@ export default function AdminCinesPage() {
             >
               {(a11y) => <input type="text" placeholder="/img/cines/abasto.jpg o https://…" {...a11y} {...props('urlImagen')} />}
             </Campo>
-            {/* key: al cambiar la URL se vuelve a intentar cargar la vista previa */}
             <FotoCine
               key={valores.urlImagen}
               cine={{ nombre: valores.nombre || 'Sin foto', urlImagen: texto(valores.urlImagen) }}

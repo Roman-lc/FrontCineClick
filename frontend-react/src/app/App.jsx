@@ -1,9 +1,10 @@
 import { lazy, Suspense } from 'react';
-import { Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, Link } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import { useAuth } from './useAuth';
 import HomePage from '../features/cartelera/HomePage';
 import LoginPage from '../features/auth/LoginPage';
+import RecuperarPage from '../features/auth/RecuperarPage';
 import RestablecerPasswordPage from '../features/auth/RestablecerPasswordPage';
 import CompraLayout from '../features/compra/CompraLayout';
 import PasoEntradas from '../features/compra/PasoEntradas';
@@ -12,7 +13,6 @@ import PasoPago from '../features/compra/PasoPago';
 import ConfirmacionPage from '../features/compra/ConfirmacionPage';
 import EstadoVacio from '../components/ui/EstadoVacio';
 import { EsqueletoFilas } from '../components/ui/Esqueletos';
-import { rutaLogin } from '../lib/volver';
 import PeliculaPage from '../features/pelicula/PeliculaPage';
 import NoEncontradaPage from '../features/error/NoEncontradaPage';
 import NosotrosPage from '../features/institucional/NosotrosPage';
@@ -25,8 +25,6 @@ import CinePage from '../features/cines/CinePage';
 import PromocionesPage from '../features/promociones/PromocionesPage';
 import MisComprasPage from '../features/cuenta/MisComprasPage';
 
-// El panel se carga aparte, recien cuando se entra a /admin: no entra en el bundle del sitio publico.
-// AdminLayout muestra un esqueleto mientras llega cada pantalla.
 const AdminLayout = lazy(() => import('../components/layout/AdminLayout'));
 const MetricasPage = lazy(() => import('../features/admin/metricas/MetricasPage'));
 const AdminCinesPage = lazy(() => import('../features/admin/cines/AdminCinesPage'));
@@ -39,17 +37,14 @@ const ValidarEntradasPage = lazy(() => import('../features/admin/validar/Validar
 const AdminArrepentimientosPage = lazy(() => import('../features/admin/arrepentimientos/AdminArrepentimientosPage'));
 const AdminSoportePage = lazy(() => import('../features/admin/soporte/AdminSoportePage'));
 
-// Solo controla lo que muestra la interfaz: la API no tiene autenticacion (limitacion conocida).
 function RequireAdmin({ children }) {
   const { isAdmin } = useAuth();
   if (!isAdmin) return <Navigate to="/" replace />;
   return children;
 }
 
-// Sin sesion de cliente se va al login, que despues vuelve a esta misma pantalla
 function RequireCliente({ children }) {
   const { user, isAdmin } = useAuth();
-  const location = useLocation();
   if (isAdmin) {
     return (
       <section className="section">
@@ -61,7 +56,7 @@ function RequireCliente({ children }) {
       </section>
     );
   }
-  if (!user?.clienteId) return <Navigate to={rutaLogin(location.pathname)} replace />;
+  if (!user?.clienteId) return <Navigate to="/login" replace />;
   return children;
 }
 
@@ -78,14 +73,13 @@ export default function App() {
         <Route path="/grupo" element={<Navigate to="/nosotros" replace />} />
         <Route path="/terminos" element={<TerminosPage />} />
         <Route path="/privacidad" element={<PrivacidadPage />} />
-        {/* Publicas, sin login ni registro (la de arrepentimiento lo exige la Resolucion 424/2020) */}
         <Route path="/arrepentimiento" element={<ArrepentimientoPage />} />
         <Route path="/soporte" element={<SoportePage />} />
 
-        {/* key distinta para que al pasar de una ruta a la otra se reinicie la pestaña elegida */}
         <Route path="/login" element={<LoginPage key="login" />} />
         <Route path="/registro" element={<LoginPage key="registro" modoInicial="registro" />} />
-        <Route path="/restablecer-contrasena" element={<RestablecerPasswordPage />} />
+        <Route path="/login/recuperar" element={<RecuperarPage />} />
+        <Route path="/restablecer" element={<RestablecerPasswordPage />} />
         <Route path="/mis-compras" element={<RequireCliente><MisComprasPage /></RequireCliente>} />
 
         <Route path="/compra/confirmacion/:compraId" element={<RequireCliente><ConfirmacionPage /></RequireCliente>} />
@@ -99,7 +93,6 @@ export default function App() {
         <Route path="*" element={<NoEncontradaPage />} />
       </Route>
 
-      {/* Panel: layout propio (tema claro, navegacion lateral), sin el header ni el footer del sitio */}
       <Route
         path="/admin"
         element={

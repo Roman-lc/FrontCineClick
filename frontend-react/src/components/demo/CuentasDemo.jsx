@@ -15,10 +15,7 @@ const leerPlegado = () => {
   }
 };
 
-// Listado de las cuentas del seed con un boton que inicia sesion con cada una. Con plegable va como panel
-// plegable (recuerda si se plego); en el login, como lista debajo del formulario. destino: ruta a la que ir despues
-// de ingresar (si no, la de cada cuenta).
-export default function CuentasDemo({ plegable = false, destino }) {
+export default function CuentasDemo({ plegable = false }) {
   const { login } = useAuth();
   const { mostrarAviso } = useToast();
   const navigate = useNavigate();
@@ -30,9 +27,7 @@ export default function CuentasDemo({ plegable = false, destino }) {
     setPlegado((p) => {
       try {
         localStorage.setItem(CLAVE_PLEGADO, String(!p));
-      } catch {
-        // Sin storage, el panel se abre de nuevo al recargar
-      }
+      } catch {}
       return !p;
     });
   };
@@ -42,7 +37,7 @@ export default function CuentasDemo({ plegable = false, destino }) {
     try {
       login(await iniciarSesion(cuenta.email, cuenta.password));
       mostrarAviso(`Ingresaste como ${cuenta.nombre} (${cuenta.rol.toLowerCase()})`, 'exito');
-      navigate(cuenta.rol === 'Administrador' ? cuenta.destino : destino || cuenta.destino);
+      navigate(cuenta.destino);
     } catch (err) {
       mostrarAviso(err.status === 401 ? 'Esa cuenta no existe en la base: reiniciá la demo (ver README).' : 'No se pudo ingresar. ¿Está corriendo el backend?', 'error');
     } finally {

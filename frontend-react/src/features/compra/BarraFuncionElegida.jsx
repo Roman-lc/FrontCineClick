@@ -4,32 +4,26 @@ import { useAuth } from '../../app/useAuth';
 import { useToast } from '../../components/ui/useToast';
 import { diaRelativo, horaCorta } from '../../lib/fechas';
 import { etiquetaFormato, etiquetaIdioma, nombreCine } from '../../lib/formato';
-import { rutaLogin } from '../../lib/volver';
 import { getFuncion } from '../../services/funciones';
 import { IconoCerrar } from './iconos';
 import PanelCombinables from './PanelCombinables';
 import styles from './compra.module.css';
 
-// Barra fija abajo que aparece al tocar un horario en la cartelera o en el detalle de la pelicula.
-// El login se pide aca, antes de elegir las entradas. "Ver qué más podés ver ese día" despliega arriba de la
-// barra las funciones que combinan (doble funcion); tocar una la elige en lugar de la actual (onCambiar).
 export default function BarraFuncionElegida({ funcion, onQuitar, onCambiar }) {
   const { user, isAdmin } = useAuth();
   const { mostrarAviso } = useToast();
   const navigate = useNavigate();
   const id = useId();
-  // El panel queda abierto solo para la funcion en la que se abrio
   const [panelPara, setPanelPara] = useState(null);
   const panelAbierto = panelPara === funcion.id;
 
   const comprar = () => {
-    const destino = `/compra/${funcion.id}/entradas`;
     if (isAdmin) {
       mostrarAviso('Las cuentas de administrador no pueden comprar entradas', 'error');
     } else if (!user?.clienteId) {
-      navigate(rutaLogin(destino));
+      navigate('/login');
     } else {
-      navigate(destino);
+      navigate(`/compra/${funcion.id}/entradas`);
     }
   };
 
